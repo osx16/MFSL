@@ -16,13 +16,28 @@
         @* BEGIN Menu *@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">HEADER</li>
-            <li class="@Url.IsLinkActive("Index", "Home")">
-                <a href="@Url.Action("Index", "Home")"><i class="fa fa-link"></i> <span>Home</span></a>
+            <li class="@Url.IsLinkActive("Dashboard", "MemberFiles")">
+                <a href="@Url.Action("Dashboard", "MemberFiles")"><i class="glyphicon glyphicon-home"></i> <span>Home</span></a>
             </li>
-            <li class="@Url.IsLinkActive("AnotherLink", "Home")">
+            <li class="@Url.IsLinkActive("NewFile", "MemberFiles")">
+                <a href="@Url.Action("NewFile", "MemberFiles")"><i class="glyphicon glyphicon-file"></i> <span>New</span></a>
+            </li>
+            <li class="@Url.IsLinkActive("Recent", "MemberFiles")">
+                <a href="@Url.Action("Recent", "MemberFiles")"><i class="glyphicon glyphicon-time"></i> <span>History</span></a>
+            </li>
+            <li class="@Url.IsLinkActive("Create", "Home")">
+                <a href="@Url.Action("Index", "Home")"><i class="glyphicon glyphicon-search"></i> <span>Advanced Search</span></a>
+            </li>
+            <li class="@Url.IsLinkActive("Create", "Home")">
+                <a href="@Url.Action("Index", "Home")"><i class="glyphicon glyphicon-user"></i> <span>My Profile</span></a>
+            </li>
+            <li class="@Url.IsLinkActive("Create", "Home")">
+                <a href="@Url.Action("Index", "Home")"><i class="glyphicon glyphicon-off"></i> <span>Sign-Out</span></a>
+            </li>
+            @*<li class="@Url.IsLinkActive("AnotherLink", "Home")">
                 <a href="@Url.Action("AnotherLink", "Home")"><i class="fa fa-link"></i> <span>Another Link</span></a>
-            </li>
-            <li class="treeview">
+            </li>*@
+            @*<li class="treeview">
                 <a href="#">
                     <i class="fa fa-link"></i> <span>Multilevel</span>
                     <span class="pull-right-container">
@@ -33,7 +48,7 @@
                     <li><a href="#">Link in level 2</a></li>
                     <li><a href="#">Link in level 2</a></li>
                 </ul>
-            </li>
+            </li>*@
         </ul>
         @* END Menu *@
     </section>

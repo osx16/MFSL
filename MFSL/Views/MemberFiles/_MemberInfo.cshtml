@@ -1,0 +1,21 @@
+﻿@model IEnumerable<MFSL.Models.vnpf_>
+<table class="table table-striped">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <strong>Full Name:</strong> @Html.DisplayFor(modelItem => item.Member_Fullname)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Loan No:</strong> @Html.DisplayFor(modelItem => item.Loan_Number)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>VNPF No:</strong> @Html.DisplayFor(modelItem => item.VNPF_Number)
+            </td>
+        </tr>
+    }
+</table>

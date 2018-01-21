@@ -14,6 +14,11 @@ namespace MFSL
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute("GetMemberInfoByNum",
+                "memberfiles/getmemberinfobynum/",
+                new { controller = "MemberFiles", action = "GetMemberInfoByNum" },
+                new[] { "MFSL.Controllers" });
         }
     }
 }

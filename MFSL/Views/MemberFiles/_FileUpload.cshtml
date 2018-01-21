@@ -1,0 +1,34 @@
+﻿@model MFSL.ViewModels.FileViewModel
+@{
+    ViewBag.Title = "FileUpload";
+}
+<script src="~/Scripts/jquery-3.1.1.js"></script>
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+@using (Html.BeginForm("NewFile", "MemberFiles", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-md-10">
+                <span class="glyphicon glyphicon-upload"></span><b>Upload Quote</b>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Quote, "", new { @type = "file", @multiple = "multiple" })
+                @Html.ValidationMessageFor(model => model.Quote, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Upload" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+

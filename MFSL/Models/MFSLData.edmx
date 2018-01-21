@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MFSLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="FileStatus">
+          <Key>
+            <PropertyRef Name="FileStatusId" />
+          </Key>
+          <Property Name="FileStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FStatus" Type="varchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MemberFile">
+          <Key>
+            <PropertyRef Name="FileNo" />
+          </Key>
+          <Property Name="FileNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="OfficeId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="MemberNo" Type="int" Nullable="false" />
+          <Property Name="LoanApplication" Type="varbinary(max)" />
+          <Property Name="OfferLetter" Type="varbinary(max)" />
+          <Property Name="LoanAgreement" Type="varbinary(max)" />
+          <Property Name="AcceptanceOffer" Type="varbinary(max)" />
+          <Property Name="GuaranteeCertificate" Type="varbinary(max)" />
+          <Property Name="Amortisation" Type="varbinary(max)" />
+          <Property Name="ChequeCopy" Type="varbinary(max)" />
+          <Property Name="Eligibility" Type="varbinary(max)" />
+          <Property Name="Quotation" Type="varbinary(max)" />
+          <Property Name="Payslip" Type="varbinary(max)" />
+          <Property Name="LoanStatement" Type="varbinary(max)" />
+          <Property Name="VNPFStatement" Type="varbinary(max)" />
+          <Property Name="Other" Type="varbinary(max)" />
+          <Property Name="fileGUID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FStatusId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Officers">
+          <Key>
+            <PropertyRef Name="OfficerId" />
+          </Key>
+          <Property Name="OfficerId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="VnpfNo" Type="int" Nullable="false" />
+          <Property Name="LoanNo" Type="int" Nullable="false" />
+          <Property Name="EmpFname" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="EmpMname" Type="varchar" MaxLength="128" />
+          <Property Name="EmpLname" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vnpf$">
+          <Key>
+            <PropertyRef Name="RowId" />
+          </Key>
+          <Property Name="RowId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VNPF_Number" Type="int" />
+          <Property Name="Loan_Number" Type="int" />
+          <Property Name="Member_Fullname" Type="nvarchar" MaxLength="255" />
+          <Property Name="Loan_Balance" Type="nvarchar" MaxLength="255" />
+          <Property Name="Current_Repayment_Amount" Type="float" />
+        </EntityType>
+        <Association Name="FK_Files_Officers">
+          <End Role="FileStatus" Type="Self.FileStatus" Multiplicity="1" />
+          <End Role="MemberFile" Type="Self.MemberFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileStatus">
+              <PropertyRef Name="FileStatusId" />
+            </Principal>
+            <Dependent Role="MemberFile">
+              <PropertyRef Name="FStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MFSLModelStoreContainer">
+          <EntitySet Name="FileStatus" EntityType="Self.FileStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MemberFile" EntityType="Self.MemberFile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Officers" EntityType="Self.Officers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vnpf$" EntityType="Self.vnpf$" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Files_Officers" Association="Self.FK_Files_Officers">
+            <End Role="FileStatus" EntitySet="FileStatus" />
+            <End Role="MemberFile" EntitySet="MemberFile" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MFSLModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="FileStatus">
+          <Key>
+            <PropertyRef Name="FileStatusId" />
+          </Key>
+          <Property Name="FileStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FStatus" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="MemberFile" Relationship="Self.FK_Files_Officers" FromRole="FileStatus" ToRole="MemberFile" />
+        </EntityType>
+        <EntityType Name="MemberFile">
+          <Key>
+            <PropertyRef Name="FileNo" />
+          </Key>
+          <Property Name="FileNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OfficeId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MemberNo" Type="Int32" Nullable="false" />
+          <Property Name="LoanApplication" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="OfferLetter" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="LoanAgreement" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="AcceptanceOffer" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="GuaranteeCertificate" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Amortisation" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="ChequeCopy" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Eligibility" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Quotation" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Payslip" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="LoanStatement" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="VNPFStatement" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Other" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="fileGUID" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FStatusId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FileStatus" Relationship="Self.FK_Files_Officers" FromRole="MemberFile" ToRole="FileStatus" />
+        </EntityType>
+        <EntityType Name="Officers">
+          <Key>
+            <PropertyRef Name="OfficerId" />
+          </Key>
+          <Property Name="OfficerId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="VnpfNo" Type="Int32" Nullable="false" />
+          <Property Name="LoanNo" Type="Int32" Nullable="false" />
+          <Property Name="EmpFname" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EmpMname" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="EmpLname" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="vnpf_">
+          <Key>
+            <PropertyRef Name="RowId" />
+          </Key>
+          <Property Name="RowId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VNPF_Number" Type="Int32" />
+          <Property Name="Loan_Number" Type="Int32" />
+          <Property Name="Member_Fullname" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Loan_Balance" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Current_Repayment_Amount" Type="Double" />
+        </EntityType>
+        <Association Name="FK_Files_Officers">
+          <End Role="FileStatus" Type="Self.FileStatus" Multiplicity="1" />
+          <End Role="MemberFile" Type="Self.MemberFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileStatus">
+              <PropertyRef Name="FileStatusId" />
+            </Principal>
+            <Dependent Role="MemberFile">
+              <PropertyRef Name="FStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MFSLEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="FileStatus" EntityType="Self.FileStatus" />
+          <EntitySet Name="MemberFile" EntityType="Self.MemberFile" />
+          <EntitySet Name="Officers" EntityType="Self.Officers" />
+          <EntitySet Name="vnpf_" EntityType="Self.vnpf_" />
+          <AssociationSet Name="FK_Files_Officers" Association="Self.FK_Files_Officers">
+            <End Role="FileStatus" EntitySet="FileStatus" />
+            <End Role="MemberFile" EntitySet="MemberFile" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MFSLModelStoreContainer" CdmEntityContainer="MFSLEntities">
+          <EntitySetMapping Name="FileStatus">
+            <EntityTypeMapping TypeName="MFSLModel.FileStatus">
+              <MappingFragment StoreEntitySet="FileStatus">
+                <ScalarProperty Name="FileStatusId" ColumnName="FileStatusId" />
+                <ScalarProperty Name="FStatus" ColumnName="FStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MemberFile">
+            <EntityTypeMapping TypeName="MFSLModel.MemberFile">
+              <MappingFragment StoreEntitySet="MemberFile">
+                <ScalarProperty Name="FileNo" ColumnName="FileNo" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="OfficeId" ColumnName="OfficeId" />
+                <ScalarProperty Name="MemberNo" ColumnName="MemberNo" />
+                <ScalarProperty Name="LoanApplication" ColumnName="LoanApplication" />
+                <ScalarProperty Name="OfferLetter" ColumnName="OfferLetter" />
+                <ScalarProperty Name="LoanAgreement" ColumnName="LoanAgreement" />
+                <ScalarProperty Name="AcceptanceOffer" ColumnName="AcceptanceOffer" />
+                <ScalarProperty Name="GuaranteeCertificate" ColumnName="GuaranteeCertificate" />
+                <ScalarProperty Name="Amortisation" ColumnName="Amortisation" />
+                <ScalarProperty Name="ChequeCopy" ColumnName="ChequeCopy" />
+                <ScalarProperty Name="Eligibility" ColumnName="Eligibility" />
+                <ScalarProperty Name="Quotation" ColumnName="Quotation" />
+                <ScalarProperty Name="Payslip" ColumnName="Payslip" />
+                <ScalarProperty Name="LoanStatement" ColumnName="LoanStatement" />
+                <ScalarProperty Name="VNPFStatement" ColumnName="VNPFStatement" />
+                <ScalarProperty Name="Other" ColumnName="Other" />
+                <ScalarProperty Name="fileGUID" ColumnName="fileGUID" />
+                <ScalarProperty Name="FStatusId" ColumnName="FStatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Officers">
+            <EntityTypeMapping TypeName="MFSLModel.Officers">
+              <MappingFragment StoreEntitySet="Officers">
+                <ScalarProperty Name="OfficerId" ColumnName="OfficerId" />
+                <ScalarProperty Name="VnpfNo" ColumnName="VnpfNo" />
+                <ScalarProperty Name="LoanNo" ColumnName="LoanNo" />
+                <ScalarProperty Name="EmpFname" ColumnName="EmpFname" />
+                <ScalarProperty Name="EmpMname" ColumnName="EmpMname" />
+                <ScalarProperty Name="EmpLname" ColumnName="EmpLname" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vnpf_">
+            <EntityTypeMapping TypeName="MFSLModel.vnpf_">
+              <MappingFragment StoreEntitySet="vnpf$">
+                <ScalarProperty Name="RowId" ColumnName="RowId" />
+                <ScalarProperty Name="VNPF_Number" ColumnName="VNPF_Number" />
+                <ScalarProperty Name="Loan_Number" ColumnName="Loan_Number" />
+                <ScalarProperty Name="Member_Fullname" ColumnName="Member_Fullname" />
+                <ScalarProperty Name="Loan_Balance" ColumnName="Loan_Balance" />
+                <ScalarProperty Name="Current_Repayment_Amount" ColumnName="Current_Repayment_Amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

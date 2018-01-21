@@ -1,0 +1,162 @@
+﻿@model MFSL.Models.MemberFile
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MemberFile</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OfficeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OfficeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MemberNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MemberNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoanApplication)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoanApplication)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OfferLetter)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OfferLetter)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoanAgreement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoanAgreement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AcceptanceOffer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AcceptanceOffer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GuaranteeCertificate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GuaranteeCertificate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amortisation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amortisation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChequeCopy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChequeCopy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Eligibility)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Eligibility)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Quotation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Quotation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Payslip)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Payslip)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoanStatement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoanStatement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VNPFStatement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VNPFStatement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Other)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Other)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fileGUID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fileGUID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FileStatus.FStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FileStatus.FStatus)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.FileNo }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
