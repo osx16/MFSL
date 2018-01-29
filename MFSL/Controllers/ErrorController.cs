@@ -13,5 +13,10 @@ namespace MFSL.Controllers
         {
             return View();
         }
+
+        public ActionResult CouldNotCreateFile()
+        {
+            return View();
+        }
     }
 }

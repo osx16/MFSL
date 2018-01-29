@@ -14,21 +14,21 @@
         <script src="~/Scripts/bootstrap.js"></script>
         <script src="~/Scripts/bootstrap.min.js"></script>
         <script type="text/javascript">
-    $(function ()
-    {
-        //alert("jQuery Executed");
-        $.ajaxPrefilter(function (options, original_Options, jqXHR) {
-            options.async = true;
-        });
+            $(function ()
+            {
+                //alert("jQuery Executed");
+                $.ajaxPrefilter(function (options, original_Options, jqXHR) {
+                    options.async = true;
+                });
 
-        $('#filepartialview').load('@Url.Action("RenderInfoView", "MemberFiles")');
-        $('#search').unbind().click(function (e) {
-            e.preventDefault();
-            //$('#filepartialview').remove();
-            $("#filepartialview").load('@(Url.Action("SearchFiles", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox').val());
-        });
+                $('#filepartialview').load('@Url.Action("RenderInfoView", "MemberFiles")');
+                $('#search').unbind().click(function (e) {
+                    e.preventDefault();
+                    //$('#filepartialview').remove();
+                    $("#filepartialview").load('@(Url.Action("SearchFiles", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox').val());
+                });
 
-    });
+            });
         </script>
         <ol class="breadcrumb">
             @*<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -59,8 +59,6 @@
                 </div>
             </div>
         </section>
-
-
     </body>
 </html>
 

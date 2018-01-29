@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<MFSL.Models.MemberFile>
+﻿@model PagedList.IPagedList<MFSL.Models.FileReferences>
 @using PagedList.Mvc;
 
 <!DOCTYPE html>
@@ -11,54 +11,54 @@
         <script src="~/Scripts/bootstrap.min.js"></script>
 
         <script type="text/javascript">
-    $(function () {
+            $(function () {
 
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
+                $(document).ready(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                });
 
-        $('.MemberLink').on('click', function (e) {
-            var MemberNum = $(this).attr("data-id");
-            $.ajax({
-                cache: false,
-                type: "GET",
-                url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
-                data: { "MemberNum": MemberNum },
-                        success: function (data) {
-                            $('#memberDetailsModal').modal();
-                            $('#memberDetailsModal').find('.ajax-dynamic-get-data-form').html(data);
-                            $('#memberDetailsModal').modal('show');
-                        },
-                        error: function () {
-                            alert('Error. Please try again.');
-                        }
-                });//EndOf Ajax
-        })
-    });//EndOf Main Func
+                $('.MemberLink').on('click', function (e) {
+                    var MemberNum = $(this).attr("data-id");
+                    $.ajax({
+                        cache: false,
+                        type: "GET",
+                        url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
+                        data: { "MemberNum": MemberNum },
+                                success: function (data) {
+                                    $('#memberDetailsModal').modal();
+                                    $('#memberDetailsModal').find('.ajax-dynamic-get-data-form').html(data);
+                                    $('#memberDetailsModal').modal('show');
+                                },
+                                error: function () {
+                                    alert('Error. Please try again.');
+                                }
+                        });//EndOf Ajax
+                })
+            });//EndOf Main Func
         </script>
 
-        <!-- Button trigger modal -->
-        <div class="modal fade" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> | Member Info</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="ajax-dynamic-get-data-form" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+        <section class="content">
+            <!-- Button trigger modal -->
+            <div class="modal fade" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> | Member Info</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="ajax-dynamic-get-data-form" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <section class="content">
             <div class="row">
                 <div class="col-md-4">
-                    <h4 class="box-title">Results: @ViewBag.TotalFiles <i class="fa fa-fw fa-folder"></i></h4>
+                    <h4 class="box-title">Total: @ViewBag.TotalFiles <i class="fa fa-fw fa-folder"></i></h4>
                 </div>
 
                 <table class="table table-striped">
@@ -95,7 +95,6 @@
                                 </td>
                                 <td>
                                     @Html.ActionLink("Loan App", "DownloadFile", new { id = item.FileNo, flag = 1 }, new { target = "_blank" })
-
                                 </td>
                                 <td>
                                     @Html.ActionLink("Offer Letter", "DownloadFile", new { id = item.FileNo, flag = 2 }, new { target = "_blank" })
@@ -146,7 +145,7 @@
             PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "filepartialview" }))
                 </div>
             </div>
-        </section>
-    </body>
+     </section>
+</body>
 </html>
 

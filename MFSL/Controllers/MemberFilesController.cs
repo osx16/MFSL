@@ -1,36 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using MFSL.Models;
-using MFSL.Repository;
 using MFSL.ViewModels;
 using System.IO;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
-using System.Data.SqlClient;
-using System.Data.SqlTypes;
 using PagedList;
+using MFSL.Services;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using MFSL.Helpers;
 
 namespace MFSL.Controllers
 {
     public class MemberFilesController : Controller
     {
-        private IFileRepo _repository;
-        private MFSLEntities db = new MFSLEntities();
 
-        public MemberFilesController() : this(new FileRepo()){ }
+        ApiServices _apiServices = new ApiServices();
+        HttpClient client;
+        //The URL of the WEB API Service
+        string url = "http://localhost:64890/api/MemberFilesAPI";
 
-        public MemberFilesController(FileRepo repository)
+        public MemberFilesController()
         {
-            _repository = repository;
+            client = new HttpClient();
+            client.BaseAddress = new Uri(url);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
+        // GET: EmployeeInfo
+        public async Task<ActionResult> Index()
+        {
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetFileForUser");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
 
+                var Employees = JsonConvert.DeserializeObject<List<MemberFile>>(responseData);
+
+                return View(Employees);
+            }
+            return View("Error");
+        }
         public ActionResult RenderInfoView()
         {
             return PartialView("_Info");
@@ -46,66 +59,92 @@ namespace MFSL.Controllers
             return View();
         }
 
-        public ActionResult MyFiles(string memberNo, int? page)
+        public async Task<ActionResult> MyFiles(string memberNo, int? page)
         {
-            ViewBag.MemberNo = memberNo;
             int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
 
-            int id = 0;
-            bool isValid = Int32.TryParse(memberNo, out id);
-
-            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            string UserId = "79a0e692-d36e-455a-bfd9-32ed77c066b4";
-            var memberFile = db.MemberFile.Include(m => m.FileStatus)
-                            .Where(
-                                    x => x.OfficeId.Equals(UserId)
-                                   )
-                            .OrderByDescending(x => x.DateCreated);
-            ViewBag.TotalFiles = memberFile.Count();
-            IPagedList<MemberFile> files = (memberFile).ToPagedList(pageIndex, pageSize);
-
-
             if (!String.IsNullOrEmpty(memberNo))
             {
-                var list = _repository.FetchMyFilesByMemberNo(id, UserId);
-                ViewBag.TotalFiles = list.Count;
-                IPagedList<MemberFile> filteredList = (list).ToPagedList(pageIndex, pageSize);             
-                return PartialView("_MyFileDetails", filteredList);
+                ViewBag.MemberNo = memberNo;
+                int id = 0;
+                bool isValid = Int32.TryParse(memberNo, out id);
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "/GetMyFileByMemberNo/" + id);
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    var resData = responseMsg.Content.ReadAsStringAsync().Result;
+                    var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
+                    ViewBag.TotalFiles = data.Count;
+                    IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
+                    return PartialView("_MyFileDetails", filteredList);
+                }
             }
 
-            return PartialView("_MyFileDetails", files);
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetFileForUser");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                var fileData = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                IPagedList<FileReferences> files = (fileData).ToPagedList(pageIndex, pageSize);
+                ViewBag.TotalFiles = fileData.Count;
+                return PartialView("_MyFileDetails", files);
+            }
+            return View("Error");
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
         // GET: Items
-        public ActionResult SearchFiles(string memberNo, int? page)
+        public async Task<ActionResult> SearchFiles(string memberNo, int? page)
         {
-            ViewBag.MemberNo = memberNo;
             int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
 
-            //if (String.IsNullOrEmpty(memberNo))
-            //{
-            //    throw new ArgumentNullException("memberNo");
-            //}
-            int id = 0;
-            bool isValid = Int32.TryParse(memberNo, out id);
-            var list = _repository.FetchAllMemberFiles();
-            ViewBag.TotalFiles = list.Count;
-            IPagedList<MemberFile> files = (list).ToPagedList(pageIndex, pageSize);
-            
             if (!String.IsNullOrEmpty(memberNo))
             {
-                var lst = _repository.FetchFileByMemberNo(id);
-                ViewBag.TotalFiles = lst.Count;
-                IPagedList<MemberFile> filteredList = (lst).ToPagedList(pageIndex, pageSize);
-                return PartialView("_FileDetails", filteredList);
+                ViewBag.MemberNo = memberNo;
+                int id = 0;
+                bool isValid = Int32.TryParse(memberNo, out id);
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "/GetFileByMemberNo/" + id);
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    var resData = responseMsg.Content.ReadAsStringAsync().Result;
+                    var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
+                    ViewBag.TotalFiles = data.Count;
+                    IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
+                    return PartialView("_FileDetails", filteredList);
+                }
             }
 
-            return PartialView("_FileDetails", files);
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetAll");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                var fileData = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                ViewBag.TotalFiles = fileData.Count;
+                IPagedList<FileReferences> files = (fileData).ToPagedList(pageIndex, pageSize);
+                return PartialView("_FileDetails", files);
+            }
+            return View("Error");
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public async Task<ActionResult> GetMemberInfoByNum(string MemberNum)
+        {
+            int id = 0;
+            bool isValid = Int32.TryParse(MemberNum, out id);
+
+            // var member = db.vnpf_.Where(s => s.VNPF_Number == id);
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetMemberInfoByNo/" + id);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                var fileData = JsonConvert.DeserializeObject<IEnumerable<vnpf_>>(responseData);
+                return PartialView("_MemberInfo", fileData);
+            }
+
+            return View("Error");
         }
 
         public ActionResult NewFile()
@@ -115,7 +154,7 @@ namespace MFSL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult NewFile(
+        public async Task<ActionResult> NewFile(
             [Bind(Include = "MemberNo,LoanApplication,OfferLetter," +
             "LoanAgreement,AcceptanceOffer,GuaranteeCertificate," +
             "Amortisation,ChequeCopy,Eligibility,Quotation,Payslip," +
@@ -124,7 +163,6 @@ namespace MFSL.Controllers
         {
             if (ModelState.IsValid)
             {
-                string UserId = "79a0e692-d36e-455a-bfd9-32ed77c066b4";
                 var LApp = new MemoryStream(); var OL = new MemoryStream(); var LAgrmt = new MemoryStream();
                 var AO = new MemoryStream(); var GC = new MemoryStream(); var Amo = new MemoryStream();
                 var CC = new MemoryStream(); var Elig = new MemoryStream(); var Quote = new MemoryStream();
@@ -140,7 +178,6 @@ namespace MFSL.Controllers
                 ViewBag.MemberNo = File.MemberNo;
                 var NewMemberFile = new MemberFile
                 {
-                    OfficeId = UserId,
                     DateCreated = System.DateTime.Now,
                     MemberNo = File.MemberNo,
                     LoanApplication = LApp.ToArray(),
@@ -159,241 +196,213 @@ namespace MFSL.Controllers
                     FStatusId = 1
                 };
 
-                db.MemberFile.Add(NewMemberFile);
-                try
+                var isSuccess = await _apiServices.CreateNewFile(NewMemberFile);
+
+                if (!isSuccess)
                 {
-                    var result = db.SaveChanges();
-                    if (result > 0)
-                    {
-                    }
+                    ErrorController err = new ErrorController();
+                    err.CouldNotCreateFile();
                 }
-                catch (DbEntityValidationException dbEx)
+                else
                 {
-                    foreach (var validationErrors in dbEx.EntityValidationErrors)
-                    {
-                        foreach (var validationError in validationErrors.ValidationErrors)
-                        {
-                            Trace.TraceInformation("Property: {0} Error: {1}",
-                                                    validationError.PropertyName,
-                                                    validationError.ErrorMessage);
-                        }
-                    }
+                    var isSuccess2 = await _apiServices.CreateNewRef(NewMemberFile);
+
+                    return RedirectToAction("Recent");
                 }
-                return RedirectToAction("Recent");
             }
 
             return View();
         }
 
+        //// GET: MemberFiles/Details/5
+        //public async Task<ActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    MemberFile memberFile = await db.MemberFile.FindAsync(id);
+        //    if (memberFile == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(memberFile);
+        //}
 
-        [AcceptVerbs(HttpVerbs.Get)]
-        public async Task<ActionResult> GetMemberInfoByNum(string MemberNum)
-        {
-            if (String.IsNullOrEmpty(MemberNum))
-            {
-                throw new ArgumentNullException("MemberNum");
-            }
-            int id = 0;
-            bool isValid = Int32.TryParse(MemberNum, out id);
+        //// GET: MemberFiles/Create
+        //public ActionResult Create()
+        //{
+        //    ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus");
+        //    return View();
+        //}
 
-            var member = db.vnpf_.Where(s => s.VNPF_Number == id);
+        //// POST: MemberFiles/Create
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Create([Bind(Include = "FileNo,DateCreated,OfficeId,MemberNo,LoanApplication,OfferLetter,LoanAgreement,AcceptanceOffer,GuaranteeCertificate,Amortisation,ChequeCopy,Eligibility,Quotation,Payslip,LoanStatement,VNPFStatement,Other,fileGUID,FStatusId")] MemberFile memberFile)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.MemberFile.Add(memberFile);
+        //        await db.SaveChangesAsync();
+        //        return RedirectToAction("Index");
+        //    }
 
-            return PartialView("_MemberInfo", await member.ToListAsync());
-        }
+        //    ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus", memberFile.FStatusId);
+        //    return View(memberFile);
+        //}
 
+        //// GET: MemberFiles/Edit/5
+        //public async Task<ActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    MemberFile memberFile = await db.MemberFile.FindAsync(id);
+        //    if (memberFile == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus", memberFile.FStatusId);
+        //    return View(memberFile);
+        //}
 
+        //// POST: MemberFiles/Edit/5
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Edit([Bind(Include = "FileNo,DateCreated,OfficeId,MemberNo,LoanApplication,OfferLetter,LoanAgreement,AcceptanceOffer,GuaranteeCertificate,Amortisation,ChequeCopy,Eligibility,Quotation,Payslip,LoanStatement,VNPFStatement,Other,fileGUID,FStatusId")] MemberFile memberFile)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(memberFile).State = EntityState.Modified;
+        //        await db.SaveChangesAsync();
+        //        return RedirectToAction("Index");
+        //    }
+        //    ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus", memberFile.FStatusId);
+        //    return View(memberFile);
+        //}
 
-        // GET: MemberFiles/Details/5
-        public async Task<ActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            MemberFile memberFile = await db.MemberFile.FindAsync(id);
-            if (memberFile == null)
-            {
-                return HttpNotFound();
-            }
-            return View(memberFile);
-        }
+        //// GET: MemberFiles/Delete/5
+        //public async Task<ActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    MemberFile memberFile = await db.MemberFile.FindAsync(id);
+        //    if (memberFile == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(memberFile);
+        //}
 
-        // GET: MemberFiles/Create
-        public ActionResult Create()
-        {
-            ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus");
-            return View();
-        }
+        //// POST: MemberFiles/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> DeleteConfirmed(int id)
+        //{
+        //    MemberFile memberFile = await db.MemberFile.FindAsync(id);
+        //    db.MemberFile.Remove(memberFile);
+        //    await db.SaveChangesAsync();
+        //    return RedirectToAction("Index");
+        //}
 
-        // POST: MemberFiles/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "FileNo,DateCreated,OfficeId,MemberNo,LoanApplication,OfferLetter,LoanAgreement,AcceptanceOffer,GuaranteeCertificate,Amortisation,ChequeCopy,Eligibility,Quotation,Payslip,LoanStatement,VNPFStatement,Other,fileGUID,FStatusId")] MemberFile memberFile)
-        {
-            if (ModelState.IsValid)
-            {
-                db.MemberFile.Add(memberFile);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
+        //[HttpGet]
+        //public FileStreamResult DownloadFile(string id, string flag)
+        //{
+        //    int FileNo = Convert.ToInt32(id);
+        //    int fileTypeId = Convert.ToInt32(flag);
+        //    string filename = "";
+        //    Dictionary<int, string> FileList = new Dictionary<int, string>();
+        //    FileList.Add(1, "LoanApplication");
+        //    FileList.Add(2, "OfferLetter");
+        //    FileList.Add(3, "LoanAgreement");
+        //    FileList.Add(4, "AcceptanceOffer");
+        //    FileList.Add(5, "GuaranteeCertificate");
+        //    FileList.Add(6, "Amortisation");
+        //    FileList.Add(7, "ChequeCopy");
+        //    FileList.Add(8, "Eligibility");
+        //    FileList.Add(9, "Quotation");
+        //    FileList.Add(10, "Payslip");
+        //    FileList.Add(11, "LoanStatement");
+        //    FileList.Add(12, "VNPFStatement");
+        //    FileList.Add(13, "Other");
 
-            ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus", memberFile.FStatusId);
-            return View(memberFile);
-        }
+        //    if (FileList.ContainsKey(fileTypeId))
+        //    {
+        //        filename = FileList[fileTypeId];
+        //        Console.WriteLine(filename);
+        //    }
 
-        // GET: MemberFiles/Edit/5
-        public async Task<ActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            MemberFile memberFile = await db.MemberFile.FindAsync(id);
-            if (memberFile == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus", memberFile.FStatusId);
-            return View(memberFile);
-        }
+        //    string connectionString = @"Data Source=JAS;Initial Catalog=MFSL;Integrated Security=True;
+        //                              MultipleActiveResultSets=True;Application Name=EntityFramework";
+        //    string commandText = @"SELECT " +filename+ 
+        //                        ".PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM MFSL.dbo.MemberFile WHERE FileNo = @FileNo;";
 
-        // POST: MemberFiles/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "FileNo,DateCreated,OfficeId,MemberNo,LoanApplication,OfferLetter,LoanAgreement,AcceptanceOffer,GuaranteeCertificate,Amortisation,ChequeCopy,Eligibility,Quotation,Payslip,LoanStatement,VNPFStatement,Other,fileGUID,FStatusId")] MemberFile memberFile)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(memberFile).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus", memberFile.FStatusId);
-            return View(memberFile);
-        }
+        //    string serverPath;
+        //    byte[] serverTxn;
+        //    byte[] buffer = new Byte[1024 * 512];
+        //    //byte[] buffer;
 
-        // GET: MemberFiles/Delete/5
-        public async Task<ActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            MemberFile memberFile = await db.MemberFile.FindAsync(id);
-            if (memberFile == null)
-            {
-                return HttpNotFound();
-            }
-            return View(memberFile);
-        }
+        //    using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+        //    {
 
-        // POST: MemberFiles/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
-        {
-            MemberFile memberFile = await db.MemberFile.FindAsync(id);
-            db.MemberFile.Remove(memberFile);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
+        //        try
+        //        {
+        //            sqlConnection.Open();
 
-        [HttpGet]
-        public FileStreamResult DownloadFile(string id, string flag)
-        {
-            int FileNo = Convert.ToInt32(id);
-            int fileTypeId = Convert.ToInt32(flag);
-            string filename = "";
-            Dictionary<int, string> FileList = new Dictionary<int, string>();
-            FileList.Add(1, "LoanApplication");
-            FileList.Add(2, "OfferLetter");
-            FileList.Add(3, "LoanAgreement");
-            FileList.Add(4, "AcceptanceOffer");
-            FileList.Add(5, "GuaranteeCertificate");
-            FileList.Add(6, "Amortisation");
-            FileList.Add(7, "ChequeCopy");
-            FileList.Add(8, "Eligibility");
-            FileList.Add(9, "Quotation");
-            FileList.Add(10, "Payslip");
-            FileList.Add(11, "LoanStatement");
-            FileList.Add(12, "VNPFStatement");
-            FileList.Add(13, "Other");
+        //            SqlTransaction transaction = sqlConnection.BeginTransaction();
+        //            SqlCommand sqlCommand = new SqlCommand();
+        //            sqlCommand.Transaction = transaction;
+        //            sqlCommand.Connection = sqlConnection;
+        //            sqlCommand.CommandText = commandText;
+        //            sqlCommand.Parameters.Add("@FileNo", SqlDbType.Int).Value = FileNo;
 
-            if (FileList.ContainsKey(fileTypeId))
-            {
-                filename = FileList[fileTypeId];
-                Console.WriteLine(filename);
-            }
+        //            using (SqlDataReader reader = sqlCommand.ExecuteReader())
+        //            {
+        //                reader.Read();
+        //                serverPath = reader.GetSqlString(0).Value;
+        //                serverTxn = reader.GetSqlBinary(1).Value;
+        //                reader.Close();
+        //            }
 
-            string connectionString = @"Data Source=JAS;Initial Catalog=MFSL;Integrated Security=True;
-                                      MultipleActiveResultSets=True;Application Name=EntityFramework";
-            string commandText = @"SELECT " +filename+ 
-                                ".PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM MFSL.dbo.MemberFile WHERE FileNo = @FileNo;";
+        //            using (SqlFileStream sqlFileStream = new SqlFileStream(serverPath, serverTxn, FileAccess.Read))
+        //            {
+        //                buffer = new Byte[sqlFileStream.Length];
+        //                sqlFileStream.Read(buffer, 0, buffer.Length);
+        //                sqlFileStream.Close();
+        //            }
 
+        //            sqlCommand.Transaction.Commit();
 
+        //        }
+        //        catch (System.Exception ex)
+        //        {
+        //            Console.WriteLine(ex.ToString());
+        //        }
+        //        finally
+        //        {
+        //            sqlConnection.Close();
+        //        }
 
-            string serverPath;
-            byte[] serverTxn;
-            byte[] buffer = new Byte[1024 * 512];
-            //byte[] buffer;
+        //    }//End of SQL Connection Block
 
-            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
-            {
+        //    return File(new MemoryStream(buffer), "application/pdf");
+        //}//End of DownloadFile Method
 
-                try
-                {
-                    sqlConnection.Open();
-
-                    SqlTransaction transaction = sqlConnection.BeginTransaction();
-                    SqlCommand sqlCommand = new SqlCommand();
-                    sqlCommand.Transaction = transaction;
-                    sqlCommand.Connection = sqlConnection;
-                    sqlCommand.CommandText = commandText;
-                    sqlCommand.Parameters.Add("@FileNo", SqlDbType.Int).Value = FileNo;
-
-                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
-                    {
-                        reader.Read();
-                        serverPath = reader.GetSqlString(0).Value;
-                        serverTxn = reader.GetSqlBinary(1).Value;
-                        reader.Close();
-                    }
-
-                    using (SqlFileStream sqlFileStream = new SqlFileStream(serverPath, serverTxn, FileAccess.Read))
-                    {
-                        buffer = new Byte[sqlFileStream.Length];
-                        sqlFileStream.Read(buffer, 0, buffer.Length);
-                        sqlFileStream.Close();
-                    }
-
-                    sqlCommand.Transaction.Commit();
-
-                }
-                catch (System.Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-                finally
-                {
-                    sqlConnection.Close();
-                }
-
-            }//End of SQL Connection Block
-
-            return File(new MemoryStream(buffer), "application/pdf");
-        }//End of DownloadFile Method
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

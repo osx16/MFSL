@@ -12,13 +12,19 @@ namespace MFSL
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Login", action = "SysUser", id = UrlParameter.Optional }
             );
 
             routes.MapRoute("GetMemberInfoByNum",
                 "memberfiles/getmemberinfobynum/",
                 new { controller = "MemberFiles", action = "GetMemberInfoByNum" },
                 new[] { "MFSL.Controllers" });
+
+            routes.MapRoute("SysUser",
+                "login/sysuser/",
+                new { controller = "Login", action = "SysUser" },
+                new[] { "MFSL.Controllers" });
         }
+
     }
 }
