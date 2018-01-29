@@ -33,20 +33,13 @@ namespace MFSL.Services
             try
             {
                 var response = await client.SendAsync(request);
-
                 var content = await response.Content.ReadAsStringAsync();
-
                 JObject jwtDynamic = JsonConvert.DeserializeObject<dynamic>(content);
-
-                //var accessTokenExpiration = jwtDynamic.Value<DateTime>(".expires");
+                var accessTokenExpiration = jwtDynamic.Value<DateTime>(".expires");
                 var accessToken = jwtDynamic.Value<string>("access_token");
-
-                //Settings.AccessTokenExpirationDate = accessTokenExpiration;
-
+                Settings.AccessTokenExpirationDate = accessTokenExpiration;
                 //Debug.WriteLine(accessTokenExpiration);
-
                 //Debug.WriteLine(content);
-
                 return accessToken;
             }
             catch (Exception ex)
