@@ -30,6 +30,16 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
+
+        //public ActionResult ValidateAccessToken()
+        //{
+        //    if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+        //    {
+        //        return RedirectToAction("SignOut", "Logout");
+        //    }
+        //    //return null;
+        //}
+
         // GET: EmployeeInfo
         public async Task<ActionResult> Index()
         {
@@ -51,16 +61,28 @@ namespace MFSL.Controllers
 
         public ActionResult Dashboard()
         {
+            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
             return View();
         }
 
         public ActionResult Recent()
         {
+            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
             return View();
         }
 
         public async Task<ActionResult> MyFiles(string memberNo, int? page)
         {
+            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
             int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
@@ -97,6 +119,10 @@ namespace MFSL.Controllers
         // GET: Items
         public async Task<ActionResult> SearchFiles(string memberNo, int? page)
         {
+            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
             int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
@@ -132,6 +158,10 @@ namespace MFSL.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> GetMemberInfoByNum(string MemberNum)
         {
+            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
             int id = 0;
             bool isValid = Int32.TryParse(MemberNum, out id);
 
@@ -149,6 +179,10 @@ namespace MFSL.Controllers
 
         public ActionResult NewFile()
         {
+            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
             return View();
         }
 

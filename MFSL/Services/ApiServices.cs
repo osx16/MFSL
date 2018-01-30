@@ -10,11 +10,19 @@ using Newtonsoft.Json.Linq;
 using MFSL.Models;
 using MFSL.ViewModels;
 using MFSL.Helpers;
-
+using MFSL.Controllers;
 namespace MFSL.Services
 {
     public class ApiServices
     {
+        public void ValidateAccessToken()
+        {
+            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                LogoutController LG = new LogoutController();
+                LG.SignOut();
+            }
+        }
         public async Task<string> LoginAsync(string userName, string password)
         {
             var keyValues = new List<KeyValuePair<string, string>>
