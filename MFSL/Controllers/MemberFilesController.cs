@@ -32,15 +32,6 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
 
-        //public ActionResult ValidateAccessToken()
-        //{
-        //    if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
-        //    {
-        //        return RedirectToAction("SignOut", "Logout");
-        //    }
-        //    //return null;
-        //}
-
         // GET: EmployeeInfo
         public async Task<ActionResult> Index()
         {
@@ -84,34 +75,18 @@ namespace MFSL.Controllers
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-
-
-            int FileNo = Convert.ToInt32(id);
-            int FileTypeId = Convert.ToInt32(flag);
-
-            FileDTO fileDTO = new FileDTO();
-            fileDTO.FileNo = FileNo;
-            fileDTO.FileTypeId = FileTypeId;
-            //var json = JsonConvert.SerializeObject(fileDTO);
-            //HttpContent content = new StringContent(json);
-            //content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
             HttpResponseMessage responseMsg = await client.GetAsync(url + "/FetchFile?id="+ id + "&flag=" + flag);
-            //var response = Request.CreateResponse<FileReferences>(HttpStatusCode.Created, item);
             if (responseMsg.IsSuccessStatusCode)
             {
-                var resData = responseMsg.Content.ReadAsByteArrayAsync().Result;
                 try
                 {
-                    //var data = JsonConvert.DeserializeObject<byte[]>(resData);
+                    var resData = responseMsg.Content.ReadAsByteArrayAsync().Result;
                     return File(new MemoryStream(resData), "application/pdf");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
-                
-                //return File(new MemoryStream(data), "application/pdf");
             }
             return RedirectToAction("Error", "NotFound");
 

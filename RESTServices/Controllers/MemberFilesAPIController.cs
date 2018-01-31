@@ -33,7 +33,6 @@ namespace RESTServices.Controllers
         //[ResponseType(typeof(MemberFile))]
         public HttpResponseMessage FetchFile(string id, string flag)
         {
-
             int FileNo = Convert.ToInt32(id);
             int FileTypeId = Convert.ToInt32(flag);
             string filename = "";
@@ -62,19 +61,15 @@ namespace RESTServices.Controllers
                                       MultipleActiveResultSets=True;Application Name=EntityFramework";
             string commandText = @"SELECT " + filename +
                                 ".PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM MFSL.dbo.MemberFile WHERE FileNo = @FileNo;";
-
             string serverPath;
             byte[] serverTxn;
             byte[] buffer = new Byte[1024 * 512];
-            //byte[] buffer;
 
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))
             {
-
                 try
                 {
                     sqlConnection.Open();
-
                     SqlTransaction transaction = sqlConnection.BeginTransaction();
                     SqlCommand sqlCommand = new SqlCommand();
                     sqlCommand.Transaction = transaction;
@@ -113,11 +108,6 @@ namespace RESTServices.Controllers
 
             HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
             result.Content = new ByteArrayContent(buffer);
-            //result.Content.Headers.ContentDisposition =
-            // new ContentDispositionHeaderValue("attachment")
-            // {
-            //     FileName = filename
-            // };
             result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             return result;
         }//End of DownloadFile Method
