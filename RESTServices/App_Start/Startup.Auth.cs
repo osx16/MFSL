@@ -38,7 +38,7 @@ namespace RESTServices
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromSeconds(30),
+                AccessTokenExpireTimeSpan = TimeSpan.FromHours(8),
                 // In production mode set AllowInsecureHttp = false
                 AllowInsecureHttp = true
             };

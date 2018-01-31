@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using MFSL.Helpers;
+using System.Net;
 
 namespace MFSL.Controllers
 {
@@ -61,7 +62,7 @@ namespace MFSL.Controllers
 
         public ActionResult Dashboard()
         {
-            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -76,6 +77,45 @@ namespace MFSL.Controllers
             }
             return View();
         }
+
+        public async Task<ActionResult> FetchFile(string id, string flag)
+        {
+            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
+
+            int FileNo = Convert.ToInt32(id);
+            int FileTypeId = Convert.ToInt32(flag);
+
+            FileDTO fileDTO = new FileDTO();
+            fileDTO.FileNo = FileNo;
+            fileDTO.FileTypeId = FileTypeId;
+            //var json = JsonConvert.SerializeObject(fileDTO);
+            //HttpContent content = new StringContent(json);
+            //content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            HttpResponseMessage responseMsg = await client.GetAsync(url + "/FetchFile?id="+ id + "&flag=" + flag);
+            //var response = Request.CreateResponse<FileReferences>(HttpStatusCode.Created, item);
+            if (responseMsg.IsSuccessStatusCode)
+            {
+                var resData = responseMsg.Content.ReadAsByteArrayAsync().Result;
+                try
+                {
+                    //var data = JsonConvert.DeserializeObject<byte[]>(resData);
+                    return File(new MemoryStream(resData), "application/pdf");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                
+                //return File(new MemoryStream(data), "application/pdf");
+            }
+            return RedirectToAction("Error", "NotFound");
+
+        }//End of DownloadFile Method
 
         public async Task<ActionResult> MyFiles(string memberNo, int? page)
         {
@@ -177,6 +217,8 @@ namespace MFSL.Controllers
             return View("Error");
         }
 
+
+
         public ActionResult NewFile()
         {
             if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
@@ -185,6 +227,7 @@ namespace MFSL.Controllers
             }
             return View();
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -347,88 +390,7 @@ namespace MFSL.Controllers
         //    return RedirectToAction("Index");
         //}
 
-        //[HttpGet]
-        //public FileStreamResult DownloadFile(string id, string flag)
-        //{
-        //    int FileNo = Convert.ToInt32(id);
-        //    int fileTypeId = Convert.ToInt32(flag);
-        //    string filename = "";
-        //    Dictionary<int, string> FileList = new Dictionary<int, string>();
-        //    FileList.Add(1, "LoanApplication");
-        //    FileList.Add(2, "OfferLetter");
-        //    FileList.Add(3, "LoanAgreement");
-        //    FileList.Add(4, "AcceptanceOffer");
-        //    FileList.Add(5, "GuaranteeCertificate");
-        //    FileList.Add(6, "Amortisation");
-        //    FileList.Add(7, "ChequeCopy");
-        //    FileList.Add(8, "Eligibility");
-        //    FileList.Add(9, "Quotation");
-        //    FileList.Add(10, "Payslip");
-        //    FileList.Add(11, "LoanStatement");
-        //    FileList.Add(12, "VNPFStatement");
-        //    FileList.Add(13, "Other");
 
-        //    if (FileList.ContainsKey(fileTypeId))
-        //    {
-        //        filename = FileList[fileTypeId];
-        //        Console.WriteLine(filename);
-        //    }
-
-        //    string connectionString = @"Data Source=JAS;Initial Catalog=MFSL;Integrated Security=True;
-        //                              MultipleActiveResultSets=True;Application Name=EntityFramework";
-        //    string commandText = @"SELECT " +filename+ 
-        //                        ".PathName(), GET_FILESTREAM_TRANSACTION_CONTEXT() FROM MFSL.dbo.MemberFile WHERE FileNo = @FileNo;";
-
-        //    string serverPath;
-        //    byte[] serverTxn;
-        //    byte[] buffer = new Byte[1024 * 512];
-        //    //byte[] buffer;
-
-        //    using (SqlConnection sqlConnection = new SqlConnection(connectionString))
-        //    {
-
-        //        try
-        //        {
-        //            sqlConnection.Open();
-
-        //            SqlTransaction transaction = sqlConnection.BeginTransaction();
-        //            SqlCommand sqlCommand = new SqlCommand();
-        //            sqlCommand.Transaction = transaction;
-        //            sqlCommand.Connection = sqlConnection;
-        //            sqlCommand.CommandText = commandText;
-        //            sqlCommand.Parameters.Add("@FileNo", SqlDbType.Int).Value = FileNo;
-
-        //            using (SqlDataReader reader = sqlCommand.ExecuteReader())
-        //            {
-        //                reader.Read();
-        //                serverPath = reader.GetSqlString(0).Value;
-        //                serverTxn = reader.GetSqlBinary(1).Value;
-        //                reader.Close();
-        //            }
-
-        //            using (SqlFileStream sqlFileStream = new SqlFileStream(serverPath, serverTxn, FileAccess.Read))
-        //            {
-        //                buffer = new Byte[sqlFileStream.Length];
-        //                sqlFileStream.Read(buffer, 0, buffer.Length);
-        //                sqlFileStream.Close();
-        //            }
-
-        //            sqlCommand.Transaction.Commit();
-
-        //        }
-        //        catch (System.Exception ex)
-        //        {
-        //            Console.WriteLine(ex.ToString());
-        //        }
-        //        finally
-        //        {
-        //            sqlConnection.Close();
-        //        }
-
-        //    }//End of SQL Connection Block
-
-        //    return File(new MemoryStream(buffer), "application/pdf");
-        //}//End of DownloadFile Method
 
         //protected override void Dispose(bool disposing)
         //{

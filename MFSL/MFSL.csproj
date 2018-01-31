@@ -1196,6 +1196,7 @@
     <Compile Include="Repository\IFileRepo.cs" />
     <Compile Include="Services\ApiServices.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\FileDTO.cs" />
     <Compile Include="ViewModels\FileViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
   </ItemGroup>
