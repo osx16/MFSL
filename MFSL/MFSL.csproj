@@ -1168,6 +1168,7 @@
     <Content Include="Views\MemberFiles\_MemberInfo.cshtml" />
     <Content Include="Views\Error\CouldNotCreateFile.cshtml" />
     <Content Include="Views\Login\SysUser.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1177,15 +1178,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LogoutController.cs" />
     <Compile Include="Controllers\MemberFilesController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Models\FileReferences.cs" />
     <Compile Include="Models\FileStatus.cs" />
     <Compile Include="Models\MemberFile.cs" />
     <Compile Include="Models\Officers.cs" />
     <Compile Include="Models\PagedLister.cs" />
+    <Compile Include="Models\RegisterBindingModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\vnpf_.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1328,6 +1332,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Logout\" />
+    <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

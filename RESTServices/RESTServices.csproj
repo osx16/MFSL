@@ -231,6 +231,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MemberFilesAPIController.cs" />
+    <Compile Include="Controllers\RolesAPIController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -269,6 +270,7 @@
     <Compile Include="Models\Officers.cs">
       <DependentUpon>MFSLData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserRolesDTO.cs" />
     <Compile Include="Models\vnpf_.cs">
       <DependentUpon>MFSLData.tt</DependentUpon>
     </Compile>
