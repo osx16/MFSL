@@ -106,12 +106,5 @@ namespace MFSL.Controllers
             
             return View();
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult test(string username, string password)
-        {
-            return View();
-        }
     }
 }
