@@ -30,6 +30,10 @@ namespace MFSL.Controllers
         // GET: Account
         public async Task<ActionResult> ActiveUsers()
         {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
             HttpResponseMessage responseMessage = await client.GetAsync(url + "GetUsers");
             if (responseMessage.IsSuccessStatusCode)
             {
@@ -42,6 +46,10 @@ namespace MFSL.Controllers
 
         public async Task<ActionResult> Register()
         {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
 
             HttpResponseMessage responseMessage = await client.GetAsync("http://localhost:64890/api/RolesAPI/GetRoles");
             if (responseMessage.IsSuccessStatusCode)

@@ -35,6 +35,10 @@ namespace MFSL.Controllers
         // GET: EmployeeInfo
         public async Task<ActionResult> Index()
         {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
             HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetFileForUser");
             if (responseMessage.IsSuccessStatusCode)
             {
@@ -48,12 +52,20 @@ namespace MFSL.Controllers
         }
         public ActionResult RenderInfoView()
         {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
             return PartialView("_Info");
         }
 
         public ActionResult Dashboard()
         {
-            if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -62,7 +74,11 @@ namespace MFSL.Controllers
 
         public ActionResult Recent()
         {
-            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -71,7 +87,11 @@ namespace MFSL.Controllers
 
         public async Task<ActionResult> FetchFile(string id, string flag)
         {
-            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -94,7 +114,11 @@ namespace MFSL.Controllers
 
         public async Task<ActionResult> MyFiles(string memberNo, int? page)
         {
-            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -134,7 +158,11 @@ namespace MFSL.Controllers
         // GET: Items
         public async Task<ActionResult> SearchFiles(string memberNo, int? page)
         {
-            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -173,7 +201,11 @@ namespace MFSL.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> GetMemberInfoByNum(string MemberNum)
         {
-            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -192,11 +224,13 @@ namespace MFSL.Controllers
             return View("Error");
         }
 
-
-
         public ActionResult NewFile()
         {
-            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if(Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }

@@ -1183,7 +1183,6 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LogoutController.cs" />
     <Compile Include="Controllers\MemberFilesController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Models\FileReferences.cs" />
     <Compile Include="Models\FileStatus.cs" />
