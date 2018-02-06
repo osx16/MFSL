@@ -17,6 +17,7 @@ namespace RESTServices
         {
             ConfigureAuth(app);
             CreateRolesandUsers();
+            app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
         }
 
         // In this method we will create default User roles and Admin user for login   

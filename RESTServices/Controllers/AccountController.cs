@@ -329,6 +329,13 @@ namespace RESTServices.Controllers
             var Users = db.Officers.OrderByDescending(x=>x.DateCreated).ToList();
             return Users;
         }
+        [Route("GetDetailsForUser")]
+        public Officers GetDetailsForUser()
+        {
+            var UserId = User.Identity.GetUserId();
+            var UserData = db.Officers.Where(o => o.OfficerId == UserId).First();
+            return UserData;
+        }
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]

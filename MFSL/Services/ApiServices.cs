@@ -15,14 +15,6 @@ namespace MFSL.Services
 {
     public class ApiServices
     {
-        public void ValidateAccessToken()
-        {
-            if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
-            {
-                LogoutController LG = new LogoutController();
-                LG.SignOut();
-            }
-        }
         public async Task<string> LoginAsync(string userName, string password)
         {
             var keyValues = new List<KeyValuePair<string, string>>
@@ -106,6 +98,43 @@ namespace MFSL.Services
             }
         }// End of RegisterAsync
 
+        public async Task<Officers> GetDetailsForUser()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
+            try
+            {
+                var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/Account/GetDetailsForUser");
+                var UserData = JsonConvert.DeserializeObject<Officers>(json);
+                return UserData;
+            }
+            catch (HttpRequestException e)
+            {
+                Debug.WriteLine("\nException Caught!");
+                Debug.WriteLine("Message :{0} ", e.Message);
+                return null;
+            }
+        }
+
+        public async Task<string> GetRoleForUser()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
+            try
+            {
+                var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/RolesAPI/GetRoleForThisUser");
+                var UserRole = JsonConvert.DeserializeObject<string>(json);
+
+                return UserRole;
+            }
+            catch (HttpRequestException e)
+            {
+                Debug.WriteLine("\nException Caught!");
+                Debug.WriteLine("Message :{0} ", e.Message);
+                return null;
+            }
+        }
+
         public async Task<List<MemberFile>> FetchFilesForUserAsync()
         {
             var client = new HttpClient();
@@ -124,6 +153,8 @@ namespace MFSL.Services
                 return null;
             }
         }
+
+
 
         public async Task<List<MemberFile>> FetchAllFilesAsync()
         {

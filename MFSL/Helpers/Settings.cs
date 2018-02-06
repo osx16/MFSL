@@ -81,5 +81,29 @@ namespace MFSL.Helpers
             }
         }
 
+        public static string RoleForThisUser
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("RoleForThisUser", "");
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("RoleForThisUser", value);
+            }
+        }
+
+        public static string UserLastName
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("UserLastName", "");
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("UserLastName", value);
+            }
+        }
+
     }
 }
