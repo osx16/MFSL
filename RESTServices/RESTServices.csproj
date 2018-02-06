@@ -271,6 +271,7 @@
       <DependentUpon>MFSLData.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserRolesDTO.cs" />
+    <Compile Include="Models\UsersViewModel.cs" />
     <Compile Include="Models\vnpf_.cs">
       <DependentUpon>MFSLData.tt</DependentUpon>
     </Compile>

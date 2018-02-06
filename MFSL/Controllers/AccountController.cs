@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using MFSL.Models;
 using System.Diagnostics;
+using MFSL.ViewModels;
 
 namespace MFSL.Controllers
 {
@@ -17,7 +18,7 @@ namespace MFSL.Controllers
     {
         HttpClient client;
         //The URL of the WEB API Service
-        string url = "http://localhost:64890/api/RolesAPI";
+        string url = "http://localhost:64890/api/Account/";
         public AccountController()
         {
             client = new HttpClient();
@@ -27,10 +28,22 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
         // GET: Account
+        public async Task<ActionResult> ActiveUsers()
+        {
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetUsers");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                var model = JsonConvert.DeserializeObject<IEnumerable<Officers>>(responseData);
+                return View(model);
+            }
+            return View();
+        }
+
         public async Task<ActionResult> Register()
         {
 
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetRoles");
+            HttpResponseMessage responseMessage = await client.GetAsync("http://localhost:64890/api/RolesAPI/GetRoles");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
@@ -46,15 +59,16 @@ namespace MFSL.Controllers
         {
             if (ModelState.IsValid)
             {
+                model.DateCreated = DateTime.Now;
                 var json = JsonConvert.SerializeObject(model);
                 HttpContent content = new StringContent(json);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-                var response = await client.PostAsync("http://localhost:64890/api/Account/Register", content);
+                var response = await client.PostAsync(url + "Register", content);
                 //Debug.WriteLine(response);
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("MemberFiles","Dashboard");
+                    return RedirectToAction("ActiveUsers");
                 }
                 else
                 {

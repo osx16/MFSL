@@ -1169,6 +1169,7 @@
     <Content Include="Views\Error\CouldNotCreateFile.cshtml" />
     <Content Include="Views\Login\SysUser.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ActiveUsers.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1203,6 +1204,7 @@
     <Compile Include="ViewModels\FileDTO.cs" />
     <Compile Include="ViewModels\FileViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\UsersViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

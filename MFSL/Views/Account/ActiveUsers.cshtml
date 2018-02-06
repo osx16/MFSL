@@ -1,0 +1,85 @@
+﻿@model IEnumerable<MFSL.Models.Officers>
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <ol class="breadcrumb">
+        @*<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#">UI</a></li>*@
+        <li class="active"><i class="fa fa-users fa-lg" aria-hidden="true"></i> | Active Users</li>
+    </ol>
+    <section class="content">
+        <div class="row">
+            <div class="box">
+                <div class="box-header">
+                </div>
+                <div class="table table-striped">
+                    <table class="table">
+                        <thead>
+                            <tr class="success">
+                                <th>
+                                    Officer ID
+                                </th>
+                                <th>
+                                    Member No.
+                                </th>
+                                <th>
+                                    Loan No.
+                                </th>
+                                <th>
+                                    First Name
+                                </th>
+                                <th>
+                                    Middle Name
+                                </th>
+                                <th>
+                                    Last Name
+                                </th>
+                                <th>
+                                    Date Created
+                                </th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OfficerId)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VnpfNo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LoanNo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmpFname)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmpMname)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmpLname)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DateCreated)
+                                    </td>
+                                    @*<td>
+                                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                                    </td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

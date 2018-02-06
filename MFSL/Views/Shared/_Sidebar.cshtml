@@ -29,7 +29,10 @@
                 <a href="@Url.Action("Index", "Home")"><i class="glyphicon glyphicon-search"></i> <span>Advanced Search</span></a>
             </li>
             <li class="@Url.IsLinkActive("Register", "Account")">
-                <a href="@Url.Action("Register", "Account")"><i class="glyphicon glyphicon-plus-sign"></i> <span>Create User</span></a>
+                <a href="@Url.Action("Register", "Account")"><i class="fa fa-user-plus fa-lg" aria-hidden="true"></i> <span>Create User</span></a>
+            </li>
+            <li class="@Url.IsLinkActive("ActiveUsers", "Account")">
+                <a href="@Url.Action("ActiveUsers", "Account")"><i class="fa fa-users fa-lg" aria-hidden="true"></i> <span>Users</span></a>
             </li>
             <li class="@Url.IsLinkActive("Create", "Home")">
                 <a href="@Url.Action("Index", "Home")"><i class="glyphicon glyphicon-user"></i> <span>My Profile</span></a>

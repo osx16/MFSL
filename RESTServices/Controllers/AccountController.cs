@@ -16,6 +16,8 @@ using Microsoft.Owin.Security.OAuth;
 using RESTServices.Models;
 using RESTServices.Providers;
 using RESTServices.Results;
+using System.Linq;
+using System.Diagnostics;
 
 namespace RESTServices.Controllers
 {
@@ -25,9 +27,12 @@ namespace RESTServices.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        ApplicationDbContext context;
+        private MFSLEntities db = new MFSLEntities();
 
         public AccountController()
         {
+            context = new ApplicationDbContext();
         }
 
         public AccountController(ApplicationUserManager userManager,
@@ -318,6 +323,12 @@ namespace RESTServices.Controllers
             return logins;
         }
 
+        [Route("GetUsers")]
+        public IEnumerable<Officers> GetUsers()
+        {
+            var Users = db.Officers.OrderByDescending(x=>x.DateCreated).ToList();
+            return Users;
+        }
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
@@ -338,10 +349,32 @@ namespace RESTServices.Controllers
             else
             {
                 await UserManager.AddToRoleAsync(user.Id,model.UserRoles);
+                Officers NewOfficer = new Officers()
+                {
+                    OfficerId = user.Id,
+                    VnpfNo = model.VnpfNo,
+                    LoanNo = model.LoanNo,
+                    EmpFname = model.EmpFname,
+                    EmpMname = model.EmpMname,
+                    EmpLname = model.EmpLname,
+                    DateCreated = model.DateCreated
+                };
+
+                db.Officers.Add(NewOfficer);
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error Message: " + ex);
+                }
             }
 
             return Ok();
         }
+
+
 
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]

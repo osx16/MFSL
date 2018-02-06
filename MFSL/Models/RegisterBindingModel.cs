@@ -9,7 +9,29 @@ namespace MFSL.Models
     public class RegisterBindingModel
     {
         [Required]
-        [Display(Name = "UserRoles")]
+        [Display(Name = "VNPF No: ")]
+        public int VnpfNo { get; set; }
+
+        [Required]
+        [Display(Name = "Loan No: ")]
+        public int LoanNo { get; set; }
+
+        [Required]
+        [Display(Name = "First Name: ")]
+        public string EmpFname { get; set; }
+
+        [Required]
+        [Display(Name = "Middle Name: ")]
+        public string EmpMname { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name: ")]
+        public string EmpLname { get; set; }
+
+        public DateTime DateCreated { get; set; }
+        //----------------------------------------------
+        [Required]
+        [Display(Name = "User Roles")]
         public string UserRoles { get; set; }
 
         [Required]
@@ -17,7 +39,7 @@ namespace MFSL.Models
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "UserName")]
+        [Display(Name = "Username")]
         public string UserName { get; set; }
 
         [Required]
