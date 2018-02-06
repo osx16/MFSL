@@ -18,9 +18,12 @@
                     <table class="table">
                         <thead>
                             <tr class="success">
+                                                                @*
                                 <th>
-                                    Officer ID
+                                Officer ID
                                 </th>
+                                                                *@
+
                                 <th>
                                     Member No.
                                 </th>
@@ -39,17 +42,18 @@
                                 <th>
                                     Date Created
                                 </th>
-                                <th></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.OfficerId)
-                                    </td>
+                                @*
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OfficerId)
+                                </td>
+                                 *@
+
                                     <td>
                                         @Html.DisplayFor(modelItem => item.VnpfNo)
                                     </td>
