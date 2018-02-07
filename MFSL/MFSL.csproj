@@ -1170,6 +1170,7 @@
     <Content Include="Views\Login\SysUser.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ActiveUsers.cshtml" />
+    <Content Include="Views\User\_UserLastName.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1183,6 +1184,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LogoutController.cs" />
     <Compile Include="Controllers\MemberFilesController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Models\FileReferences.cs" />
     <Compile Include="Models\FileStatus.cs" />
@@ -1334,7 +1336,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Logout\" />
-    <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

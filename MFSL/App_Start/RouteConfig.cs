@@ -24,6 +24,11 @@ namespace MFSL
                 "login/sysuser/",
                 new { controller = "Login", action = "SysUser" },
                 new[] { "MFSL.Controllers" });
+
+            routes.MapRoute("GetRoleForThisUser",
+                "user/getroleforthisuser/",
+                new { controller = "User", action = "GetRoleForThisUser" },
+                new[] { "MFSL.Controllers" });
         }
 
     }

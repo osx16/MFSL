@@ -93,15 +93,15 @@ namespace MFSL.Helpers
             }
         }
 
-        public static string UserLastName
+        public static string UserFirstName
         {
             get
             {
-                return AppSettings.GetValueOrDefault("UserLastName", "");
+                return AppSettings.GetValueOrDefault("UserFirstName", "");
             }
             set
             {
-                AppSettings.AddOrUpdateValue("UserLastName", value);
+                AppSettings.AddOrUpdateValue("UserFirstName", value);
             }
         }
 

@@ -87,7 +87,7 @@ namespace MFSL.Controllers
                     var responseData = responseMsg.Content.ReadAsStringAsync().Result;
 
                     var data = JsonConvert.DeserializeObject<Officers>(responseData);
-                    Settings.UserLastName = data.EmpLname;
+                    Settings.UserFirstName = data.EmpFname;
                 }
 
                 HttpResponseMessage responseMessage = await client.GetAsync(url + "GetRoleForThisUser");

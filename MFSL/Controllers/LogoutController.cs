@@ -21,7 +21,7 @@ namespace MFSL.Controllers
             Settings.Username = "";
             Settings.Password = "";
             Settings.RoleForThisUser = "";
-            Settings.UserLastName = "";
+            Settings.UserFirstName = "";
             return RedirectToAction("SysUser","Login");
         }
     }

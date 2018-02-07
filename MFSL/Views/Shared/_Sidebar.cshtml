@@ -1,4 +1,5 @@
 ﻿@using WebHelpers.Mvc5
+
 <aside class="main-sidebar">
     <section class="sidebar">
         @* BEGIN Search *@
@@ -14,6 +15,31 @@
         </form>*@
         @* END Search *@
         @* BEGIN Menu *@
+        @*USE JQuery Here!!*@
+        <script src="~/Scripts/jquery-3.1.1.js"></script>
+        <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                alert('Jquery executed!');
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetRoleForThisUser"))",
+                    //data: { },
+                    //If success then bind data to dropdownlist
+                    success: function (data) {
+                        @ViewBag.UserRole = data;
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve role');
+                    }
+                });
+            });
+        </script>
+
+        @*@ViewBag.UserRole = @Html.Action("GetRoleForThisUser", "User");
+        @{string UserRole = ViewBag.UserRole;}*@
+
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">M E N U</li>
             <li class="@Url.IsLinkActive("Dashboard", "MemberFiles")">
@@ -28,12 +54,15 @@
             <li class="@Url.IsLinkActive("Create", "Home")">
                 <a href="@Url.Action("Index", "Home")"><i class="glyphicon glyphicon-search"></i> <span>Advanced Search</span></a>
             </li>
-            <li class="@Url.IsLinkActive("Register", "Account")">
-                <a href="@Url.Action("Register", "Account")"><i class="fa fa-user-plus fa-lg" aria-hidden="true"></i> <span>Create User</span></a>
-            </li>
-            <li class="@Url.IsLinkActive("ActiveUsers", "Account")">
-                <a href="@Url.Action("ActiveUsers", "Account")"><i class="fa fa-users fa-lg" aria-hidden="true"></i> <span>Users</span></a>
-            </li>
+            @if (@ViewBag.UserRole == "Admin")
+            {
+                <li class="@Url.IsLinkActive("Register", "Account")">
+                    <a href="@Url.Action("Register", "Account")"><i class="fa fa-user-plus fa-lg" aria-hidden="true"></i> <span>Create User</span></a>
+                </li>
+                <li class="@Url.IsLinkActive("ActiveUsers", "Account")">
+                    <a href="@Url.Action("ActiveUsers", "Account")"><i class="fa fa-users fa-lg" aria-hidden="true"></i> <span>Users</span></a>
+                </li>
+            }
             <li class="@Url.IsLinkActive("Create", "Home")">
                 <a href="@Url.Action("Index", "Home")"><i class="glyphicon glyphicon-user"></i> <span>My Profile</span></a>
             </li>
