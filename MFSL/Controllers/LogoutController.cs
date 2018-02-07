@@ -20,6 +20,8 @@ namespace MFSL.Controllers
             Settings.AccessToken = "";
             Settings.Username = "";
             Settings.Password = "";
+            Settings.RoleForThisUser = "";
+            Settings.UserLastName = "";
             return RedirectToAction("SysUser","Login");
         }
     }
