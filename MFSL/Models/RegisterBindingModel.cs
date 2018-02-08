@@ -20,7 +20,6 @@ namespace MFSL.Models
         [Display(Name = "First Name: ")]
         public string EmpFname { get; set; }
 
-        [Required]
         [Display(Name = "Middle Name: ")]
         public string EmpMname { get; set; }
 
