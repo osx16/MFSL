@@ -37,21 +37,6 @@ namespace MFSL.Controllers
             return PartialView("_UserLastName");
         }
 
-        //public async Task<string> GetRoleForUser()
-        //{
-        //    string role = "";
-        //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
-        //    HttpResponseMessage responseMessage = await client.GetAsync(url + "GetRoleForThisUser");
-        //    if (responseMessage.IsSuccessStatusCode)
-        //    {
-        //        var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-
-        //        role = JsonConvert.DeserializeObject<string>(responseData);
-        //    }
-
-        //    return role;
-        //}
-
         public string GetRoleForThisUser()
         {
             var role = Settings.RoleForThisUser;
