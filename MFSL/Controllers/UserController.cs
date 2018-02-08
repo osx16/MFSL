@@ -27,7 +27,7 @@ namespace MFSL.Controllers
             return View();
         }
 
-        public ActionResult RenderUserLastName()
+        public ActionResult RenderUserFrstName()
         {
             if (Settings.AccessToken == "")
             {

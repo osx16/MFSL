@@ -1159,8 +1159,6 @@
     <Content Include="Views\MemberFiles\_FileUpload.cshtml" />
     <Content Include="Views\MemberFiles\Dashboard.cshtml" />
     <Content Include="Views\MemberFiles\_FileDetails.cshtml" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\MemberFiles\_Info.cshtml" />
     <Content Include="Views\MemberFiles\RecentlyAdded.cshtml" />
     <Content Include="Views\MemberFiles\Recent.cshtml" />
@@ -1171,6 +1169,8 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ActiveUsers.cshtml" />
     <Content Include="Views\User\_UserLastName.cshtml" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.1.1.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
