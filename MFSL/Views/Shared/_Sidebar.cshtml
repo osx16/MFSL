@@ -20,12 +20,15 @@
             <li class="@Url.IsLinkActive("Dashboard", "MemberFiles")">
                 <a href="@Url.Action("Dashboard", "MemberFiles")"><i class="glyphicon glyphicon-home"></i> <span>Home</span></a>
             </li>
-            <li class="@Url.IsLinkActive("NewFile", "MemberFiles")">
-                <a href="@Url.Action("NewFile", "MemberFiles")"><i class="glyphicon glyphicon-file"></i> <span>New</span></a>
-            </li>
-            <li class="@Url.IsLinkActive("Recent", "MemberFiles")">
-                <a href="@Url.Action("Recent", "MemberFiles")"><i class="glyphicon glyphicon-time"></i> <span>History</span></a>
-            </li>
+            @if (UserRole == "Admin" || UserRole == "Employee")
+            {
+                <li class="@Url.IsLinkActive("NewFile", "MemberFiles")">
+                    <a href="@Url.Action("NewFile", "MemberFiles")"><i class="glyphicon glyphicon-file"></i> <span>New</span></a>
+                </li>
+                <li class="@Url.IsLinkActive("Recent", "MemberFiles")">
+                    <a href="@Url.Action("Recent", "MemberFiles")"><i class="glyphicon glyphicon-time"></i> <span>History</span></a>
+                </li>
+            }
             <li class="@Url.IsLinkActive("Create", "Home")">
                 <a href="@Url.Action("Index", "Home")"><i class="glyphicon glyphicon-search"></i> <span>Advanced Search</span></a>
             </li>
@@ -41,11 +44,8 @@
                     <a href="@Url.Action("ActiveUsers", "Account")"><i class="fa fa-users fa-lg" aria-hidden="true"></i> <span>Users</span></a>
                 </li>
             }
-            <li class="@Url.IsLinkActive("Create", "Home")">
-                <a href="@Url.Action("Index", "Home")"><i class="glyphicon glyphicon-user"></i> <span>My Profile</span></a>
-            </li>
             <li class="@Url.IsLinkActive("SignOut", "Logout")">
-                <a href="@Url.Action("SignOut", "Logout")"><i class="glyphicon glyphicon-off"></i> <span>Sign-Out</span></a>
+                <a href="@Url.Action("SignOut", "Logout")"><i class="glyphicon glyphicon-off"></i> <span>Sign Out</span></a>
             </li>
             @*<li class="@Url.IsLinkActive("AnotherLink", "Home")">
                 <a href="@Url.Action("AnotherLink", "Home")"><i class="fa fa-link"></i> <span>Another Link</span></a>

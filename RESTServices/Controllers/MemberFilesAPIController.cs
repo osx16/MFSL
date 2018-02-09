@@ -30,7 +30,6 @@ namespace RESTServices.Controllers
 
         [HttpGet]
         [Route("api/MemberFilesAPI/FetchFile/")]
-        //[ResponseType(typeof(MemberFile))]
         public HttpResponseMessage FetchFile(string id, string flag)
         {
             int FileNo = Convert.ToInt32(id);
@@ -93,7 +92,6 @@ namespace RESTServices.Controllers
                     }
 
                     sqlCommand.Transaction.Commit();
-
                 }
                 catch (System.Exception ex)
                 {

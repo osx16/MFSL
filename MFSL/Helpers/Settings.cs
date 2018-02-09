@@ -104,6 +104,64 @@ namespace MFSL.Helpers
                 AppSettings.AddOrUpdateValue("UserFirstName", value);
             }
         }
+        public static string UserMidName
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("UserMidName", "");
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("UserMidName", value);
+            }
+        }
+        public static string UserLastName
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("UserLastName", "");
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("UserLastName", value);
+            }
+        }
+
+        public static int VNPFNo
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("VNPFNo", 0);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("VNPFNo", value);
+            }
+        }
+
+        public static int LoanNo
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("LoanNo", 0);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("LoanNo", value);
+            }
+        }
+
+        public static DateTime DateRegistered
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("DateRegistered", DateTime.Now);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("DateRegistered", value);
+            }
+        }
 
     }
 }

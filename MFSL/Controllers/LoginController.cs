@@ -88,6 +88,11 @@ namespace MFSL.Controllers
 
                     var data = JsonConvert.DeserializeObject<Officers>(responseData);
                     Settings.UserFirstName = data.EmpFname;
+                    Settings.UserMidName = data.EmpMname;
+                    Settings.UserLastName = data.EmpLname;
+                    Settings.VNPFNo = data.VnpfNo;
+                    Settings.LoanNo = data.LoanNo;
+                    Settings.DateRegistered = data.DateCreated;
                 }
 
                 HttpResponseMessage responseMessage = await client.GetAsync(url + "GetRoleForThisUser");
