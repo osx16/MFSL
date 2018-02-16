@@ -5,9 +5,8 @@
 </head>
     <body>
         <ol class="breadcrumb">
-            @*<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">UI</a></li>*@
-            <li class="active"><i class="fa fa-user-plus fa-lg" aria-hidden="true"></i> | Create User</li>
+            <li><i class="fa fa-users"></i> Accounts</li>
+            <li class="active"><i class="fa fa-user-plus" aria-hidden="true"></i> Create User</li>
         </ol>
         @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {

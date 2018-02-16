@@ -85,5 +85,52 @@ namespace MFSL.Controllers
             }
             return View();
         }
+
+        public ActionResult ForgotPassword()
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(model);
+                HttpContent content = new StringContent(json);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                var response = await client.PostAsync(url + "ForgotPassword", content);
+                //Debug.WriteLine(response);
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("ForgotPasswordConfirmation");
+                }
+                else
+                {
+                    return RedirectToAction("InternalServerError", "Error");
+                }
+
+                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                // Send an email with this link
+                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public ActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
     }
 }

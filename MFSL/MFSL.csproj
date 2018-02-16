@@ -1172,6 +1172,8 @@
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\User\_UserProfile.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1189,6 +1191,7 @@
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Models\FileReferences.cs" />
     <Compile Include="Models\FileStatus.cs" />
+    <Compile Include="Models\ForgotPasswordViewModel.cs" />
     <Compile Include="Models\MemberFile.cs" />
     <Compile Include="Models\Officers.cs" />
     <Compile Include="Models\PagedLister.cs" />

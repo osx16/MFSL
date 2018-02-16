@@ -18,6 +18,9 @@ using RESTServices.Providers;
 using RESTServices.Results;
 using System.Linq;
 using System.Diagnostics;
+using System.Net.Mail;
+using SendGrid.Helpers.Mail;
+using System.Net.Mime;
 
 namespace RESTServices.Controllers
 {
@@ -27,6 +30,7 @@ namespace RESTServices.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private ApplicationUserManager.EmailService _emailService;
         ApplicationDbContext context;
         private MFSLEntities db = new MFSLEntities();
 
@@ -128,8 +132,7 @@ namespace RESTServices.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
-                model.NewPassword);
+            IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,model.NewPassword);
             
             if (!result.Succeeded)
             {
@@ -337,7 +340,6 @@ namespace RESTServices.Controllers
             return UserData;
         }
         // POST api/Account/Register
-        [AllowAnonymous]
         [Route("Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
@@ -381,7 +383,76 @@ namespace RESTServices.Controllers
             return Ok();
         }
 
+        [NonAction]
+        public void SendEmailNotification(String emailbody, string emailAddress)
+        {
+            MailMessage mailMessage = new MailMessage("samsamson2016@gmail.com", emailAddress);
+            mailMessage.Subject = "[NO REPLY] Password Reset";
+            mailMessage.Body = emailbody;
 
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new System.Net.NetworkCredential()
+            {
+                UserName = "samsamson2016@gmail.com",
+                Password = "1215Jean.b45"
+            };
+            smtpClient.EnableSsl = true;
+            smtpClient.Send(mailMessage);
+        }
+
+        // POST: /Account/ForgotPassword
+        [Route("ForgotPassword")]
+        public async Task<IHttpActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                //if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                //{
+                //    // Don't reveal that the user does not exist or is not confirmed
+                //    return Ok();
+                //}
+
+                if (user == null)
+                {
+                    return Ok();
+                }
+
+                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                // Send an email with this link
+                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                string EmailBody = $"Please reset your password by using this {code}";
+                string DestEmail = user.Email;
+                //await UserManager.SendEmailAsync(user.Id, "Reset Password", $"Please reset your password by using this {code}");
+                try
+                {
+                    //IdentityMessage obj = new IdentityMessage()
+                    //{
+                    //    Destination = DestEmail,
+                    //    Subject = Subject,
+                    //    Body = EmailBody
+                    //};
+                    //await _userManager.SendEmailAsync(user.Id,Subject,EmailBody);
+                    SendEmailNotification(EmailBody,DestEmail);
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
+                return BadRequest();
+            }
+
+            // If we got this far, something failed, redisplay form
+            return BadRequest(ModelState);
+        }
 
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]

@@ -7,7 +7,8 @@
     <ol class="breadcrumb">
         @*<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li><a href="#">UI</a></li>*@
-        <li class="active"><i class="fa fa-users fa-lg" aria-hidden="true"></i> | Active Users</li>
+        <li><i class="fa fa-users"></i> Accounts</li>
+        <li class="active"><i class="fa fa-user" aria-hidden="true"></i> Active Users</li>
     </ol>
     <section class="content">
         <div class="row">
@@ -23,14 +24,13 @@
                                 Officer ID
                                 </th>
 
-
-                                <th>
-                                    Member No.
-                                </th>
                                 <th>
                                     Loan No.
                                 </th>
                                                                 *@
+                                <th>
+                                    Member No.
+                                </th>
                                 <th>
                                     First Name
                                 </th>
@@ -54,6 +54,9 @@
                                     @Html.DisplayFor(modelItem => item.OfficerId)
                                 </td>
                                  *@
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VnpfNo)
+                                    </td>
 
                                     @*<td>
                                         @Html.DisplayFor(modelItem => item.VnpfNo)
