@@ -1174,6 +1174,8 @@
     <Content Include="Views\User\_UserProfile.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1198,6 +1200,7 @@
     <Compile Include="Models\PagedLister.cs" />
     <Compile Include="Models\PasswordConfigModel.cs" />
     <Compile Include="Models\RegisterBindingModel.cs" />
+    <Compile Include="Models\ResetPasswordViewModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserDetails.cs" />
     <Compile Include="Models\vnpf_.cs" />

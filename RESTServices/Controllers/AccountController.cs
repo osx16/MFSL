@@ -427,41 +427,14 @@ namespace RESTServices.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByEmailAsync(model.Email);
-                //if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-                //{
-                //    // Don't reveal that the user does not exist or is not confirmed
-                //    return Ok();
-                //}
 
                 if (user == null)
                 {
                     return BadRequest();
                 }
-
-                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
-
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-
-                //string EmailBody = $"Please reset your password by using this {code}";
-                //string EmailBody = "Testing Email for MFSL File System. Thank you.";
-                //string DestEmail = user.Email;
-                //await UserManager.SendEmailAsync(user.Id, "Reset Password", $"Please reset your password by using this {code}");
                 try
                 {
-                    //IdentityMessage obj = new IdentityMessage()
-                    //{
-                    //    Destination = DestEmail,
-                    //    Subject = Subject,
-                    //    Body = EmailBody
-                    //};
-                    //await _userManager.SendEmailAsync(user.Id,Subject,EmailBody);
-                    //SendEmailNotification(EmailBody,DestEmail);
                     PasswordConfigModel config = new PasswordConfigModel()
                     {
                         UserId = user.Id,
@@ -477,9 +450,30 @@ namespace RESTServices.Controllers
 
                 return BadRequest();
             }
-
             // If we got this far, something failed, redisplay form
             return BadRequest(ModelState);
+        }
+
+        [Route("ResetPassword")]
+        public async Task<IHttpActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var user = await UserManager.FindByNameAsync(model.Email);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist
+                return BadRequest();
+            }
+            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            var ErrorMsg = result.Errors.FirstOrDefault();
+            return BadRequest(ErrorMsg);
         }
 
         // POST api/Account/RegisterExternal

@@ -15,6 +15,7 @@ namespace MFSL.Controllers
             MailMessage mailMessage = new MailMessage("samsamson2016@gmail.com", emailAddress);
             mailMessage.Subject = "System Email Testing";
             mailMessage.Body = emailbody;
+            //mailMessage.IsBodyHtml = true;
 
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
             smtpClient.UseDefaultCredentials = false;

@@ -119,9 +119,10 @@ namespace MFSL.Controllers
                         try
                         {
                             EmailController email = new EmailController();
-                            email.SendEmailNotification(callbackUrl, model.Email);
+                            string EmailBody = "Please reset your password by clicking this url: " + callbackUrl;
+                            email.SendEmailNotification(EmailBody, model.Email);
                         }
-                        catch (Exception ex) { Debug.WriteLine(ex.Message); }
+                        catch (Exception ex) { Debug.WriteLine(ex.Message); return RedirectToAction("InternalServerError", "Error"); }
                         // return RedirectToAction("ForgotPasswordConfirmation", "Account");
                         return RedirectToAction("ForgotPasswordConfirmation");
                     }
@@ -135,21 +136,7 @@ namespace MFSL.Controllers
                     Debug.WriteLine("\nException Caught!");
                     Debug.WriteLine("Message :{0} ", e.Message);
                 }
-
-                //string UserEmail = model.Email;
-                ////var response = await client.GetAsync(url + "ForgotPassword");
-                //var response = await client.GetAsync(url + "GetPwdConfig/" + UserEmail);
-                ////Debug.WriteLine(response);
-
-
-                //// For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                //// Send an email with this link
-                //// string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                //// var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                //// await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                //// return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
-
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -158,5 +145,52 @@ namespace MFSL.Controllers
         {
             return View();
         }
+
+        // GET: /Account/ResetPassword
+        [AllowAnonymous]
+        public ActionResult ResetPassword(string code)
+        {
+            return code == null ? View("Error") : View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(model);
+                HttpContent content = new StringContent(json);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                try
+                {
+                    var Response = await client.PostAsync(url + "ResetPassword", content);
+                    //Debug.WriteLine(response);
+                    if (Response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("ResetPasswordConfirmation", "Account");
+                    }
+                    else
+                    {
+                        return RedirectToAction("InternalServerError", "Error");
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    Debug.WriteLine("\nException Caught!");
+                    Debug.WriteLine("Message :{0} ", e.Message);
+                }
+            }
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public ActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
     }
 }
