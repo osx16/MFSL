@@ -30,7 +30,6 @@ namespace RESTServices.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
-        private ApplicationUserManager.EmailService _emailService;
         ApplicationDbContext context;
         private MFSLEntities db = new MFSLEntities();
 
