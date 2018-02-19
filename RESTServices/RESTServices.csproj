@@ -274,6 +274,7 @@
     <Compile Include="Models\Officers.cs">
       <DependentUpon>MFSLData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PasswordConfigModel.cs" />
     <Compile Include="Models\UserRolesDTO.cs" />
     <Compile Include="Models\UsersViewModel.cs" />
     <Compile Include="Models\vnpf_.cs">

@@ -1184,6 +1184,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LogoutController.cs" />
     <Compile Include="Controllers\MemberFilesController.cs" />
@@ -1195,6 +1196,7 @@
     <Compile Include="Models\MemberFile.cs" />
     <Compile Include="Models\Officers.cs" />
     <Compile Include="Models\PagedLister.cs" />
+    <Compile Include="Models\PasswordConfigModel.cs" />
     <Compile Include="Models\RegisterBindingModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserDetails.cs" />
@@ -1339,6 +1341,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Email\" />
     <Folder Include="Views\Logout\" />
   </ItemGroup>
   <ItemGroup>

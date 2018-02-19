@@ -328,7 +328,7 @@ namespace RESTServices.Controllers
 
         [Route("GetUsers")]
         public IEnumerable<Officers> GetUsers()
-        {
+        { 
             var Users = db.Officers.OrderByDescending(x=>x.DateCreated).ToList();
             return Users;
         }
@@ -387,7 +387,7 @@ namespace RESTServices.Controllers
         public void SendEmailNotification(String emailbody, string emailAddress)
         {
             MailMessage mailMessage = new MailMessage("samsamson2016@gmail.com", emailAddress);
-            mailMessage.Subject = "[NO REPLY] Password Reset";
+            mailMessage.Subject = "System Email Testing";
             mailMessage.Body = emailbody;
 
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
@@ -399,6 +399,25 @@ namespace RESTServices.Controllers
             };
             smtpClient.EnableSsl = true;
             smtpClient.Send(mailMessage);
+        }
+
+        [HttpGet]
+        [Route("GetPwdConfig/UserEmail")]
+        public async Task<PasswordConfigModel> GetUserPwdConfig([FromUri]string UserEmail)
+        {
+            var user = await UserManager.FindByEmailAsync(UserEmail);
+            if (user == null)
+            {
+                return null;
+            }
+            string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            var UserId = user.Id;
+            PasswordConfigModel model = new PasswordConfigModel()
+            {
+                Code = code,
+                UserId = UserId
+            };
+            return model;    
         }
 
         // POST: /Account/ForgotPassword
@@ -416,7 +435,7 @@ namespace RESTServices.Controllers
 
                 if (user == null)
                 {
-                    return Ok();
+                    return BadRequest();
                 }
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -427,8 +446,11 @@ namespace RESTServices.Controllers
                 // return RedirectToAction("ForgotPasswordConfirmation", "Account");
 
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                string EmailBody = $"Please reset your password by using this {code}";
-                string DestEmail = user.Email;
+                //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+
+                //string EmailBody = $"Please reset your password by using this {code}";
+                //string EmailBody = "Testing Email for MFSL File System. Thank you.";
+                //string DestEmail = user.Email;
                 //await UserManager.SendEmailAsync(user.Id, "Reset Password", $"Please reset your password by using this {code}");
                 try
                 {
@@ -439,8 +461,14 @@ namespace RESTServices.Controllers
                     //    Body = EmailBody
                     //};
                     //await _userManager.SendEmailAsync(user.Id,Subject,EmailBody);
-                    SendEmailNotification(EmailBody,DestEmail);
-                    return Ok();
+                    //SendEmailNotification(EmailBody,DestEmail);
+                    PasswordConfigModel config = new PasswordConfigModel()
+                    {
+                        UserId = user.Id,
+                        Code = code
+                    };
+
+                    return Ok(config);
                 }
                 catch (Exception ex)
                 {
