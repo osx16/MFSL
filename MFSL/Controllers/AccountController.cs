@@ -141,6 +141,7 @@ namespace MFSL.Controllers
 
         public ActionResult ForgotPasswordConfirmation()
         {
+            ViewBag.Seconds = System.DateTime.UtcNow.Second;
             return View();
         }
 
