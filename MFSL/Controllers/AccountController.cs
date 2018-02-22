@@ -22,6 +22,7 @@ namespace MFSL.Controllers
     /// 4. ForgotPasswordConfirmation - View to confirm password reset
     /// 5. ResetPassword - Reset Password View
     /// 6. ResetPasswordConfirmation - View for reset password confirmation
+    /// 7. ResetPasswordError - Returns ResetPasswordError View
     /// </summary>
     public class AccountController : Controller
     {
@@ -185,7 +186,7 @@ namespace MFSL.Controllers
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
-            return code == null ? View("Error") : View();
+            return code == null ? View("ResetPasswordError") : View();
         }
 
         /// <summary>
@@ -214,7 +215,7 @@ namespace MFSL.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("InternalServerError", "Error");
+                        return RedirectToAction("ResetPasswordError", "Account");
                     }
                 }
                 catch (HttpRequestException e)
@@ -231,6 +232,14 @@ namespace MFSL.Controllers
         /// </summary>
         /// <returns>ResetPasswordConfirmation view</returns>
         public ActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+        /// <summary>
+        /// Returns Reset Password Error View
+        /// </summary>
+        /// <returns>Reset Password Error View</returns>
+        public ActionResult ResetPasswordError()
         {
             return View();
         }

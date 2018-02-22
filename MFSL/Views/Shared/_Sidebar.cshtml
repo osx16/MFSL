@@ -20,7 +20,7 @@
             <li class="@Url.IsLinkActive("Dashboard", "MemberFiles")">
                 <a href="@Url.Action("Dashboard", "MemberFiles")"><i class="glyphicon glyphicon-home"></i> <span>Home</span></a>
             </li>
-            @if (UserRole == "Admin" || UserRole == "Employee")
+            @if (UserRole == "Admin" || UserRole == "Employee" || UserRole == "Manager")
             {
                 <li class="@Url.IsLinkActive("NewFile", "MemberFiles")">
                     <a href="@Url.Action("NewFile", "MemberFiles")"><i class="glyphicon glyphicon-file"></i> <span>New</span></a>
