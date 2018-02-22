@@ -72,6 +72,7 @@ namespace MFSL.Controllers
             var client = new HttpClient();
             try
             {
+                //call to web api service
                 var response = await client.SendAsync(request);
                 var content = await response.Content.ReadAsStringAsync();
                 JObject jwtDynamic = JsonConvert.DeserializeObject<dynamic>(content);
