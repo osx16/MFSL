@@ -15,40 +15,11 @@ namespace MFSL.Services
 {
     public class ApiServices
     {
-        public async Task<string> LoginAsync(string userName, string password)
-        {
-            var keyValues = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("username", userName),
-                new KeyValuePair<string, string>("password", password),
-                new KeyValuePair<string, string>("grant_type", "password")
-            };
-
-            var request = new HttpRequestMessage(
-                HttpMethod.Post, Constants.BaseApiAddress + "Token");
-
-            request.Content = new FormUrlEncodedContent(keyValues);
-
-            var client = new HttpClient();
-            try
-            {
-                var response = await client.SendAsync(request);
-                var content = await response.Content.ReadAsStringAsync();
-                JObject jwtDynamic = JsonConvert.DeserializeObject<dynamic>(content);
-                var accessTokenExpiration = jwtDynamic.Value<DateTime>(".expires");
-                var accessToken = jwtDynamic.Value<string>("access_token");
-                Settings.AccessTokenExpirationDate = accessTokenExpiration;
-                //Debug.WriteLine(accessTokenExpiration);
-                //Debug.WriteLine(content);
-                return accessToken;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
+        /// <summary>
+        /// Task Method for posting new member file to web api
+        /// </summary>
+        /// <param name="model"> Member File</param>
+        /// <returns>Boolean</returns>
         public async Task<bool> CreateNewFile(MemberFile model)
         {
             var client = new HttpClient();
@@ -72,6 +43,11 @@ namespace MFSL.Services
             }
         }// End of RegisterAsync
 
+        /// <summary>
+        /// Task method for posting new file reference to web api
+        /// </summary>
+        /// <param name="model">MemberFile</param>
+        /// <returns>Boolean</returns>
         public async Task<bool> CreateNewRef(MemberFile model)
         {
             var client = new HttpClient();
@@ -97,85 +73,5 @@ namespace MFSL.Services
                 return false;
             }
         }// End of RegisterAsync
-
-        public async Task<Officers> GetDetailsForUser()
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
-            try
-            {
-                var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/Account/GetDetailsForUser");
-                var UserData = JsonConvert.DeserializeObject<Officers>(json);
-                return UserData;
-            }
-            catch (HttpRequestException e)
-            {
-                Debug.WriteLine("\nException Caught!");
-                Debug.WriteLine("Message :{0} ", e.Message);
-                return null;
-            }
-        }
-
-        public async Task<string> GetRoleForUser()
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
-            try
-            {
-                var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/RolesAPI/GetRoleForThisUser");
-                var UserRole = JsonConvert.DeserializeObject<string>(json);
-
-                return UserRole;
-            }
-            catch (HttpRequestException e)
-            {
-                Debug.WriteLine("\nException Caught!");
-                Debug.WriteLine("Message :{0} ", e.Message);
-                return null;
-            }
-        }
-
-        public async Task<List<MemberFile>> FetchFilesForUserAsync()
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
-            try
-            {
-                var json = await client.GetStringAsync (Constants.BaseApiAddress + "api/MemberFilesAPI/GetFileForUser");
-                var Files = JsonConvert.DeserializeObject<List<MemberFile>>(json);
-
-                return Files;
-            }
-            catch (HttpRequestException e)
-            {
-                Debug.WriteLine("\nException Caught!");
-                Debug.WriteLine("Message :{0} ", e.Message);
-                return null;
-            }
-        }
-
-
-
-        public async Task<List<MemberFile>> FetchAllFilesAsync()
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
-
-            var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/MemberFilesAPI/FetchAll");
-            var Files = JsonConvert.DeserializeObject<List<MemberFile>>(json);
-
-            return Files;
-        }
-
-        public async Task<List<FileReferences>> GetFileByMemberNo(int MemberNo)
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
-
-            var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/MemberFilesAPI/GetFileByMemberNo/"+ MemberNo);
-            var Files = JsonConvert.DeserializeObject<List<FileReferences>>(json);
-
-            return Files;
-        }
     }
 }

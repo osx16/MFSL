@@ -20,7 +20,7 @@ namespace MFSL.Controllers
     /// 1. RenderInfoView - Renders brief info about customer
     /// 2. Dashboard - Renders Dashboard of the system
     /// 3. Recent - Renders history of files created by an officer
-    /// 4. FetchFile - Fetch a particular file based on number and type
+    /// 4. FetchFile - Fetch a particular file based on number and file type
     /// 5. MyFiles - Search facility for an officer's files
     /// 6. SearchFiles - Search facility for all customer files
     /// 7. GetMemberInfoByNum - Gets member details by member number
