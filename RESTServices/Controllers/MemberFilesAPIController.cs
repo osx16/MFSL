@@ -22,12 +22,20 @@ namespace RESTServices.Controllers
         private MFSLEntities db = new MFSLEntities();
         private string OfficerID = System.Web.HttpContext.Current.User.Identity.GetUserId();
 
+        /// <summary>
+        /// Gets all File References for all Customers
+        /// </summary>
         [Route("api/MemberFilesAPI/GetAll")]
         public IQueryable<FileReferences> GetAllMemberFile()
         {
             return db.FileReferences;
         }
 
+        /// <summary>
+        /// Fetch specific file for a user based on File Id and Flag
+        /// </summary>
+        /// <param name="id">File Id</param>
+        /// <param name="flag">Flag indicates type of document</param>
         [HttpGet]
         [Route("api/MemberFilesAPI/FetchFile/")]
         public HttpResponseMessage FetchFile(string id, string flag)
@@ -110,6 +118,9 @@ namespace RESTServices.Controllers
             return result;
         }//End of DownloadFile Method
 
+        /// <summary>
+        /// Get file references created by current user
+        /// </summary>
         [Route("api/MemberFilesAPI/GetFileForUser")]
         public IQueryable<FileReferences> GetFileForUser()
         {
@@ -118,38 +129,36 @@ namespace RESTServices.Controllers
                                     .OrderByDescending(x=>x.DateCreated);
         }
 
+        /// <summary>
+        /// Get file reference(s) for member
+        /// </summary>
+        /// <param name="MemberNo">Member No</param>
         [Route("api/MemberFilesAPI/GetFileByMemberNo/{MemberNo:int}")]
         public IQueryable<FileReferences> GetFileByMemberNo(int MemberNo)
         {
             var data = db.FileReferences.Where(x => x.MemberNo == MemberNo);
             return data;
         }
-
+        /// <summary>
+        /// Get file references for member by member no under an officer 
+        /// </summary>
+        /// <param name="MemberNo"> Member No</param>
+        /// <returns></returns>
         [Route("api/MemberFilesAPI/GetMyFileByMemberNo/{MemberNo:int}")]
         public IQueryable<FileReferences> GetMyFileByMemberNo(int MemberNo)
         {
             var UserId = User.Identity.GetUserId();
             return db.FileReferences.Where(x => x.MemberNo == MemberNo && x.OfficerId == UserId);
         }
-
+        /// <summary>
+        /// Get member info by member number
+        /// </summary>
+        /// <param name="MemberNo"> Member Number</param>
         [Route("api/MemberFilesAPI/GetMemberInfoByNo/{MemberNo:int}")]
         //[ResponseType(typeof(MemberFile))]
         public IEnumerable<vnpf_> GetMemberInfoByNo(int MemberNo)
         {
             return db.vnpf_.Where(f => f.VNPF_Number == MemberNo);
-        }
-
-        // GET: api/MemberFilesAPI/5
-        [ResponseType(typeof(MemberFile))]
-        public IHttpActionResult GetMemberFile(int id)
-        {
-            MemberFile memberFile = db.MemberFile.Find(id);
-            if (memberFile == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(memberFile);
         }
 
         // PUT: api/MemberFilesAPI/5
@@ -188,6 +197,11 @@ namespace RESTServices.Controllers
         }
 
         // POST: api/MemberFilesAPI
+        /// <summary>
+        /// Post new member file to database
+        /// </summary>
+        /// <param name="memberFile">MembeFile</param>
+        /// <returns></returns>
         [ResponseType(typeof(MemberFile))]
         public IHttpActionResult PostMemberFile(MemberFile memberFile)
         {
@@ -202,7 +216,11 @@ namespace RESTServices.Controllers
 
             return CreatedAtRoute("DefaultApi", new { id = memberFile.FileNo }, memberFile);
         }
-
+        /// <summary>
+        /// Post new file reference for customer to database
+        /// </summary>
+        /// <param name="fileRef"></param>
+        /// <returns></returns>
         [Route("api/MemberFilesAPI/PostReference")]
         [ResponseType(typeof(MemberFile))]
         public IHttpActionResult PostReference(FileReferences fileRef)

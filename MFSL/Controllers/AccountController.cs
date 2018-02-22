@@ -14,6 +14,15 @@ using MFSL.ViewModels;
 
 namespace MFSL.Controllers
 {
+    /// <summary>
+    /// Controller Methods:
+    /// 1. ActiveUsers - Get list of active userse
+    /// 2. Register - Register new user
+    /// 3. ForgotPassword - For resetting new password for user
+    /// 4. ForgotPasswordConfirmation - View to confirm password reset
+    /// 5. ResetPassword - Reset Password View
+    /// 6. ResetPasswordConfirmation - View for reset password confirmation
+    /// </summary>
     public class AccountController : Controller
     {
         HttpClient client;
@@ -27,7 +36,11 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
-        // GET: Account
+
+        /// <summary>
+        /// Gets list of active users of the system
+        /// by calling web api service
+        /// </summary>
         public async Task<ActionResult> ActiveUsers()
         {
             if (Settings.AccessToken == "")
@@ -44,6 +57,10 @@ namespace MFSL.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Returns New User Creation Form
+        /// </summary>
+        /// <returns>New User Creation Form</returns>
         public async Task<ActionResult> Register()
         {
             if (Settings.AccessToken == "")
@@ -60,7 +77,11 @@ namespace MFSL.Controllers
             }
             return View("Error");
         }
-
+        /// <summary>
+        /// Register Post Method
+        /// </summary>
+        /// <param name="model">RegisterBindingModel</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterBindingModel model)
@@ -85,7 +106,10 @@ namespace MFSL.Controllers
             }
             return View();
         }
-
+        /// <summary>
+        /// Returns ForgotPassword View
+        /// </summary>
+        /// <returns>Forgot Password View</returns>
         public ActionResult ForgotPassword()
         {
             if (Settings.AccessToken == "")
@@ -94,7 +118,11 @@ namespace MFSL.Controllers
             }
             return View();
         }
-
+        /// <summary>
+        /// Forgot Password Post Method
+        /// </summary>
+        /// <param name="model">ForgotPasswordViewModel</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
@@ -138,13 +166,21 @@ namespace MFSL.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        /// <summary>
+        /// Returns Forgot Password Confirmation View
+        /// </summary>
+        /// <returns>Forgot Password Confirmation View</returns>
         public ActionResult ForgotPasswordConfirmation()
         {
             ViewBag.Seconds = System.DateTime.UtcNow.Second;
             return View();
         }
 
+        /// <summary>
+        /// Returns Reset Password View
+        /// </summary>
+        /// <param name="code"> user generated code for password reset</param>
+        /// <returns></returns>
         // GET: /Account/ResetPassword
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
@@ -152,6 +188,11 @@ namespace MFSL.Controllers
             return code == null ? View("Error") : View();
         }
 
+        /// <summary>
+        /// Post method for reset password view
+        /// </summary>
+        /// <param name="model">ResetPasswordViewModel</param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -185,7 +226,10 @@ namespace MFSL.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        /// <summary>
+        /// Returns password reset view
+        /// </summary>
+        /// <returns>ResetPasswordConfirmation view</returns>
         public ActionResult ResetPasswordConfirmation()
         {
             return View();

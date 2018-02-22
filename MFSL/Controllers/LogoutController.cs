@@ -7,14 +7,15 @@ using MFSL.Helpers;
 
 namespace MFSL.Controllers
 {
+    /// <summary>
+    /// Controller Methods:
+    /// 1. SignOut - Logs user out of system
+    /// </summary>
     public class LogoutController : Controller
     {
-        // GET: Logout
-        public ActionResult Index()
-        {
-            return View();
-        }
-
+        /// <summary>
+        /// Disposes User credentials & configs then redirects to login page
+        /// </summary>
         public ActionResult SignOut()
         {
             Settings.AccessToken = "";

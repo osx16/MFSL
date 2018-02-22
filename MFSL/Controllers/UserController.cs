@@ -11,6 +11,12 @@ using System.Web.Mvc;
 
 namespace MFSL.Controllers
 {
+    /// <summary>
+    /// Controller Methods:
+    /// 1. RenderUserFrstName - Gets Users First Name
+    /// 2. GetRoleForThisUser - Get User's role
+    /// 3. MyProfile - Gets User Profile
+    /// </summary>
     public class UserController : Controller
     {
         HttpClient client;
@@ -30,12 +36,10 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
             client2.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
-        // GET: User
-        public ActionResult Index()
-        {
-            return View();
-        }
-
+        /// <summary>
+        /// Gets Users First Name to dispay in header bar
+        /// </summary>
+        /// <returns>User First Name</returns>
         public ActionResult RenderUserFrstName()
         {
             if (Settings.AccessToken == "")
@@ -45,13 +49,19 @@ namespace MFSL.Controllers
             ViewBag.UserFirstname = Settings.UserFirstName;
             return PartialView("_UserLastName");
         }
-
+        /// <summary>
+        /// Gets User Role to dispay in MyProfile
+        /// </summary>
+        /// <returns>User Role</returns>
         public string GetRoleForThisUser()
         {
             var role = Settings.RoleForThisUser;
             return role;
         }
-
+        /// <summary>
+        /// Brief summary info about user
+        /// </summary>
+        /// <returns>Profile Info</returns>
         public ActionResult MyProfile()
         {
             ViewBag.FirstName = Settings.UserFirstName;

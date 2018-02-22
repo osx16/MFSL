@@ -15,6 +15,17 @@ using System.Net;
 
 namespace MFSL.Controllers
 {
+    /// <summary>
+    /// Controller Methods:
+    /// 1. RenderInfoView - Renders brief info about customer
+    /// 2. Dashboard - Renders Dashboard of the system
+    /// 3. Recent - Renders history of files created by an officer
+    /// 4. FetchFile - Fetch a particular file based on number and type
+    /// 5. MyFiles - Search facility for an officer's files
+    /// 6. SearchFiles - Search facility for all customer files
+    /// 7. GetMemberInfoByNum - Gets member details by member number
+    /// 8. NewFile - Create new file for member
+    /// </summary>
     public class MemberFilesController : Controller
     {
 
@@ -32,25 +43,10 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
-
-        // GET: EmployeeInfo
-        public async Task<ActionResult> Index()
-        {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetFileForUser");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-
-                var Employees = JsonConvert.DeserializeObject<List<MemberFile>>(responseData);
-
-                return View(Employees);
-            }
-            return View("Error");
-        }
+        /// <summary>
+        /// Return Modal view for displaying customer info
+        /// </summary>
+        /// <returns>Customer Info View</returns>
         public ActionResult RenderInfoView()
         {
             if (Settings.AccessToken == "")
@@ -59,7 +55,10 @@ namespace MFSL.Controllers
             }
             return PartialView("_Info");
         }
-
+        /// <summary>
+        /// Returns Dashboard View
+        /// </summary>
+        /// <returns>Dashboard View</returns>
         public ActionResult Dashboard()
         {
             if (Settings.AccessToken == "")
@@ -72,7 +71,10 @@ namespace MFSL.Controllers
             }
             return View();
         }
-
+        /// <summary>
+        /// Returns View For File History for Officer
+        /// </summary>
+        /// <returns>History of files created by user</returns>
         public ActionResult Recent()
         {
             if (Settings.AccessToken == "")
@@ -85,7 +87,12 @@ namespace MFSL.Controllers
             }
             return View();
         }
-
+        /// <summary>
+        /// Calls web api to return a particular file
+        /// </summary>
+        /// <param name="id">File Number</param>
+        /// <param name="flag">Flag represents file type</param>
+        /// <returns>PDF File</returns>
         public async Task<ActionResult> FetchFile(string id, string flag)
         {
             if (Settings.AccessToken == "")
@@ -111,8 +118,15 @@ namespace MFSL.Controllers
             }
             return RedirectToAction("Error", "NotFound");
 
-        }//End of DownloadFile Method
+        }//End of FetchFile Method
 
+        /// <summary>
+        /// Search facility to invoke web api to return files for officer
+        /// Search results are filtered into pages
+        /// </summary>
+        /// <param name="memberNo"> Member Number</param>
+        /// <param name="page">Page number</param>
+        /// <returns>Member File Details</returns>
         public async Task<ActionResult> MyFiles(string memberNo, int? page)
         {
             if (Settings.AccessToken == "")
@@ -155,8 +169,14 @@ namespace MFSL.Controllers
             return View("Error");
         }
 
+        /// <summary>
+        /// Search facility to search for any member's files
+        /// Search result is filtered into pages
+        /// </summary>
+        /// <param name="memberNo">Member number</param>
+        /// <param name="page">Page number</param>
+        /// <returns>Member File Details</returns>
         [AcceptVerbs(HttpVerbs.Get)]
-        // GET: Items
         public async Task<ActionResult> SearchFiles(string memberNo, int? page)
         {
             if (Settings.AccessToken == "")
@@ -199,6 +219,11 @@ namespace MFSL.Controllers
             return View("Error");
         }
 
+        /// <summary>
+        /// Call Web API that returns customer's details
+        /// </summary>
+        /// <param name="MemberNum">Member number</param>
+        /// <returns>Customer Details</returns>
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> GetMemberInfoByNum(string MemberNum)
         {
@@ -224,7 +249,10 @@ namespace MFSL.Controllers
 
             return View("Error");
         }
-
+        /// <summary>
+        /// Returns Form for creating a new file for customer
+        /// </summary>
+        /// <returns>New File Creation Form</returns>
         public ActionResult NewFile()
         {
             if(Settings.AccessToken == "")
@@ -238,7 +266,11 @@ namespace MFSL.Controllers
             return View();
         }
 
-
+        /// <summary>
+        /// Post method for New Customer File
+        /// </summary>
+        /// <param name="File">FileViewModel</param>
+        /// <returns>HTTP Status Message</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> NewFile(
@@ -297,118 +329,7 @@ namespace MFSL.Controllers
                     return RedirectToAction("Recent");
                 }
             }
-
             return View();
         }
-
-        //// GET: MemberFiles/Details/5
-        //public async Task<ActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    MemberFile memberFile = await db.MemberFile.FindAsync(id);
-        //    if (memberFile == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(memberFile);
-        //}
-
-        //// GET: MemberFiles/Create
-        //public ActionResult Create()
-        //{
-        //    ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus");
-        //    return View();
-        //}
-
-        //// POST: MemberFiles/Create
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> Create([Bind(Include = "FileNo,DateCreated,OfficeId,MemberNo,LoanApplication,OfferLetter,LoanAgreement,AcceptanceOffer,GuaranteeCertificate,Amortisation,ChequeCopy,Eligibility,Quotation,Payslip,LoanStatement,VNPFStatement,Other,fileGUID,FStatusId")] MemberFile memberFile)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.MemberFile.Add(memberFile);
-        //        await db.SaveChangesAsync();
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus", memberFile.FStatusId);
-        //    return View(memberFile);
-        //}
-
-        //// GET: MemberFiles/Edit/5
-        //public async Task<ActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    MemberFile memberFile = await db.MemberFile.FindAsync(id);
-        //    if (memberFile == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus", memberFile.FStatusId);
-        //    return View(memberFile);
-        //}
-
-        //// POST: MemberFiles/Edit/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> Edit([Bind(Include = "FileNo,DateCreated,OfficeId,MemberNo,LoanApplication,OfferLetter,LoanAgreement,AcceptanceOffer,GuaranteeCertificate,Amortisation,ChequeCopy,Eligibility,Quotation,Payslip,LoanStatement,VNPFStatement,Other,fileGUID,FStatusId")] MemberFile memberFile)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(memberFile).State = EntityState.Modified;
-        //        await db.SaveChangesAsync();
-        //        return RedirectToAction("Index");
-        //    }
-        //    ViewBag.FStatusId = new SelectList(db.FileStatus, "FileStatusId", "FStatus", memberFile.FStatusId);
-        //    return View(memberFile);
-        //}
-
-        //// GET: MemberFiles/Delete/5
-        //public async Task<ActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    MemberFile memberFile = await db.MemberFile.FindAsync(id);
-        //    if (memberFile == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(memberFile);
-        //}
-
-        //// POST: MemberFiles/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> DeleteConfirmed(int id)
-        //{
-        //    MemberFile memberFile = await db.MemberFile.FindAsync(id);
-        //    db.MemberFile.Remove(memberFile);
-        //    await db.SaveChangesAsync();
-        //    return RedirectToAction("Index");
-        //}
-
-
-
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
     }
 }

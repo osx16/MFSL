@@ -14,6 +14,11 @@ using Newtonsoft.Json.Linq;
 
 namespace MFSL.Controllers
 {
+    /// <summary>
+    /// Controller Methods:
+    /// 1. SysUser - Returns Login View
+    /// 2. SysUser[Post] - Posts login details to web api
+    /// </summary>
     public class LoginController : Controller
     {
         ApiServices _apiServices = new ApiServices();
@@ -33,17 +38,21 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client2.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
-        // GET: Login
-        public ActionResult Index()
-        {
-            return View();
-        }
 
+        /// <summary>
+        /// Returns Login View
+        /// </summary>
+        /// <returns>User Login View</returns>
         public ActionResult SysUser()
         {
             return View();
         }
 
+        /// <summary>
+        /// Posts login details to web api
+        /// </summary>
+        /// <param name="user"> User Model</param>
+        /// <returns>Access Token</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SysUser([Bind(Include = "Username,Password")] User user)
@@ -54,7 +63,7 @@ namespace MFSL.Controllers
                 new KeyValuePair<string, string>("password", user.Password),
                 new KeyValuePair<string, string>("grant_type", "password")
             };
-
+            //Call to web api
             var request = new HttpRequestMessage(
                 HttpMethod.Post, Constants.BaseApiAddress + "Token");
 

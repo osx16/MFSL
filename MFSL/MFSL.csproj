@@ -1154,7 +1154,6 @@
     <Content Include="Views\MemberFiles\Delete.cshtml" />
     <Content Include="Views\MemberFiles\Details.cshtml" />
     <Content Include="Views\MemberFiles\Edit.cshtml" />
-    <Content Include="Views\MemberFiles\Index.cshtml" />
     <Content Include="Views\MemberFiles\NewFile.cshtml" />
     <Content Include="Views\MemberFiles\_FileUpload.cshtml" />
     <Content Include="Views\MemberFiles\Dashboard.cshtml" />

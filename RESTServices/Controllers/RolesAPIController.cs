@@ -14,19 +14,26 @@ namespace RESTServices.Controllers
     {
         ApplicationDbContext context;
         AccountController Account;
+
         public RolesAPIController()
         {
             Account = new AccountController();
             context = new ApplicationDbContext();
         }
-
+        /// <summary>
+        /// Get all roles for system users except admin
+        /// </summary>
+        /// <returns></returns>
         [Route("api/RolesAPI/GetRoles")]
         public List<string> GetRoles()
         {
             var roles = context.Roles.Where(u => !u.Name.Contains("Admin")).Select(x=>x.Name).ToList();
             return roles;
         }
-
+        /// <summary>
+        /// Get role for current user
+        /// </summary>
+        /// <returns></returns>
         [Route("api/RolesAPI/GetRoleForThisUser")]
         public string GetRoleForThisUser()
         {
