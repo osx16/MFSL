@@ -51,7 +51,7 @@ namespace MFSL.Controllers
         /// <summary>
         /// Posts login details to web api
         /// </summary>
-        /// <param name="user"> User</param>
+        /// <param name="user">User</param>
         /// <returns>Access Token</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
