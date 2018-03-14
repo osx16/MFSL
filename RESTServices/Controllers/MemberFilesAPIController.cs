@@ -17,6 +17,22 @@ using System.Net.Http.Headers;
 
 namespace RESTServices.Controllers
 {
+    /// <summary>
+    /// List of Controller and Non-Controller methods used
+    /// 1. GetAllMemberFile - Gets all File References for all Customers
+    /// 2. FetchFile - Fetch specific file for a user based on File Id and Flag
+    /// 3. GetFileForUser - Get file references created by current user
+    /// 4. GetFileByMemberNo - Get file reference(s) for member
+    /// 5. GetFileRefByFileNo - Get file reference by file number
+    /// 6. GetMyFileByMemberNo - Get file references for member by member no under an officer 
+    /// 7. GetMemberInfoByNo - Get member info by member number
+    /// 8. PutMemberFile - Unused (Reserve)
+    /// 9. PostMemberFile - Unused (Reserve)
+    /// 10. PostReference - Post new file reference for customer to database
+    /// 11. DeleteMemberFile - Unused (Reserve)
+    /// 12. Dispose (Non-Controller Method) - Dispose controller data
+    /// 13. MemberFileExists (Non-Controller Method) - Returns 1 if Member File exists
+    /// </summary>
     public class MemberFilesAPIController : ApiController
     {
         private MFSLEntities db = new MFSLEntities();
@@ -174,6 +190,12 @@ namespace RESTServices.Controllers
             return db.vnpf_.Where(f => f.VNPF_Number == MemberNo);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="memberFile"></param>
+        /// <returns></returns>
         // PUT: api/MemberFilesAPI/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutMemberFile(int id, MemberFile memberFile)
@@ -259,6 +281,11 @@ namespace RESTServices.Controllers
             return CreatedAtRoute("DefaultApi", new { id = fileRef.FileNo }, fileRef);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: api/MemberFilesAPI/5
         [ResponseType(typeof(MemberFile))]
         public IHttpActionResult DeleteMemberFile(int id)
@@ -275,6 +302,10 @@ namespace RESTServices.Controllers
             return Ok(memberFile);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
