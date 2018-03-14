@@ -10,7 +10,7 @@
         <EntityTypeShape EntityType="MFSLModel.FileType" Width="1.5" PointX="5.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.MemberFile" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.Officers" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="MFSLModel.vnpf_" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MFSLModel.vnpf_" Width="2.625" PointX="2.75" PointY="6.75" IsExpanded="true" />
         <AssociationConnector Association="MFSLModel.FK_Files_Officers" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
