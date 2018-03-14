@@ -6,37 +6,6 @@
 <head>
 </head>
     <body>
-        <script src="~/Scripts/jquery-3.1.1.min.js"></script>
-        <script src="~/Scripts/bootstrap.js"></script>
-        <script src="~/Scripts/bootstrap.min.js"></script>
-
-        <script type="text/javascript">
-            $(function () {
-
-                $(document).ready(function () {
-                    $('[data-toggle="tooltip"]').tooltip();
-                });
-
-                $('.MemberLink').on('click', function (e) {
-                    var MemberNum = $(this).attr("data-id");
-                    $.ajax({
-                        cache: false,
-                        type: "GET",
-                        url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
-                        data: { "MemberNum": MemberNum },
-                                success: function (data) {
-                                    $('#memberDetailsModal').modal();
-                                    $('#memberDetailsModal').find('.ajax-dynamic-get-data-form').html(data);
-                                    $('#memberDetailsModal').modal('show');
-                                },
-                                error: function () {
-                                    alert('Error. Please try again.');
-                                }
-                        });//EndOf Ajax
-                })
-            });//EndOf Main Func
-        </script>
-
         <section class="content">
             <!-- Button trigger modal -->
             <div class="modal fade" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -146,6 +115,35 @@
                 </div>
             </div>
      </section>
+
+        <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+        <script src="~/Scripts/bootstrap.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $(document).ready(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                });
+
+                $('.MemberLink').on('click', function (e) {
+                    var MemberNum = $(this).attr("data-id");
+                    $.ajax({
+                        cache: false,
+                        type: "GET",
+                        url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
+                        data: { "MemberNum": MemberNum },
+                                success: function (data) {
+                                    $('#memberDetailsModal').modal();
+                                    $('#memberDetailsModal').find('.ajax-dynamic-get-data-form').html(data);
+                                    $('#memberDetailsModal').modal('show');
+                                },
+                                error: function () {
+                                    alert('Error. Please try again.');
+                                }
+                        });//EndOf Ajax
+                })
+            });//EndOf Main Func
+        </script>
 </body>
 </html>
 
