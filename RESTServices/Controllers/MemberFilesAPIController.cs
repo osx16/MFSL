@@ -27,7 +27,7 @@ namespace RESTServices.Controllers
     /// 6. GetMyFileByMemberNo - Get file references for member by member no under an officer 
     /// 7. GetMemberInfoByNo - Get member info by member number
     /// 8. PutMemberFile - Unused (Reserve)
-    /// 9. PostMemberFile - Unused (Reserve)
+    /// 9. PostMemberFile - Post new member file
     /// 10. PostReference - Post new file reference for customer to database
     /// 11. DeleteMemberFile - Unused (Reserve)
     /// 12. Dispose (Non-Controller Method) - Dispose controller data
@@ -61,18 +61,20 @@ namespace RESTServices.Controllers
             string filename = "";
             Dictionary<int, string> FileList = new Dictionary<int, string>();
             FileList.Add(1, "LoanApplication");
-            FileList.Add(2, "OfferLetter");
-            FileList.Add(3, "LoanAgreement");
-            FileList.Add(4, "AcceptanceOffer");
-            FileList.Add(5, "GuaranteeCertificate");
-            FileList.Add(6, "Amortisation");
-            FileList.Add(7, "ChequeCopy");
-            FileList.Add(8, "Eligibility");
+            FileList.Add(2, "LoanAgreement");
+            FileList.Add(3, "GuaranteeCertificate");
+            FileList.Add(4, "Amortisation");
+            FileList.Add(5, "ChequeCopy");
+            FileList.Add(6, "Eligibility");
+            FileList.Add(7, "RequestLetter");
+            FileList.Add(8, "EmployerLetter");
             FileList.Add(9, "Quotation");
             FileList.Add(10, "Payslip");
-            FileList.Add(11, "LoanStatement");
-            FileList.Add(12, "VNPFStatement");
-            FileList.Add(13, "Other");
+            FileList.Add(11, "BankAccStatement");
+            FileList.Add(12, "LoanStatement");
+            FileList.Add(13, "VNPFStatement");
+            FileList.Add(14, "StandingOrder");
+            FileList.Add(15, "CustomerID");
 
             if (FileList.ContainsKey(FileTypeId))
             {

@@ -38,18 +38,20 @@
           <Property Name="OfficeId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="MemberNo" Type="int" Nullable="false" />
           <Property Name="LoanApplication" Type="varbinary(max)" />
-          <Property Name="OfferLetter" Type="varbinary(max)" />
           <Property Name="LoanAgreement" Type="varbinary(max)" />
-          <Property Name="AcceptanceOffer" Type="varbinary(max)" />
           <Property Name="GuaranteeCertificate" Type="varbinary(max)" />
           <Property Name="Amortisation" Type="varbinary(max)" />
           <Property Name="ChequeCopy" Type="varbinary(max)" />
           <Property Name="Eligibility" Type="varbinary(max)" />
+          <Property Name="RequestLetter" Type="varbinary(max)" />
+          <Property Name="EmployerLetter" Type="varbinary(max)" />
           <Property Name="Quotation" Type="varbinary(max)" />
           <Property Name="Payslip" Type="varbinary(max)" />
+          <Property Name="BankAccStatement" Type="varbinary(max)" />
           <Property Name="LoanStatement" Type="varbinary(max)" />
           <Property Name="VNPFStatement" Type="varbinary(max)" />
-          <Property Name="Other" Type="varbinary(max)" />
+          <Property Name="StandingOrder" Type="varbinary(max)" />
+          <Property Name="CustomerID" Type="varbinary(max)" />
           <Property Name="fileGUID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="FStatusId" Type="int" Nullable="false" />
         </EntityType>
@@ -139,18 +141,20 @@
           <Property Name="OfficeId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MemberNo" Type="Int32" Nullable="false" />
           <Property Name="LoanApplication" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="OfferLetter" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="LoanAgreement" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="AcceptanceOffer" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="GuaranteeCertificate" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="Amortisation" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="ChequeCopy" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="Eligibility" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="RequestLetter" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="EmployerLetter" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="Quotation" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="Payslip" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="BankAccStatement" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="LoanStatement" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="VNPFStatement" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="Other" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="StandingOrder" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="CustomerID" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="fileGUID" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FStatusId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="FileStatus" Relationship="Self.FK_Files_Officers" FromRole="MemberFile" ToRole="FileStatus" />
@@ -243,18 +247,20 @@
                 <ScalarProperty Name="OfficeId" ColumnName="OfficeId" />
                 <ScalarProperty Name="MemberNo" ColumnName="MemberNo" />
                 <ScalarProperty Name="LoanApplication" ColumnName="LoanApplication" />
-                <ScalarProperty Name="OfferLetter" ColumnName="OfferLetter" />
                 <ScalarProperty Name="LoanAgreement" ColumnName="LoanAgreement" />
-                <ScalarProperty Name="AcceptanceOffer" ColumnName="AcceptanceOffer" />
                 <ScalarProperty Name="GuaranteeCertificate" ColumnName="GuaranteeCertificate" />
                 <ScalarProperty Name="Amortisation" ColumnName="Amortisation" />
                 <ScalarProperty Name="ChequeCopy" ColumnName="ChequeCopy" />
                 <ScalarProperty Name="Eligibility" ColumnName="Eligibility" />
+                <ScalarProperty Name="RequestLetter" ColumnName="RequestLetter" />
+                <ScalarProperty Name="EmployerLetter" ColumnName="EmployerLetter" />
                 <ScalarProperty Name="Quotation" ColumnName="Quotation" />
                 <ScalarProperty Name="Payslip" ColumnName="Payslip" />
+                <ScalarProperty Name="BankAccStatement" ColumnName="BankAccStatement" />
                 <ScalarProperty Name="LoanStatement" ColumnName="LoanStatement" />
                 <ScalarProperty Name="VNPFStatement" ColumnName="VNPFStatement" />
-                <ScalarProperty Name="Other" ColumnName="Other" />
+                <ScalarProperty Name="StandingOrder" ColumnName="StandingOrder" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
                 <ScalarProperty Name="fileGUID" ColumnName="fileGUID" />
                 <ScalarProperty Name="FStatusId" ColumnName="FStatusId" />
               </MappingFragment>

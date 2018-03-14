@@ -58,24 +58,10 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Offer Letter</td>
-                                                        <td>
-                                                            @Html.TextBoxFor(model => model.OfferLetter, "", new { @type = "file", @multiple = "multiple" })
-                                                            @Html.ValidationMessageFor(model => model.OfferLetter, "", new { @class = "text-danger" })
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
                                                         <td>Loan Agreement</td>
                                                         <td>
                                                             @Html.TextBoxFor(model => model.LoanAgreement, "", new { @type = "file", @multiple = "multiple" })
                                                             @Html.ValidationMessageFor(model => model.LoanAgreement, "", new { @class = "text-danger" })
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Acceptance Offer</td>
-                                                        <td>
-                                                            @Html.TextBoxFor(model => model.AcceptanceOffer, "", new { @type = "file", @multiple = "multiple" })
-                                                            @Html.ValidationMessageFor(model => model.AcceptanceOffer, "", new { @class = "text-danger" })
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -127,6 +113,20 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
+                                                        <td>Request Letter</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.RequestLetter, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.RequestLetter, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Employer Letter</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.EmployerLetter, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.EmployerLetter, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
                                                         <td>Quotation</td>
                                                         <td>
                                                             @Html.TextBoxFor(model => model.Quotation, "", new { @type = "file", @multiple = "multiple" })
@@ -138,6 +138,13 @@
                                                         <td>
                                                             @Html.TextBoxFor(model => model.Payslip, "", new { @type = "file", @multiple = "multiple" })
                                                             @Html.ValidationMessageFor(model => model.Payslip, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank Account Statement</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.BankAccStatment, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.BankAccStatment, "", new { @class = "text-danger" })
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -155,10 +162,17 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Other</td>
+                                                        <td>Standing Order</td>
                                                         <td>
-                                                            @Html.TextBoxFor(model => model.Other, "", new { @type = "file", @multiple = "multiple" })
-                                                            @Html.ValidationMessageFor(model => model.Other, "", new { @class = "text-danger" })
+                                                            @Html.TextBoxFor(model => model.StandingOrder, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.StandingOrder, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Customer ID</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.CustomerID, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.CustomerID, "", new { @class = "text-danger" })
                                                         </td>
                                                     </tr>
                                                 </table>

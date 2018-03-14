@@ -305,44 +305,66 @@ namespace MFSL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> NewFile(
-            [Bind(Include = "MemberNo,LoanApplication,OfferLetter," +
-            "LoanAgreement,AcceptanceOffer,GuaranteeCertificate," +
-            "Amortisation,ChequeCopy,Eligibility,Quotation,Payslip," +
-            "LoanStatement,VNPFStatement,Other,FStatusId,")] FileViewModel File)
+            [Bind(Include = "MemberNo,LoanApplication," +
+            "LoanAgreement,GuaranteeCertificate," +
+            "Amortisation,ChequeCopy,Eligibility,RequestLetter,EmployerLetter,Quotation,Payslip," +
+            "BankAccStatment,LoanStatement,VNPFStatement,StandingOrder,CustomerID,FStatusId,")] FileViewModel File)
 
         {
             if (ModelState.IsValid)
             {
-                var LApp = new MemoryStream(); var OL = new MemoryStream(); var LAgrmt = new MemoryStream();
-                var AO = new MemoryStream(); var GC = new MemoryStream(); var Amo = new MemoryStream();
-                var CC = new MemoryStream(); var Elig = new MemoryStream(); var Quote = new MemoryStream();
-                var PS = new MemoryStream(); var LS = new MemoryStream(); var VS = new MemoryStream();
-                var Other = new MemoryStream();
+                var LApp = new MemoryStream();
+                var LAgrmt = new MemoryStream();
+                var GC = new MemoryStream();
+                var Amo = new MemoryStream();
+                var CC = new MemoryStream();
+                var Elig = new MemoryStream();
+                var RL = new MemoryStream();
+                var EL = new MemoryStream();
+                var Quote = new MemoryStream();
+                var PS = new MemoryStream();
+                var BS = new MemoryStream();
+                var LS = new MemoryStream();
+                var VS = new MemoryStream();
+                var SO = new MemoryStream();
+                var CID = new MemoryStream();
 
-                File.LoanApplication.InputStream.CopyTo(LApp); File.OfferLetter.InputStream.CopyTo(OL); File.LoanAgreement.InputStream.CopyTo(LAgrmt);
-                File.AcceptanceOffer.InputStream.CopyTo(AO); File.GuaranteeCertificate.InputStream.CopyTo(GC);
-                File.Amortisation.InputStream.CopyTo(Amo); File.ChequeCopy.InputStream.CopyTo(CC);
-                File.Eligibility.InputStream.CopyTo(Elig); File.Quotation.InputStream.CopyTo(Quote);
-                File.Payslip.InputStream.CopyTo(PS); File.LoanStatement.InputStream.CopyTo(LS);
-                File.VNPFStatement.InputStream.CopyTo(VS); File.Other.InputStream.CopyTo(Other);
+                File.LoanApplication.InputStream.CopyTo(LApp);
+                File.LoanAgreement.InputStream.CopyTo(LAgrmt);
+                File.GuaranteeCertificate.InputStream.CopyTo(GC);
+                File.Amortisation.InputStream.CopyTo(Amo);
+                File.ChequeCopy.InputStream.CopyTo(CC);
+                File.Eligibility.InputStream.CopyTo(Elig);
+                File.RequestLetter.InputStream.CopyTo(RL);
+                File.EmployerLetter.InputStream.CopyTo(EL);
+                File.Quotation.InputStream.CopyTo(Quote);
+                File.Payslip.InputStream.CopyTo(PS);
+                File.BankAccStatment.InputStream.CopyTo(BS);
+                File.LoanStatement.InputStream.CopyTo(LS);
+                File.VNPFStatement.InputStream.CopyTo(VS);
+                File.StandingOrder.InputStream.CopyTo(SO);
+                File.CustomerID.InputStream.CopyTo(CID);
+
                 ViewBag.MemberNo = File.MemberNo;
                 var NewMemberFile = new MemberFile
                 {
                     DateCreated = System.DateTime.Now,
                     MemberNo = File.MemberNo,
                     LoanApplication = LApp.ToArray(),
-                    OfferLetter = OL.ToArray(),
                     LoanAgreement = LAgrmt.ToArray(),
-                    AcceptanceOffer = AO.ToArray(),
                     GuaranteeCertificate = GC.ToArray(),
                     Amortisation = Amo.ToArray(),
                     ChequeCopy = CC.ToArray(),
                     Eligibility = Elig.ToArray(),
+                    RequestLetter = RL.ToArray(),
+                    EmployerLetter = EL.ToArray(),
                     Quotation = Quote.ToArray(),
                     Payslip = PS.ToArray(),
+                    BankAccStatement = BS.ToArray(),
                     LoanStatement = LS.ToArray(),
                     VNPFStatement = VS.ToArray(),
-                    Other = Other.ToArray(),
+                    StandingOrder = SO.ToArray(),
+                    CustomerID = CID.ToArray(),
                     FStatusId = 1
                 };
 

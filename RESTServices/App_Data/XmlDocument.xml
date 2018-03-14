@@ -505,6 +505,24 @@
             <param name="model">ForgotPasswordViewModel</param>
             <returns>PasswordConfigModel</returns>
         </member>
+        <member name="T:RESTServices.Controllers.MemberFilesAPIController">
+            <summary>
+            List of Controller and Non-Controller methods used
+            1. GetAllMemberFile - Gets all File References for all Customers
+            2. FetchFile - Fetch specific file for a user based on File Id and Flag
+            3. GetFileForUser - Get file references created by current user
+            4. GetFileByMemberNo - Get file reference(s) for member
+            5. GetFileRefByFileNo - Get file reference by file number
+            6. GetMyFileByMemberNo - Get file references for member by member no under an officer 
+            7. GetMemberInfoByNo - Get member info by member number
+            8. PutMemberFile - Unused (Reserve)
+            9. PostMemberFile - Post new member file
+            10. PostReference - Post new file reference for customer to database
+            11. DeleteMemberFile - Unused (Reserve)
+            12. Dispose (Non-Controller Method) - Dispose controller data
+            13. MemberFileExists (Non-Controller Method) - Returns 1 if Member File exists
+            </summary>
+        </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllMemberFile">
             <summary>
             Gets all File References for all Customers
@@ -548,6 +566,14 @@
             </summary>
             <param name="MemberNo"> Member Number</param>
         </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.PutMemberFile(System.Int32,RESTServices.Models.MemberFile)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="memberFile"></param>
+            <returns></returns>
+        </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.PostMemberFile(RESTServices.Models.MemberFile)">
             <summary>
             Post new member file to database
@@ -561,6 +587,19 @@
             </summary>
             <param name="fileRef"></param>
             <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.DeleteMemberFile(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
         </member>
         <member name="M:RESTServices.Controllers.RolesAPIController.GetRoles">
             <summary>

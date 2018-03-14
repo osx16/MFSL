@@ -29,17 +29,7 @@ namespace MFSL.ViewModels
         [Required]
         [DataType(DataType.Upload)]
         [Display(Name = "Select File")]
-        public HttpPostedFileBase OfferLetter { get; set; }
-
-        [Required]
-        [DataType(DataType.Upload)]
-        [Display(Name = "Select File")]
         public HttpPostedFileBase LoanAgreement { get; set; }
-
-        [Required]
-        [DataType(DataType.Upload)]
-        [Display(Name = "Select File")]
-        public HttpPostedFileBase AcceptanceOffer { get; set; }
 
         [Required]
         [DataType(DataType.Upload)]
@@ -51,7 +41,7 @@ namespace MFSL.ViewModels
         [Display(Name = "Select File")]
         public HttpPostedFileBase Amortisation { get; set; }
 
-        [Required]
+        //[Required]
         [DataType(DataType.Upload)]
         [Display(Name = "Select File")]
         public HttpPostedFileBase ChequeCopy { get; set; }
@@ -60,6 +50,16 @@ namespace MFSL.ViewModels
         [DataType(DataType.Upload)]
         [Display(Name = "Select File")]
         public HttpPostedFileBase Eligibility { get; set; }
+
+        [Required]
+        [DataType(DataType.Upload)]
+        [Display(Name = "Select File")]
+        public HttpPostedFileBase RequestLetter { get; set; }
+
+        [Required]
+        [DataType(DataType.Upload)]
+        [Display(Name = "Select File")]
+        public HttpPostedFileBase EmployerLetter { get; set; }
 
         [Required]
         [DataType(DataType.Upload)]
@@ -74,6 +74,11 @@ namespace MFSL.ViewModels
         [Required]
         [DataType(DataType.Upload)]
         [Display(Name = "Select File")]
+        public HttpPostedFileBase BankAccStatment { get; set; }
+
+        [Required]
+        [DataType(DataType.Upload)]
+        [Display(Name = "Select File")]
         public HttpPostedFileBase LoanStatement { get; set; }
 
         [Required]
@@ -84,6 +89,11 @@ namespace MFSL.ViewModels
         //[Required]
         [DataType(DataType.Upload)]
         [Display(Name = "Select File")]
-        public HttpPostedFileBase Other { get; set; }
+        public HttpPostedFileBase StandingOrder { get; set; }
+
+        [Required]
+        [DataType(DataType.Upload)]
+        [Display(Name = "Select File")]
+        public HttpPostedFileBase CustomerID { get; set; }
     }
 }
