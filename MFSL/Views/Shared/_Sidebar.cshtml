@@ -23,15 +23,15 @@
             @if (UserRole == "Admin" || UserRole == "Employee" || UserRole == "Manager")
             {
                 <li class="@Url.IsLinkActive("NewFile", "MemberFiles")">
-                    <a href="@Url.Action("NewFile", "MemberFiles")"><i class="glyphicon glyphicon-file"></i> <span>New</span></a>
+                    <a href="@Url.Action("NewFile", "MemberFiles")"><i class="glyphicon glyphicon-file"></i> <span>New File</span></a>
                 </li>
                 <li class="@Url.IsLinkActive("Recent", "MemberFiles")">
                     <a href="@Url.Action("Recent", "MemberFiles")"><i class="glyphicon glyphicon-time"></i> <span>History</span></a>
                 </li>
             }
-            <li class="@Url.IsLinkActive("Create", "Home")">
+            @*<li class="@Url.IsLinkActive("Create", "Home")">
                 <a href="@Url.Action("Index", "Home")"><i class="glyphicon glyphicon-search"></i> <span>Advanced Search</span></a>
-            </li>
+            </li>*@
             @if (UserRole == "Admin")
             {
                 <li class="treeview">
