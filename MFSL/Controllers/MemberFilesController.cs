@@ -24,7 +24,8 @@ namespace MFSL.Controllers
     /// 5. MyFiles - Search facility for an officer's files
     /// 6. SearchFiles - Search facility for all customer files
     /// 7. GetMemberInfoByNum - Gets member details by member number
-    /// 8. NewFile - Create new file for member
+    /// 8. GetFileRefsByFileNo - Gets file reference by file number
+    /// 9. NewFile - Create new file for member
     /// </summary>
     public class MemberFilesController : Controller
     {
@@ -250,6 +251,11 @@ namespace MFSL.Controllers
             return View("Error");
         }
 
+        /// <summary>
+        /// Gets file reference by FileNo
+        /// </summary>
+        /// <param name="FileNo"></param>
+        /// <returns></returns>
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> GetFileRefsByFileNo(string FileNo)
         {
