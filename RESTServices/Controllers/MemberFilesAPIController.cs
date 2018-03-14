@@ -139,6 +139,19 @@ namespace RESTServices.Controllers
             var data = db.FileReferences.Where(x => x.MemberNo == MemberNo);
             return data;
         }
+
+        /// <summary>
+        /// Get file reference by file number
+        /// </summary>
+        /// <param name="FileNo"></param>
+        /// <returns></returns>
+        [Route("api/MemberFilesAPI/GetFileRefByFileNo/{FileNo:int}")]
+        public IQueryable<FileReferences> GetFileRefByFileNo(int FileNo)
+        {
+            var fileRef = db.FileReferences.Where(x => x.FileNo == FileNo);
+            return fileRef;
+        }
+
         /// <summary>
         /// Get file references for member by member no under an officer 
         /// </summary>

@@ -528,6 +528,13 @@
             </summary>
             <param name="MemberNo">Member No</param>
         </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetFileRefByFileNo(System.Int32)">
+            <summary>
+            Get file reference by file number
+            </summary>
+            <param name="FileNo"></param>
+            <returns></returns>
+        </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetMyFileByMemberNo(System.Int32)">
             <summary>
             Get file references for member by member no under an officer 

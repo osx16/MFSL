@@ -1,0 +1,87 @@
+﻿@model IEnumerable<MFSL.Models.FileReferences>
+
+<table class="table table-striped">
+    <thead>
+        <tr class="success">
+            <th>
+                Files
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="7">No results Found</td>
+            </tr>
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink("Loan App", "FetchFile", new { id = item.FileNo, flag = 1 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Offer Letter", "FetchFile", new { id = item.FileNo, flag = 2 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Loan Agreement", "FetchFile", new { id = item.FileNo, flag = 3 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Acceptance Offer", "FetchFile", new { id = item.FileNo, flag = 4 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Guarantee Certificate", "FetchFile", new { id = item.FileNo, flag = 5 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Amortisation", "FetchFile", new { id = item.FileNo, flag = 6 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Cheque Copy", "FetchFile", new { id = item.FileNo, flag = 7 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Eligibility", "FetchFile", new { id = item.FileNo, flag = 8 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Quote", "FetchFile", new { id = item.FileNo, flag = 9 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Pay Slip", "FetchFile", new { id = item.FileNo, flag = 10 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Loan Statement", "FetchFile", new { id = item.FileNo, flag = 11 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("VNPF Statement", "FetchFile", new { id = item.FileNo, flag = 12 }, new { target = "_blank" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("Other", "FetchFile", new { id = item.FileNo, flag = 13 }, new { target = "_blank" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

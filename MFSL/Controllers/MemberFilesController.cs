@@ -243,12 +243,37 @@ namespace MFSL.Controllers
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-                var fileData = JsonConvert.DeserializeObject<IEnumerable<vnpf_>>(responseData);
-                return PartialView("_MemberInfo", fileData);
+                var memberInfo = JsonConvert.DeserializeObject<IEnumerable<vnpf_>>(responseData);
+                return PartialView("_MemberInfo", memberInfo);
             }
 
             return View("Error");
         }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public async Task<ActionResult> GetFileRefsByFileNo(string FileNo)
+        {
+            if(Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if(DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            int id = 0;
+            bool isValid = Int32.TryParse(FileNo, out id);
+
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetFileRefByFileNo/" + id);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                var fileRefs = JsonConvert.DeserializeObject<IEnumerable<FileReferences>>(responseData);
+                return PartialView("_UserFiles", fileRefs);
+            }
+            return View("Error");
+        }
+
         /// <summary>
         /// Returns Form for creating a new file for customer
         /// </summary>

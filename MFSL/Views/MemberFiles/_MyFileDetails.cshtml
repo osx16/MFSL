@@ -1,12 +1,109 @@
 ﻿@model PagedList.IPagedList<MFSL.Models.FileReferences>
 @using PagedList.Mvc;
 
-
 <!DOCTYPE html>
 <html>
 <head>
 </head>
 <body>
+    <section class="content">
+        <!-- Button trigger modal -->
+        <div class="modal fade" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> | Member Info</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ajax-dynamic-get-data-form" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- File modal -->
+        <div class="modal fade" id="memberFilesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title"><i class="fa fa-file-archive-o fa-lg" aria-hidden="true"></i> | Archive</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ajax-dynamic-get-data-form" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="box-title">Total: @ViewBag.TotalFiles <i class="fa fa-fw fa-folder"></i></h4>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr class="success">
+                        <th>
+                            Member No
+                        </th>
+                        <th>
+                            Date Created
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="7">No results Found</td>
+                        </tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a href="#" class="MemberLink"
+                                   data-id="@item.MemberNo"
+                                   data-toggle="tooltip" title="Click for more">
+                                    @Html.DisplayFor(modelItem => item.MemberNo)
+                                </a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateCreated)
+                            </td>
+                            <td>
+                                <a href="#" class="FileLink"
+                                   data-id="@item.FileNo"
+                                   data-toggle="tooltip" title="Click to view">
+                                    Show
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+            <div id='Paging' style="text-align: center">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                of @Model.PageCount
+                @Html.PagedListPager(Model, page => Url.Action("MyFiles",
+            new { memberNo = ViewBag.MemberNo, page }),
+            PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "filepartialview" }))
+            </div>
+        </div>
+    </section>
+
     <script src="~/Scripts/jquery-3.1.1.min.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
@@ -37,118 +134,31 @@
         })
     });//EndOf Main Func
     </script>
+    <script type="text/javascript">
+            $(function () {
+                $(document).ready(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                });
 
-
-
-    <section class="content">
-        <!-- Button trigger modal -->
-        <div class="modal fade" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> | Member Info</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="ajax-dynamic-get-data-form" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <h4 class="box-title">Total: @ViewBag.TotalFiles <i class="fa fa-fw fa-folder"></i></h4>
-            </div>
-
-            <table class="table table-striped">
-                <thead>
-                    <tr class="success">
-                        <th>
-                            Member No
-                        </th>
-                        <th>
-                            Date Created
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Count() == 0)
-                    {
-                        <tr>
-                            <td colspan="7">No results Found</td>
-                        </tr>
-                    }
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                <a href="#" class="MemberLink"
-                                   data-id="@item.MemberNo"
-                                   data-toggle="tooltip" title="Click for more">
-                                    @Html.DisplayFor(modelItem => item.MemberNo)
-                                </a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DateCreated)
-                            </td>
-                            <td>
-                                @Html.ActionLink("Loan App", "FetchFile", new { id = item.FileNo, flag = 1 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Offer Letter", "FetchFile", new { id = item.FileNo, flag = 2 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Loan Agreement", "FetchFile", new { id = item.FileNo, flag = 3 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Acceptance Offer", "FetchFile", new { id = item.FileNo, flag = 4 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Guarantee Certificate", "FetchFile", new { id = item.FileNo, flag = 5 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Amortisation", "FetchFile", new { id = item.FileNo, flag = 6 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Cheque Copy", "FetchFile", new { id = item.FileNo, flag = 7 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Eligibility", "FetchFile", new { id = item.FileNo, flag = 8 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Quote", "FetchFile", new { id = item.FileNo, flag = 9 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Pay Slip", "FetchFile", new { id = item.FileNo, flag = 10 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Loan Statement", "FetchFile", new { id = item.FileNo, flag = 11 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("VNPF Statement", "FetchFile", new { id = item.FileNo, flag = 12 }, new { target = "_blank" })
-                            </td>
-                            <td>
-                                @Html.ActionLink("Other", "FetchFile", new { id = item.FileNo, flag = 13 }, new { target = "_blank" })
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <br />
-            <div id='Paging' style="text-align: center">
-                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
-                of @Model.PageCount
-                @Html.PagedListPager(Model, page => Url.Action("MyFiles",
-            new { memberNo = ViewBag.MemberNo, page }),
-            PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "filepartialview" }))
-            </div>
-        </div>
-    </section>
+                $('.FileLink').on('click', function (e) {
+                    var FileNo = $(this).attr("data-id");
+                    $.ajax({
+                        cache: false,
+                        type: "GET",
+                        url: "@(Url.RouteUrl("GetFileRefsByFileNo"))",
+                        data: { "FileNo": FileNo },
+                                success: function (data) {
+                                    $('#memberFilesModal').modal();
+                                    $('#memberFilesModal').find('.ajax-dynamic-get-data-form').html(data);
+                                    $('#memberFilesModal').modal('show');
+                                },
+                                error: function () {
+                                    alert('Error. Please try again.');
+                                }
+                        });//EndOf Ajax
+                })
+            });//EndOf Main Func
+    </script>
 </body>
 </html>
 
