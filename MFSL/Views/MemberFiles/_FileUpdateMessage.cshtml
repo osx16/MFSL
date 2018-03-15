@@ -1,0 +1,47 @@
+﻿@model IEnumerable<MFSL.ViewModels.FileUpdateViewModel>
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+    <body>
+        <section class="content">
+            <div class="col-md-6">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <i class="fa fa-bullhorn"></i>
+
+                        <h3 class="box-title">Callouts</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="callout callout-danger">
+                            <h4>File Status: </h4> @ViewBag.FileStatus
+
+                            <p>
+                                This file has already been finalized and therefore is not modifiable.
+                            </p>
+                        </div>
+                        @*<div class="callout callout-info">
+                            <h4>I am an info callout!</h4>
+
+                            <p>Follow the steps to continue to payment.</p>
+                        </div>
+                        <div class="callout callout-warning">
+                            <h4>I am a warning callout!</h4>
+
+                            <p>This is a yellow callout.</p>
+                        </div>
+                        <div class="callout callout-success">
+                            <h4>I am a success callout!</h4>
+
+                            <p>This is a green callout.</p>
+                        </div>*@
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </section>
+</body>
+</html>

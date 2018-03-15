@@ -1177,6 +1177,9 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\ResetPasswordError.cshtml" />
     <Content Include="Views\MemberFiles\_UserFiles.cshtml" />
+    <Content Include="Views\MemberFiles\_UpdateFile.cshtml" />
+    <Content Include="Views\Error\CouldNotUpdateFile.cshtml" />
+    <Content Include="Views\MemberFiles\_FileUpdateMessage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1195,6 +1198,7 @@
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Models\FileReferences.cs" />
     <Compile Include="Models\FileStatus.cs" />
+    <Compile Include="Models\FileUpdateDTO.cs" />
     <Compile Include="Models\ForgotPasswordViewModel.cs" />
     <Compile Include="Models\MemberFile.cs" />
     <Compile Include="Models\Officers.cs" />
@@ -1214,6 +1218,7 @@
     <Compile Include="Services\ApiServices.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\FileDTO.cs" />
+    <Compile Include="ViewModels\FileUpdateViewModel.cs" />
     <Compile Include="ViewModels\FileViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />

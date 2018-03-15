@@ -31,7 +31,25 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title"><i class="fa fa-file-archive-o fa-lg" aria-hidden="true"></i> | Archive</h4>
+                        <h4 class="modal-title"><i class="fa fa-file-archive-o fa-lg" aria-hidden="true"></i> | Docs</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ajax-dynamic-get-data-form" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update File modal -->
+        <div class="modal fade" id="updateFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title"><i class="fa fa-cloud-upload-alt fa-lg" aria-hidden="true"></i> | Update File</h4>
                     </div>
                     <div class="modal-body">
                         <div class="ajax-dynamic-get-data-form" />
@@ -87,6 +105,11 @@
                                    data-id="@item.FileNo"
                                    data-toggle="tooltip" title="Click to view">
                                     Show
+                                </a> |
+                                <a href="#" class="UpdateLink"
+                                   data-id="@item.FileNo"
+                                   data-toggle="tooltip" title="Click to open">
+                                   Update
                                 </a>
                             </td>
                         </tr>
@@ -151,6 +174,31 @@
                                     $('#memberFilesModal').modal();
                                     $('#memberFilesModal').find('.ajax-dynamic-get-data-form').html(data);
                                     $('#memberFilesModal').modal('show');
+                                },
+                                error: function () {
+                                    alert('Error. Please try again.');
+                                }
+                        });//EndOf Ajax
+                })
+            });//EndOf Main Func
+    </script>
+    <script type="text/javascript">
+            $(function () {
+                $(document).ready(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                });
+
+                $('.UpdateLink').on('click', function (e) {
+                    var FileNo = $(this).attr("data-id");
+                    $.ajax({
+                        cache: false,
+                        type: "GET",
+                        url: "@(Url.RouteUrl("UpdateMemberFile"))",
+                        data: { "FileNo": FileNo },
+                                success: function (data) {
+                                    $('#updateFileModal').modal();
+                                    $('#updateFileModal').find('.ajax-dynamic-get-data-form').html(data);
+                                    $('#updateFileModal').modal('show');
                                 },
                                 error: function () {
                                     alert('Error. Please try again.');

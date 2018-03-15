@@ -181,6 +181,23 @@ namespace RESTServices.Controllers
             var UserId = User.Identity.GetUserId();
             return db.FileReferences.Where(x => x.MemberNo == MemberNo && x.OfficerId == UserId);
         }
+
+        /// <summary>
+        /// Returns File Status Id
+        /// </summary>
+        /// <param name="FileNo"></param>
+        /// <returns></returns>
+        [Route("api/MemberFilesAPI/GetFileStatusId/{FileNo:int}")]
+        public int GetFileStatusId(int FileNo)
+        {
+            var StatusId = db.MemberFile.Where(x => x.FileNo == FileNo).Select(x => x.FStatusId);
+            if(StatusId != null)
+            {
+                return StatusId.First();
+            }
+            return 0;
+        }
+
         /// <summary>
         /// Get member info by member number
         /// </summary>
@@ -195,24 +212,27 @@ namespace RESTServices.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="memberFile"></param>
+        /// <param name="fileUpdateDTO"></param>
         /// <returns></returns>
         // PUT: api/MemberFilesAPI/5
+        [Route("api/MemberFilesApi/UpdateFile/{fileUpdateDTO}")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutMemberFile(int id, MemberFile memberFile)
+        public IHttpActionResult PutMemberFile(FileUpdateDTO fileUpdateDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != memberFile.FileNo)
+            var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
+            if (file == null)
             {
                 return BadRequest();
             }
 
-            db.Entry(memberFile).State = EntityState.Modified;
+            var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
+            fileToUpdate.ChequeCopy = fileUpdateDTO.ChequeCopy;
+            fileToUpdate.FStatusId = 2;
+            //db.Entry(memberFile).State = EntityState.Modified;
 
             try
             {
@@ -220,7 +240,7 @@ namespace RESTServices.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MemberFileExists(id))
+                if (!MemberFileExists(file.FileNo))
                 {
                     return NotFound();
                 }

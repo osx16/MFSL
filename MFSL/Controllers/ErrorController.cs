@@ -18,5 +18,10 @@ namespace MFSL.Controllers
         {
             return View();
         }
+
+        public ActionResult CouldNotUpdateFile()
+        {
+            return View();
+        }
     }
 }

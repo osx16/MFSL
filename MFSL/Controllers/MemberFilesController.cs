@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using MFSL.Helpers;
 using System.Net;
+using System.Diagnostics;
 
 namespace MFSL.Controllers
 {
@@ -34,7 +35,7 @@ namespace MFSL.Controllers
         HttpClient client;
 
         //The URL of the WEB API Service
-        string url = "http://localhost:64890/api/MemberFilesAPI";
+        string url = "http://localhost:64890/api/MemberFilesAPI/";
 
         public MemberFilesController()
         {
@@ -104,7 +105,7 @@ namespace MFSL.Controllers
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-            HttpResponseMessage responseMsg = await client.GetAsync(url + "/FetchFile?id="+ id + "&flag=" + flag);
+            HttpResponseMessage responseMsg = await client.GetAsync(url + "FetchFile?id="+ id + "&flag=" + flag);
             if (responseMsg.IsSuccessStatusCode)
             {
                 try
@@ -147,7 +148,7 @@ namespace MFSL.Controllers
                 ViewBag.MemberNo = memberNo;
                 int id = 0;
                 bool isValid = Int32.TryParse(memberNo, out id);
-                HttpResponseMessage responseMsg = await client.GetAsync(url + "/GetMyFileByMemberNo/" + id);
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "GetMyFileByMemberNo/" + id);
                 if (responseMsg.IsSuccessStatusCode)
                 {
                     var resData = responseMsg.Content.ReadAsStringAsync().Result;
@@ -158,7 +159,7 @@ namespace MFSL.Controllers
                 }
             }
 
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetFileForUser");
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileForUser");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
@@ -197,7 +198,7 @@ namespace MFSL.Controllers
                 ViewBag.MemberNo = memberNo;
                 int id = 0;
                 bool isValid = Int32.TryParse(memberNo, out id);
-                HttpResponseMessage responseMsg = await client.GetAsync(url + "/GetFileByMemberNo/" + id);
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "GetFileByMemberNo/" + id);
                 if (responseMsg.IsSuccessStatusCode)
                 {
                     var resData = responseMsg.Content.ReadAsStringAsync().Result;
@@ -208,7 +209,7 @@ namespace MFSL.Controllers
                 }
             }
 
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetAll");
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAll");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
@@ -240,7 +241,7 @@ namespace MFSL.Controllers
             bool isValid = Int32.TryParse(MemberNum, out id);
 
             // var member = db.vnpf_.Where(s => s.VNPF_Number == id);
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetMemberInfoByNo/" + id);
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetMemberInfoByNo/" + id);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
@@ -270,7 +271,7 @@ namespace MFSL.Controllers
             int id = 0;
             bool isValid = Int32.TryParse(FileNo, out id);
 
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "/GetFileRefByFileNo/" + id);
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileRefByFileNo/" + id);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
@@ -383,6 +384,96 @@ namespace MFSL.Controllers
                 }
             }
             return View();
+        }
+
+        /// <summary>
+        /// Update Member File
+        /// </summary>
+        /// <param name="fileNo"></param>
+        /// <returns></returns>
+        [AcceptVerbs(HttpVerbs.Get)]
+        public async Task<ActionResult> UpdateMemberFile(int fileNo)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
+            FileUpdateViewModel model = new FileUpdateViewModel()
+            {
+                FileNo = fileNo
+            };
+
+            //1. Get File Status
+            int id = 0;
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileStatusId/" + fileNo);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                id = JsonConvert.DeserializeObject<int>(responseData);
+            }
+            ViewBag.FileStatus = "";
+            if(id != 1)
+            {
+                ViewBag.FileStatus = "Finalized";
+                return PartialView("_FileUpdateMessage", model);
+            }
+            if( id == 1)
+            {
+                ViewBag.FileStatus = "Not Finalized";
+            }
+            return PartialView("_UpdateFile", model);
+        }
+
+        [HttpPut]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateMemberFile([Bind(Include = "MemberNo,ChequeCopy")] FileUpdateViewModel File)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var ChequeCopy = new MemoryStream();
+                File.ChequeCopy.InputStream.CopyTo(ChequeCopy);
+
+                var FileDTO = new FileUpdateDTO
+                {
+                    FileNo = File.FileNo,
+                    ChequeCopy = ChequeCopy.ToArray()
+                };
+
+                var json = JsonConvert.SerializeObject(FileDTO);
+                HttpContent content = new StringContent(json);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                try
+                {
+                    var response = await client.PostAsync(url+ "UpdateFile/", content);
+                    Debug.WriteLine(response);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Recent");
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    Debug.WriteLine("\nException Caught!");
+                    Debug.WriteLine("Message :{0} ", e.Message);
+                    return RedirectToAction("CouldNotUpdateFile", "Error");
+                }
+            }
+            return RedirectToAction("InternalServerError", "Error");
         }
     }
 }
