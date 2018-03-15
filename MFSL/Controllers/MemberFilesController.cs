@@ -408,7 +408,6 @@ namespace MFSL.Controllers
                 FileNo = fileNo
             };
 
-            //1. Get File Status
             int id = 0;
             HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileStatusId/" + fileNo);
             if (responseMessage.IsSuccessStatusCode)

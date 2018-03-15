@@ -268,6 +268,11 @@ namespace RESTServices.Controllers
                 return BadRequest(ModelState);
             }
 
+            if(memberFile.ChequeCopy != null)
+            {
+                memberFile.FStatusId = 2;
+            }
+
             db.MemberFile.Add(memberFile);
             db.SaveChanges();
 

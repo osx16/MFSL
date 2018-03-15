@@ -560,18 +560,24 @@
             <param name="MemberNo"> Member No</param>
             <returns></returns>
         </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetFileStatusId(System.Int32)">
+            <summary>
+            Returns File Status Id
+            </summary>
+            <param name="FileNo"></param>
+            <returns></returns>
+        </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetMemberInfoByNo(System.Int32)">
             <summary>
             Get member info by member number
             </summary>
             <param name="MemberNo"> Member Number</param>
         </member>
-        <member name="M:RESTServices.Controllers.MemberFilesAPIController.PutMemberFile(System.Int32,RESTServices.Models.MemberFile)">
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.PutMemberFile(RESTServices.Models.FileUpdateDTO)">
             <summary>
             
             </summary>
-            <param name="id"></param>
-            <param name="memberFile"></param>
+            <param name="fileUpdateDTO"></param>
             <returns></returns>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.PostMemberFile(RESTServices.Models.MemberFile)">
