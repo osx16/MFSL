@@ -9,7 +9,7 @@ namespace MFSL.ViewModels
     public class FileUpdateViewModel
     {
         [Required]
-        [Display(Name = "Member No: ")]
+        [Display(Name = "File No: ")]
         public int FileNo { get; set; }
 
         [Required]

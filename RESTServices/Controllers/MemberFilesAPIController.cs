@@ -215,7 +215,7 @@ namespace RESTServices.Controllers
         /// <param name="fileUpdateDTO"></param>
         /// <returns></returns>
         // PUT: api/MemberFilesAPI/5
-        [Route("api/MemberFilesApi/UpdateFile/{fileUpdateDTO}")]
+        [Route("api/MemberFilesApi/UpdateFile/")]
         [ResponseType(typeof(void))]
         public IHttpActionResult PutMemberFile(FileUpdateDTO fileUpdateDTO)
         {

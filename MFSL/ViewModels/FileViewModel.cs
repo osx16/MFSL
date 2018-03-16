@@ -42,9 +42,9 @@ namespace MFSL.ViewModels
         public HttpPostedFileBase Amortisation { get; set; }
 
         //[Required]
-        [DataType(DataType.Upload)]
-        [Display(Name = "Select File")]
-        public HttpPostedFileBase ChequeCopy { get; set; }
+        //[DataType(DataType.Upload)]
+        //[Display(Name = "Select File")]
+        //public HttpPostedFileBase ChequeCopy { get; set; }
 
         [Required]
         [DataType(DataType.Upload)]

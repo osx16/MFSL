@@ -258,7 +258,7 @@ namespace MFSL.Controllers
         /// <param name="FileNo"></param>
         /// <returns></returns>
         [AcceptVerbs(HttpVerbs.Get)]
-        public async Task<ActionResult> GetFileRefsByFileNo(string FileNo)
+        public async Task<ActionResult> GetFileRefsByFileNo(int fileNo)
         {
             if(Settings.AccessToken == "")
             {
@@ -268,16 +268,33 @@ namespace MFSL.Controllers
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-            int id = 0;
-            bool isValid = Int32.TryParse(FileNo, out id);
 
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileRefByFileNo/" + id);
+            int statusId = 0;
+            HttpResponseMessage responseMsg = await client.GetAsync(url + "GetFileStatusId/" + fileNo);
+            if (responseMsg.IsSuccessStatusCode)
+            {
+                var responseData = responseMsg.Content.ReadAsStringAsync().Result;
+                statusId = JsonConvert.DeserializeObject<int>(responseData);
+            }
+
+            ViewBag.FileStatus = "";
+            if (statusId != 1)
+            {
+                ViewBag.FileStatus = "Finalized";
+            }
+            if (statusId == 1)
+            {
+                ViewBag.FileStatus = "Not Finalized";
+            }
+
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileRefByFileNo/" + fileNo);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
                 var fileRefs = JsonConvert.DeserializeObject<IEnumerable<FileReferences>>(responseData);
                 return PartialView("_UserFiles", fileRefs);
             }
+
             return View("Error");
         }
 
@@ -308,7 +325,7 @@ namespace MFSL.Controllers
         public async Task<ActionResult> NewFile(
             [Bind(Include = "MemberNo,LoanApplication," +
             "LoanAgreement,GuaranteeCertificate," +
-            "Amortisation,ChequeCopy,Eligibility,RequestLetter,EmployerLetter,Quotation,Payslip," +
+            "Amortisation,Eligibility,RequestLetter,EmployerLetter,Quotation,Payslip," +
             "BankAccStatment,LoanStatement,VNPFStatement,StandingOrder,CustomerID,FStatusId,")] FileViewModel File)
 
         {
@@ -318,7 +335,7 @@ namespace MFSL.Controllers
                 var LAgrmt = new MemoryStream();
                 var GC = new MemoryStream();
                 var Amo = new MemoryStream();
-                var CC = new MemoryStream();
+                //var CC = new MemoryStream();
                 var Elig = new MemoryStream();
                 var RL = new MemoryStream();
                 var EL = new MemoryStream();
@@ -334,7 +351,7 @@ namespace MFSL.Controllers
                 File.LoanAgreement.InputStream.CopyTo(LAgrmt);
                 File.GuaranteeCertificate.InputStream.CopyTo(GC);
                 File.Amortisation.InputStream.CopyTo(Amo);
-                File.ChequeCopy.InputStream.CopyTo(CC);
+                //File.ChequeCopy.InputStream.CopyTo(CC);
                 File.Eligibility.InputStream.CopyTo(Elig);
                 File.RequestLetter.InputStream.CopyTo(RL);
                 File.EmployerLetter.InputStream.CopyTo(EL);
@@ -355,7 +372,7 @@ namespace MFSL.Controllers
                     LoanAgreement = LAgrmt.ToArray(),
                     GuaranteeCertificate = GC.ToArray(),
                     Amortisation = Amo.ToArray(),
-                    ChequeCopy = CC.ToArray(),
+                    //ChequeCopy = CC.ToArray(),
                     Eligibility = Elig.ToArray(),
                     RequestLetter = RL.ToArray(),
                     EmployerLetter = EL.ToArray(),
@@ -408,29 +425,29 @@ namespace MFSL.Controllers
                 FileNo = fileNo
             };
 
-            int id = 0;
+            int statusId = 0;
             HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileStatusId/" + fileNo);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-                id = JsonConvert.DeserializeObject<int>(responseData);
+                statusId = JsonConvert.DeserializeObject<int>(responseData);
             }
             ViewBag.FileStatus = "";
-            if(id != 1)
+            if(statusId != 1)
             {
                 ViewBag.FileStatus = "Finalized";
                 return PartialView("_FileUpdateMessage", model);
             }
-            if( id == 1)
+            if(statusId == 1)
             {
                 ViewBag.FileStatus = "Not Finalized";
             }
             return PartialView("_UpdateFile", model);
         }
 
-        [HttpPut]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateMemberFile([Bind(Include = "MemberNo,ChequeCopy")] FileUpdateViewModel File)
+        public async Task<ActionResult> UpdateMemberFile([Bind(Include = "FileNo,ChequeCopy")] FileUpdateViewModel File)
         {
             if (Settings.AccessToken == "")
             {
@@ -458,7 +475,7 @@ namespace MFSL.Controllers
 
                 try
                 {
-                    var response = await client.PostAsync(url+ "UpdateFile/", content);
+                    var response = await client.PutAsync(url+ "UpdateFile/", content);
                     Debug.WriteLine(response);
                     if (response.IsSuccessStatusCode)
                     {
