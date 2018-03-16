@@ -37,11 +37,15 @@
                     <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Amortisation", "FetchFile", new { id = item.FileNo, flag = 4 }, new { target = "_blank" })
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Cheque Copy", "FetchFile", new { id = item.FileNo, flag = 5 }, new { target = "_blank" })
-                </td>
-            </tr>
+            if (ViewBag.FileStatus == "Finalized")
+            {
+                <tr>
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Cheque Copy", "FetchFile", new { id = item.FileNo, flag = 5 }, new { target = "_blank" })
+                    </td>
+                </tr>
+            }
+
             <tr>
                 <td>
                     <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Eligibility", "FetchFile", new { id = item.FileNo, flag = 6 }, new { target = "_blank" })
