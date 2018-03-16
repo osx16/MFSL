@@ -14,6 +14,7 @@
           <Property Name="OfficerId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="MemberNo" Type="int" Nullable="false" />
           <Property Name="FileNo" Type="int" Nullable="false" />
+          <Property Name="FileStatus" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="FileStatus">
           <Key>
@@ -116,6 +117,7 @@
           <Property Name="OfficerId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MemberNo" Type="Int32" Nullable="false" />
           <Property Name="FileNo" Type="Int32" Nullable="false" />
+          <Property Name="FileStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityType Name="FileStatus">
           <Key>
@@ -220,6 +222,7 @@
                 <ScalarProperty Name="OfficerId" ColumnName="OfficerId" />
                 <ScalarProperty Name="MemberNo" ColumnName="MemberNo" />
                 <ScalarProperty Name="FileNo" ColumnName="FileNo" />
+                <ScalarProperty Name="FileStatus" ColumnName="FileStatus" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

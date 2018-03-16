@@ -4,10 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4de2f58e474d4085800028e45c02eb53" Name="Diagram1">
+      <Diagram DiagramId="848d33bee58d4eb99e626a53c0c98218" Name="Diagram1">
         <EntityTypeShape EntityType="MFSLModel.FileReferences" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.FileStatus" Width="1.5" PointX="0.75" PointY="2.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="MFSLModel.FileType" Width="1.5" PointX="5.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MFSLModel.FileType" Width="1.5" PointX="5.75" PointY="3.25" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.MemberFile" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.Officers" Width="1.5" PointX="5.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.vnpf_" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />

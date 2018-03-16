@@ -12,5 +12,6 @@ namespace MFSL.Models
         public string OfficerId { get; set; }
         public int MemberNo { get; set; }
         public int FileNo { get; set; }
+        public string FileStatus { get; set; }
     }
 }

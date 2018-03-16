@@ -42,36 +42,5 @@ namespace MFSL.Services
                 return false;
             }
         }// End of RegisterAsync
-
-        /// <summary>
-        /// Task method for posting new file reference to web api
-        /// </summary>
-        /// <param name="model">MemberFile</param>
-        /// <returns>Boolean</returns>
-        public async Task<bool> CreateNewRef(MemberFile model)
-        {
-            var client = new HttpClient();
-            FileReferences FR = new FileReferences();
-            FR.DateCreated = model.DateCreated;
-            FR.MemberNo = model.MemberNo;
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
-            var json = JsonConvert.SerializeObject(FR);
-            HttpContent content = new StringContent(json);
-
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            try
-            {
-                var response = await client.PostAsync(Constants.BaseApiAddress + "api/MemberFilesAPI/PostReference", content);
-                Debug.WriteLine(response);
-                return response.IsSuccessStatusCode;
-            }
-            catch (HttpRequestException e)
-            {
-                Debug.WriteLine("\nException Caught!");
-                Debug.WriteLine("Message :{0} ", e.Message);
-                return false;
-            }
-        }// End of RegisterAsync
     }
 }

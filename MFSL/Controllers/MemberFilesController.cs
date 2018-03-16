@@ -269,29 +269,17 @@ namespace MFSL.Controllers
                 return RedirectToAction("SignOut", "Logout");
             }
 
-            int statusId = 0;
-            HttpResponseMessage responseMsg = await client.GetAsync(url + "GetFileStatusId/" + fileNo);
-            if (responseMsg.IsSuccessStatusCode)
-            {
-                var responseData = responseMsg.Content.ReadAsStringAsync().Result;
-                statusId = JsonConvert.DeserializeObject<int>(responseData);
-            }
-
-            ViewBag.FileStatus = "";
-            if (statusId != 1)
-            {
-                ViewBag.FileStatus = "Finalized";
-            }
-            if (statusId == 1)
-            {
-                ViewBag.FileStatus = "Not Finalized";
-            }
-
             HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileRefByFileNo/" + fileNo);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
                 var fileRefs = JsonConvert.DeserializeObject<IEnumerable<FileReferences>>(responseData);
+                ViewBag.FileStatus = "";
+                foreach(var i in fileRefs)
+                {
+                    ViewBag.FileStatus = i.FileStatus;
+                }
+                ViewBag.FileNo = fileNo;
                 return PartialView("_UserFiles", fileRefs);
             }
 
@@ -395,7 +383,7 @@ namespace MFSL.Controllers
                 }
                 else
                 {
-                    var isSuccess2 = await _apiServices.CreateNewRef(NewMemberFile);
+                    //var isSuccess2 = await _apiServices.CreateNewRef(NewMemberFile);
 
                     return RedirectToAction("Recent");
                 }
@@ -432,16 +420,13 @@ namespace MFSL.Controllers
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
                 statusId = JsonConvert.DeserializeObject<int>(responseData);
             }
-            ViewBag.FileStatus = "";
+  
             if(statusId != 1)
             {
                 ViewBag.FileStatus = "Finalized";
                 return PartialView("_FileUpdateMessage", model);
             }
-            if(statusId == 1)
-            {
-                ViewBag.FileStatus = "Not Finalized";
-            }
+            //ViewBag.FileNo = fileNo;
             return PartialView("_UpdateFile", model);
         }
 

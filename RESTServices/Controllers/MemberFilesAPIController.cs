@@ -14,6 +14,8 @@ using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 
 namespace RESTServices.Controllers
 {
@@ -210,6 +212,79 @@ namespace RESTServices.Controllers
         }
 
         /// <summary>
+        /// Post new member file to database
+        /// </summary>
+        /// <param name="memberFile">MembeFile</param>
+        /// <returns></returns>
+        // POST: api/MemberFilesAPI
+        [ResponseType(typeof(MemberFile))]
+        public IHttpActionResult PostMemberFile(MemberFile memberFile)
+        {
+            memberFile.OfficeId = User.Identity.GetUserId();
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            //Create Transaction
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    #region Transaction 1 begins
+                    //Create new member File
+                    if (memberFile.ChequeCopy != null)
+                    {
+                        memberFile.FStatusId = 2;
+                    }
+
+                    db.MemberFile.Add(memberFile);
+                    db.SaveChanges();
+                    #endregion Transaction 1 ends
+
+                    #region Transaction 2 begins
+                    //Create new file reference
+                    var UserId = User.Identity.GetUserId();
+                    var data = db.MemberFile.Where(x => x.OfficeId == UserId && x.MemberNo == memberFile.MemberNo)
+                                                         .OrderByDescending(x => x.FileNo)
+                                                         .Select(x => x.FileNo)
+                                                         .ToList();
+
+                    FileReferences NewFileRef = new FileReferences()
+                    {
+                        DateCreated = memberFile.DateCreated,
+                        OfficerId = UserId,
+                        MemberNo = memberFile.MemberNo,
+                        FileNo = data.First(),
+                        FileStatus = "Not Finalized"
+                    };
+
+                    db.FileReferences.Add(NewFileRef);
+                    db.SaveChanges();
+                    #endregion Transaction 2 ends
+                    
+                    //Commit Transaction
+                    transaction.Commit();
+                }
+                catch (DbEntityValidationException dbEx)
+                {
+                    foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            Trace.TraceInformation("Property: {0} Error: {1}",
+                                                    validationError.PropertyName,
+                                                    validationError.ErrorMessage);
+                        }
+                    }
+                    //Rollback Transaction
+                    transaction.Rollback();
+                }
+            }
+            return CreatedAtRoute("DefaultApi", new { id = memberFile.FileNo }, memberFile);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="fileUpdateDTO"></param>
@@ -223,89 +298,49 @@ namespace RESTServices.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
-            if (file == null)
+            //Create Transaction
+            using (var transaction = db.Database.BeginTransaction())
             {
-                return BadRequest();
-            }
-
-            var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
-            fileToUpdate.ChequeCopy = fileUpdateDTO.ChequeCopy;
-            fileToUpdate.FStatusId = 2;
-            //db.Entry(memberFile).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MemberFileExists(file.FileNo))
+                var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
+                try
                 {
-                    return NotFound();
+                    #region Transaction 1 begins
+                    //Update MemberFileTable
+                    if (file == null)
+                    {
+                        return BadRequest();
+                    }
+                    var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
+                    fileToUpdate.ChequeCopy = fileUpdateDTO.ChequeCopy;
+                    fileToUpdate.FStatusId = 2;
+                    db.SaveChanges();
+                    #endregion Transaction 1 ends
+
+                    #region Transaction 2 begins
+                    //Update FileReferences Table
+                    var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
+                    RefToUpdate.FileStatus = "Finalized";
+                    db.SaveChanges();
+                    #endregion Transaction 2 ends
+
+                    //Commit Transaction
+                    transaction.Commit();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    //Rollback Transaction
+                    transaction.Rollback();
+                    if (!MemberFileExists(file.FileNo))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
-
             return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/MemberFilesAPI
-        /// <summary>
-        /// Post new member file to database
-        /// </summary>
-        /// <param name="memberFile">MembeFile</param>
-        /// <returns></returns>
-        [ResponseType(typeof(MemberFile))]
-        public IHttpActionResult PostMemberFile(MemberFile memberFile)
-        {
-            memberFile.OfficeId = User.Identity.GetUserId();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if(memberFile.ChequeCopy != null)
-            {
-                memberFile.FStatusId = 2;
-            }
-
-            db.MemberFile.Add(memberFile);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = memberFile.FileNo }, memberFile);
-        }
-        /// <summary>
-        /// Post new file reference for customer to database
-        /// </summary>
-        /// <param name="fileRef"></param>
-        /// <returns></returns>
-        [Route("api/MemberFilesAPI/PostReference")]
-        [ResponseType(typeof(MemberFile))]
-        public IHttpActionResult PostReference(FileReferences fileRef)
-        {
-            var UserId = User.Identity.GetUserId();
-            fileRef.OfficerId = UserId;
-            var DateCreated = fileRef.DateCreated;
-            var MemberNo = fileRef.MemberNo;
-            var data = db.MemberFile.Where(x => x.OfficeId == UserId &&
-                                             x.MemberNo == MemberNo)
-                                             .OrderByDescending(x=>x.FileNo)
-                                             .Select(x => x.FileNo)
-                                             .ToList();
-            fileRef.FileNo = data.First();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.FileReferences.Add(fileRef);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = fileRef.FileNo }, fileRef);
         }
 
         /// <summary>

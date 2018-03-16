@@ -573,13 +573,6 @@
             </summary>
             <param name="MemberNo"> Member Number</param>
         </member>
-        <member name="M:RESTServices.Controllers.MemberFilesAPIController.PutMemberFile(RESTServices.Models.FileUpdateDTO)">
-            <summary>
-            
-            </summary>
-            <param name="fileUpdateDTO"></param>
-            <returns></returns>
-        </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.PostMemberFile(RESTServices.Models.MemberFile)">
             <summary>
             Post new member file to database
@@ -587,11 +580,11 @@
             <param name="memberFile">MembeFile</param>
             <returns></returns>
         </member>
-        <member name="M:RESTServices.Controllers.MemberFilesAPIController.PostReference(RESTServices.Models.FileReferences)">
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.PutMemberFile(RESTServices.Models.FileUpdateDTO)">
             <summary>
-            Post new file reference for customer to database
+            
             </summary>
-            <param name="fileRef"></param>
+            <param name="fileUpdateDTO"></param>
             <returns></returns>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.DeleteMemberFile(System.Int32)">
