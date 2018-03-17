@@ -311,6 +311,7 @@ namespace RESTServices.Controllers
                         return BadRequest();
                     }
                     var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
+                    fileToUpdate.LoanApplication = fileUpdateDTO.LoanApplication;
                     fileToUpdate.ChequeCopy = fileUpdateDTO.ChequeCopy;
                     fileToUpdate.FStatusId = 2;
                     db.SaveChanges();

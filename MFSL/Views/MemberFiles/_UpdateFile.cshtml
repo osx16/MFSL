@@ -24,6 +24,13 @@
                                     <div class="box-footer no-padding">
                                         <table class="table">
                                             <tr>
+                                                <td>Loan Application:</td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.LoanApplication, "", new { @type = "file", @multiple = "multiple" })
+                                                    @Html.ValidationMessageFor(model => model.LoanApplication, "", new { @class = "text-danger" })
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td>Check Copy:</td>
                                                 <td>
                                                     @Html.TextBoxFor(model => model.ChequeCopy, "", new { @type = "file", @multiple = "multiple" })

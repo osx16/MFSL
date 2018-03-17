@@ -432,7 +432,7 @@ namespace MFSL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateMemberFile([Bind(Include = "FileNo,ChequeCopy")] FileUpdateViewModel File)
+        public async Task<ActionResult> UpdateMemberFile([Bind(Include = "FileNo,LoanApplication,ChequeCopy")] FileUpdateViewModel File)
         {
             if (Settings.AccessToken == "")
             {
@@ -445,12 +445,15 @@ namespace MFSL.Controllers
 
             if (ModelState.IsValid)
             {
+                var LoanApplication = new MemoryStream();
                 var ChequeCopy = new MemoryStream();
+                File.LoanApplication.InputStream.CopyTo(LoanApplication);
                 File.ChequeCopy.InputStream.CopyTo(ChequeCopy);
 
                 var FileDTO = new FileUpdateDTO
                 {
                     FileNo = File.FileNo,
+                    LoanApplication = LoanApplication.ToArray(),
                     ChequeCopy = ChequeCopy.ToArray()
                 };
 

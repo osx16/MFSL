@@ -15,6 +15,11 @@ namespace MFSL.ViewModels
         [Required]
         [DataType(DataType.Upload)]
         [Display(Name = "Select File")]
+        public HttpPostedFileBase LoanApplication { get; set; }
+
+        [Required]
+        [DataType(DataType.Upload)]
+        [Display(Name = "Select File")]
         public HttpPostedFileBase ChequeCopy { get; set; }
     }
 }
