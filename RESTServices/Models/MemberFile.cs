@@ -18,6 +18,7 @@ namespace RESTServices.Models
         public System.DateTime DateCreated { get; set; }
         public string OfficeId { get; set; }
         public int MemberNo { get; set; }
+        public string EmployerType { get; set; }
         public byte[] LoanApplication { get; set; }
         public byte[] LoanAgreement { get; set; }
         public byte[] GuaranteeCertificate { get; set; }
@@ -32,7 +33,11 @@ namespace RESTServices.Models
         public byte[] LoanStatement { get; set; }
         public byte[] VNPFStatement { get; set; }
         public byte[] StandingOrder { get; set; }
+        public byte[] OffsetLetter { get; set; }
         public byte[] CustomerID { get; set; }
+        public byte[] PaymentAdvice { get; set; }
+        public byte[] Collateral { get; set; }
+        public byte[] MaintenanceForm { get; set; }
         public System.Guid fileGUID { get; set; }
         public int FStatusId { get; set; }
     

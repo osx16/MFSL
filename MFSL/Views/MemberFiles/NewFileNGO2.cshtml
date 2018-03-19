@@ -1,0 +1,202 @@
+﻿@model MFSL.ViewModels.NGOFileViewModel2
+
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <ol class="breadcrumb">
+        @*<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#">UI</a></li>*@
+        <li class="active"><i class="glyphicon glyphicon-file"></i> New File</li>
+        <li class="active">NGO Type 2</li>
+    </ol>
+    @using (Html.BeginForm("NewFileNGO2", "MemberFiles", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+    <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"><i class="fa fa-plus fa-lg" aria-hidden="true"></i> <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> <i class="fa fa-folder-open-o fa-lg" aria-hidden="true"></i></h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <form role="form">
+                            <div class="box-body">
+                                <div class="form-group">
+                                    @Html.EditorFor(model => model.MemberNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Member No." } })
+                                    @Html.ValidationMessageFor(model => model.MemberNo, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <!-- Widget: user widget style 1 -->
+                                        <div class="box box-widget widget-user-2">
+                                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                                            <div class="widget-user-header bg-yellow">
+                                                @*<div class="widget-user-image">
+                                                        <img class="img-circle" src="../dist/img/user7-128x128.jpg" alt="User Avatar">
+                                                    </div>*@
+                                                <!-- /.widget-user-image -->
+                                                <h3 class="widget-user-username"><i class="fa fa-fw fa-upload"></i> Legal Docs</h3>
+                                                @*<h5 class="widget-user-desc">Lead Developer</h5>*@
+                                            </div>
+                                            <div class="box-footer no-padding">
+                                                <table class="table">
+                                                    <tr>
+                                                        <td>Loan Application</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.LoanApplication, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.LoanApplication, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Loan Agreement</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.LoanAgreement, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.LoanAgreement, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Guarantee Certificate</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.GuaranteeCertificate, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.GuaranteeCertificate, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Amortisation</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.Amortisation, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.Amortisation, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    @*<tr>
+                                                            <td>Cheque Copy</td>
+                                                            <td>
+                                                                @Html.TextBoxFor(model => model.ChequeCopy, "", new { @type = "file", @multiple = "multiple" })
+                                                                @Html.ValidationMessageFor(model => model.ChequeCopy, "", new { @class = "text-danger" })
+                                                            </td>
+                                                        </tr>*@
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- /.widget-user -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-md-5">
+                                        <!-- Widget: user widget style 1 -->
+                                        <div class="box box-widget widget-user-2">
+                                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                                            <div class="widget-user-header bg-olive">
+                                                @*<div class="widget-user-image">
+                                                        <img class="img-circle" src="../dist/img/user7-128x128.jpg" alt="User Avatar">
+                                                    </div>*@
+                                                <!-- /.widget-user-image -->
+                                                <h3 class="widget-user-username"><i class="fa fa-fw fa-upload"></i> Supporting Docs</h3>
+                                                @*<h5 class="widget-user-desc">Lead Developer</h5>*@
+                                            </div>
+                                            <div class="box-footer no-padding">
+                                                <table class="table">
+                                                    <tr>
+                                                        <td>Eligibility</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.Eligibility, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.Eligibility, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Request Letter</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.RequestLetter, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.RequestLetter, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Employer Letter</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.EmployerLetter, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.EmployerLetter, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Quotation</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.Quotation, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.Quotation, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank Account Statement</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.BankAccStatment, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.BankAccStatment, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Loan Statement</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.LoanStatement, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.LoanStatement, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>VNPF Statement</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.VNPFStatement, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.VNPFStatement, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Offset Letter</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.OffsetLetter, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.OffsetLetter, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Customer ID</td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => model.CustomerID, "", new { @type = "file", @multiple = "multiple" })
+                                                            @Html.ValidationMessageFor(model => model.CustomerID, "", new { @class = "text-danger" })
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- /.widget-user -->
+                                    </div>    <!-- /.col -->
+                                </div>
+
+                            </div>
+                            <!-- /.box-body -->
+
+                            <div class="box-footer">
+                                <input type="submit" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- right column -->
+            </div>
+            <!-- /.row -->
+        </section>
+    <!-- /.content -->
+    }
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1180,6 +1180,9 @@
     <Content Include="Views\MemberFiles\_UpdateFile.cshtml" />
     <Content Include="Views\Error\CouldNotUpdateFile.cshtml" />
     <Content Include="Views\MemberFiles\_FileUpdateMessage.cshtml" />
+    <Content Include="Views\MemberFiles\NewFileNGO1.cshtml" />
+    <Content Include="Views\MemberFiles\NewFileNGO2.cshtml" />
+    <Content Include="Views\MemberFiles\NewFileGov.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1220,7 +1223,10 @@
     <Compile Include="ViewModels\FileDTO.cs" />
     <Compile Include="ViewModels\FileUpdateViewModel.cs" />
     <Compile Include="ViewModels\FileViewModel.cs" />
+    <Compile Include="ViewModels\GovFileViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\NGOFileViewModel1.cs" />
+    <Compile Include="ViewModels\NGOFileViewModel2.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

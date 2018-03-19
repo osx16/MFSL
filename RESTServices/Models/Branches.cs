@@ -12,19 +12,18 @@ namespace RESTServices.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Officers
+    public partial class Branches
     {
-        public string OfficerId { get; set; }
-        public int BranchId { get; set; }
-        public int VnpfNo { get; set; }
-        public int LoanNo { get; set; }
-        public string EmpFname { get; set; }
-        public string EmpMname { get; set; }
-        public string EmpLname { get; set; }
-        public int StatusId { get; set; }
-        public System.DateTime DateCreated { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Branches()
+        {
+            this.Officers = new HashSet<Officers>();
+        }
     
-        public virtual Branches Branches { get; set; }
-        public virtual EmployeeStatus EmployeeStatus { get; set; }
+        public int BranchId { get; set; }
+        public string BranchLocation { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Officers> Officers { get; set; }
     }
 }

@@ -323,7 +323,6 @@ namespace MFSL.Controllers
                 var LAgrmt = new MemoryStream();
                 var GC = new MemoryStream();
                 var Amo = new MemoryStream();
-                //var CC = new MemoryStream();
                 var Elig = new MemoryStream();
                 var RL = new MemoryStream();
                 var EL = new MemoryStream();
@@ -339,7 +338,6 @@ namespace MFSL.Controllers
                 File.LoanAgreement.InputStream.CopyTo(LAgrmt);
                 File.GuaranteeCertificate.InputStream.CopyTo(GC);
                 File.Amortisation.InputStream.CopyTo(Amo);
-                //File.ChequeCopy.InputStream.CopyTo(CC);
                 File.Eligibility.InputStream.CopyTo(Elig);
                 File.RequestLetter.InputStream.CopyTo(RL);
                 File.EmployerLetter.InputStream.CopyTo(EL);
@@ -360,7 +358,6 @@ namespace MFSL.Controllers
                     LoanAgreement = LAgrmt.ToArray(),
                     GuaranteeCertificate = GC.ToArray(),
                     Amortisation = Amo.ToArray(),
-                    //ChequeCopy = CC.ToArray(),
                     Eligibility = Elig.ToArray(),
                     RequestLetter = RL.ToArray(),
                     EmployerLetter = EL.ToArray(),
@@ -385,6 +382,289 @@ namespace MFSL.Controllers
                 {
                     //var isSuccess2 = await _apiServices.CreateNewRef(NewMemberFile);
 
+                    return RedirectToAction("Recent");
+                }
+            }
+            return View();
+        }
+
+        /// <summary>
+        /// Returns Form for creating a new file for customer
+        /// </summary>
+        /// <returns>New File Creation Form</returns>
+        public ActionResult NewFileGov()
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            return View();
+        }
+
+        /// <summary>
+        /// Post method for New Customer File
+        /// </summary>
+        /// <param name="File">FileViewModel</param>
+        /// <returns>HTTP Status Message</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> NewFileGov(
+            [Bind(Include = "MemberNo,LoanApplication," +
+            "LoanAgreement,GuaranteeCertificate," +
+            "Amortisation,Eligibility,RequestLetter,Quotation,Payslip," +
+            "BankAccStatment,LoanStatement,VNPFStatement,CustomerID,FStatusId,")] GovFileViewModel File)
+
+        {
+            if (ModelState.IsValid)
+            {
+                var LApp = new MemoryStream();
+                var LAgrmt = new MemoryStream();
+                var GC = new MemoryStream();
+                var Amo = new MemoryStream();
+                var Elig = new MemoryStream();
+                var RL = new MemoryStream();
+                var Quote = new MemoryStream();
+                var PS = new MemoryStream();
+                var BS = new MemoryStream();
+                var LS = new MemoryStream();
+                var VS = new MemoryStream();
+                var CID = new MemoryStream();
+
+                File.LoanApplication.InputStream.CopyTo(LApp);
+                File.LoanAgreement.InputStream.CopyTo(LAgrmt);
+                File.GuaranteeCertificate.InputStream.CopyTo(GC);
+                File.Amortisation.InputStream.CopyTo(Amo);
+                File.Eligibility.InputStream.CopyTo(Elig);
+                File.RequestLetter.InputStream.CopyTo(RL);
+                File.Quotation.InputStream.CopyTo(Quote);
+                File.Payslip.InputStream.CopyTo(PS);
+                File.BankAccStatment.InputStream.CopyTo(BS);
+                File.LoanStatement.InputStream.CopyTo(LS);
+                File.VNPFStatement.InputStream.CopyTo(VS);
+                File.CustomerID.InputStream.CopyTo(CID);
+
+                ViewBag.MemberNo = File.MemberNo;
+                var NewMemberFile = new MemberFile
+                {
+                    DateCreated = System.DateTime.Now,
+                    MemberNo = File.MemberNo,
+                    EmployerType = "Gov",
+                    LoanApplication = LApp.ToArray(),
+                    LoanAgreement = LAgrmt.ToArray(),
+                    GuaranteeCertificate = GC.ToArray(),
+                    Amortisation = Amo.ToArray(),
+                    Eligibility = Elig.ToArray(),
+                    RequestLetter = RL.ToArray(),
+                    Quotation = Quote.ToArray(),
+                    Payslip = PS.ToArray(),
+                    BankAccStatement = BS.ToArray(),
+                    LoanStatement = LS.ToArray(),
+                    VNPFStatement = VS.ToArray(),
+                    CustomerID = CID.ToArray(),
+                    FStatusId = 1
+                };
+
+                var isSuccess = await _apiServices.CreateNewFile(NewMemberFile);
+
+                if (!isSuccess)
+                {
+                    ErrorController err = new ErrorController();
+                    err.CouldNotCreateFile();
+                }
+                else
+                {
+                    //var isSuccess2 = await _apiServices.CreateNewRef(NewMemberFile);
+
+                    return RedirectToAction("Recent");
+                }
+            }
+            return View();
+        }
+
+        /// <summary>
+        /// Returns Form for creating a new file for customer
+        /// </summary>
+        /// <returns>New File Creation Form</returns>
+        public ActionResult NewFileNGO1()
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> NewFileNGO1(
+        [Bind(Include = "MemberNo,LoanApplication," +
+            "LoanAgreement,GuaranteeCertificate," +
+            "Amortisation,Eligibility,RequestLetter,Quotation,Payslip," +
+            "BankAccStatment,LoanStatement,VNPFStatement,StandingOrder,CustomerID,FStatusId,")] NGOFileViewModel1 File)
+
+        {
+            if (ModelState.IsValid)
+            {
+                var LApp = new MemoryStream();
+                var LAgrmt = new MemoryStream();
+                var GC = new MemoryStream();
+                var Amo = new MemoryStream();
+                var Elig = new MemoryStream();
+                var RL = new MemoryStream();
+                var Quote = new MemoryStream();
+                var PS = new MemoryStream();
+                var BS = new MemoryStream();
+                var LS = new MemoryStream();
+                var VS = new MemoryStream();
+                var SO = new MemoryStream();
+                var CID = new MemoryStream();
+
+                File.LoanApplication.InputStream.CopyTo(LApp);
+                File.LoanAgreement.InputStream.CopyTo(LAgrmt);
+                File.GuaranteeCertificate.InputStream.CopyTo(GC);
+                File.Amortisation.InputStream.CopyTo(Amo);
+                File.Eligibility.InputStream.CopyTo(Elig);
+                File.RequestLetter.InputStream.CopyTo(RL);
+                File.Quotation.InputStream.CopyTo(Quote);
+                File.Payslip.InputStream.CopyTo(PS);
+                File.BankAccStatment.InputStream.CopyTo(BS);
+                File.LoanStatement.InputStream.CopyTo(LS);
+                File.VNPFStatement.InputStream.CopyTo(VS);
+                File.StandingOrder.InputStream.CopyTo(SO);
+                File.CustomerID.InputStream.CopyTo(CID);
+
+                ViewBag.MemberNo = File.MemberNo;
+                var NewMemberFile = new MemberFile
+                {
+                    DateCreated = System.DateTime.Now,
+                    MemberNo = File.MemberNo,
+                    EmployerType = "NGO1",
+                    LoanApplication = LApp.ToArray(),
+                    LoanAgreement = LAgrmt.ToArray(),
+                    GuaranteeCertificate = GC.ToArray(),
+                    Amortisation = Amo.ToArray(),
+                    Eligibility = Elig.ToArray(),
+                    RequestLetter = RL.ToArray(),
+                    Quotation = Quote.ToArray(),
+                    Payslip = PS.ToArray(),
+                    BankAccStatement = BS.ToArray(),
+                    LoanStatement = LS.ToArray(),
+                    VNPFStatement = VS.ToArray(),
+                    StandingOrder = SO.ToArray(),
+                    CustomerID = CID.ToArray(),
+                    FStatusId = 1
+                };
+
+                var isSuccess = await _apiServices.CreateNewFile(NewMemberFile);
+
+                if (!isSuccess)
+                {
+                    ErrorController err = new ErrorController();
+                    err.CouldNotCreateFile();
+                }
+                else
+                {
+                    return RedirectToAction("Recent");
+                }
+            }
+            return View();
+        }
+
+        /// <summary>
+        /// Returns Form for creating a new file for customer
+        /// </summary>
+        /// <returns>New File Creation Form</returns>
+        public ActionResult NewFileNGO2()
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> NewFileNGO2(
+            [Bind(Include = "MemberNo,LoanApplication," +
+            "LoanAgreement,GuaranteeCertificate," +
+            "Amortisation,Eligibility,RequestLetter,EmployerLetter,Quotation," +
+            "BankAccStatment,LoanStatement,VNPFStatement,OffsetLetter,CustomerID,FStatusId,")] NGOFileViewModel2 File)
+
+        {
+            if (ModelState.IsValid)
+            {
+                var LApp = new MemoryStream();
+                var LAgrmt = new MemoryStream();
+                var GC = new MemoryStream();
+                var Amo = new MemoryStream();
+                var Elig = new MemoryStream();
+                var RL = new MemoryStream();
+                var EL = new MemoryStream();
+                var Quote = new MemoryStream();
+                var BS = new MemoryStream();
+                var LS = new MemoryStream();
+                var VS = new MemoryStream();
+                var OL = new MemoryStream();
+                var CID = new MemoryStream();
+
+                File.LoanApplication.InputStream.CopyTo(LApp);
+                File.LoanAgreement.InputStream.CopyTo(LAgrmt);
+                File.GuaranteeCertificate.InputStream.CopyTo(GC);
+                File.Amortisation.InputStream.CopyTo(Amo);
+                File.Eligibility.InputStream.CopyTo(Elig);
+                File.RequestLetter.InputStream.CopyTo(RL);
+                File.EmployerLetter.InputStream.CopyTo(EL);
+                File.Quotation.InputStream.CopyTo(Quote);
+                File.BankAccStatment.InputStream.CopyTo(BS);
+                File.LoanStatement.InputStream.CopyTo(LS);
+                File.VNPFStatement.InputStream.CopyTo(VS);
+                File.OffsetLetter.InputStream.CopyTo(OL);
+                File.CustomerID.InputStream.CopyTo(CID);
+
+                ViewBag.MemberNo = File.MemberNo;
+                var NewMemberFile = new MemberFile
+                {
+                    DateCreated = System.DateTime.Now,
+                    MemberNo = File.MemberNo,
+                    EmployerType = "NGO2",
+                    LoanApplication = LApp.ToArray(),
+                    LoanAgreement = LAgrmt.ToArray(),
+                    GuaranteeCertificate = GC.ToArray(),
+                    Amortisation = Amo.ToArray(),
+                    Eligibility = Elig.ToArray(),
+                    RequestLetter = RL.ToArray(),
+                    EmployerLetter = EL.ToArray(),
+                    Quotation = Quote.ToArray(),
+                    BankAccStatement = BS.ToArray(),
+                    LoanStatement = LS.ToArray(),
+                    VNPFStatement = VS.ToArray(),
+                    OffsetLetter = OL.ToArray(),
+                    CustomerID = CID.ToArray(),
+                    FStatusId = 1
+                };
+
+                var isSuccess = await _apiServices.CreateNewFile(NewMemberFile);
+
+                if (!isSuccess)
+                {
+                    ErrorController err = new ErrorController();
+                    err.CouldNotCreateFile();
+                }
+                else
+                {
                     return RedirectToAction("Recent");
                 }
             }

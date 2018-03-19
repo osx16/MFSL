@@ -22,8 +22,24 @@
             </li>
             @if (UserRole == "Admin" || UserRole == "Employee" || UserRole == "Manager")
             {
-                <li class="@Url.IsLinkActive("NewFile", "MemberFiles")">
-                    <a href="@Url.Action("NewFile", "MemberFiles")"><i class="glyphicon glyphicon-file"></i> <span>New File</span></a>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="glyphicon glyphicon-file"></i><span>  New File</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="@Url.IsLinkActive("NewFileGov", "MemberFiles")">
+                            <a href="@Url.Action("NewFileGov", "MemberFiles")"><i class="glyphicon glyphicon-plus"></i> <span>Gov</span></a>
+                        </li>
+                        <li class="@Url.IsLinkActive("NewFileNGO1", "MemberFiles")">
+                            <a href="@Url.Action("NewFileNGO1", "MemberFiles")"><i class="glyphicon glyphicon-plus"></i> <span>NGO Type 1</span></a>
+                        </li>
+                        <li class="@Url.IsLinkActive("NewFileNGO2", "MemberFiles")">
+                            <a href="@Url.Action("NewFileNGO2", "MemberFiles")"><i class="glyphicon glyphicon-plus"></i> <span>NGO Type 2</span></a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="@Url.IsLinkActive("Recent", "MemberFiles")">
                     <a href="@Url.Action("Recent", "MemberFiles")"><i class="glyphicon glyphicon-time"></i> <span>History</span></a>
