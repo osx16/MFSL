@@ -73,6 +73,9 @@
                             Member No
                         </th>
                         <th>
+                            File Type
+                        </th>
+                        <th>
                             File No
                         </th>
                         <th>
@@ -102,6 +105,9 @@
                                    data-toggle="tooltip" title="Click for more">
                                     @Html.DisplayFor(modelItem => item.MemberNo)
                                 </a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EmployerType)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.FileNo)

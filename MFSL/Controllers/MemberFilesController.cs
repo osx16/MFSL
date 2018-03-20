@@ -274,12 +274,14 @@ namespace MFSL.Controllers
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
                 var fileRefs = JsonConvert.DeserializeObject<IEnumerable<FileReferences>>(responseData);
+                ViewBag.FileNo = fileNo;
                 ViewBag.FileStatus = "";
+                ViewBag.EmployerType = "";
                 foreach(var i in fileRefs)
                 {
                     ViewBag.FileStatus = i.FileStatus;
+                    ViewBag.EmployerType = i.EmployerType;
                 }
-                ViewBag.FileNo = fileNo;
                 return PartialView("_UserFiles", fileRefs);
             }
 
@@ -452,7 +454,7 @@ namespace MFSL.Controllers
                 {
                     DateCreated = System.DateTime.Now,
                     MemberNo = File.MemberNo,
-                    EmployerType = "Gov",
+                    EmployerType = "GOVT",
                     LoanApplication = LApp.ToArray(),
                     LoanAgreement = LAgrmt.ToArray(),
                     GuaranteeCertificate = GC.ToArray(),
@@ -692,22 +694,43 @@ namespace MFSL.Controllers
             {
                 FileNo = fileNo
             };
-
-            int statusId = 0;
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileStatusId/" + fileNo);
+            //Get File Reference
+            var obj = new FileReferences();
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileRefByFileNo/" + fileNo);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-                statusId = JsonConvert.DeserializeObject<int>(responseData);
+                try
+                {
+                    var list = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    foreach(var i in list)
+                    {
+                        obj = i;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
             }
-  
-            if(statusId != 1)
+
+            if (obj.FileStatus == "Pending Approval")
             {
-                ViewBag.FileStatus = "Finalized";
+                ViewBag.FileStatus = obj.FileStatus;
                 return PartialView("_FileUpdateMessage", model);
             }
-            //ViewBag.FileNo = fileNo;
-            return PartialView("_UpdateFile", model);
+            if (obj.FileStatus == "Awaiting Input")
+            {
+                ViewBag.FileStatus = obj.FileStatus;
+                return PartialView("_UpdateFile", model);
+            }
+            if (obj.FileStatus == "Await Posting")
+            {
+                ViewBag.FileStatus = obj.FileStatus;
+                return PartialView("_UpdateFile", model);
+            }
+            return PartialView("_FileUpdateMessage", model);
         }
 
         [HttpPost]

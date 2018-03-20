@@ -40,7 +40,7 @@
                     <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Amortisation", "FetchFile", new { id = item.FileNo, flag = 4 }, new { target = "_blank" })
                 </td>
             </tr>
-            if (ViewBag.FileStatus == "Finalized")
+            if (ViewBag.FileStatus == "Awaiting Input")
             {
                 <tr>
                     <td>
@@ -59,21 +59,20 @@
                     <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Request Letter", "FetchFile", new { id = item.FileNo, flag = 7 }, new { target = "_blank" })
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Employee Letter", "FetchFile", new { id = item.FileNo, flag = 8 }, new { target = "_blank" })
-                </td>
-            </tr>
+
             <tr>
                 <td>
                     <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Quote", "FetchFile", new { id = item.FileNo, flag = 9 }, new { target = "_blank" })
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Pay Slip", "FetchFile", new { id = item.FileNo, flag = 10 }, new { target = "_blank" })
-                </td>
-            </tr>
+            if (ViewBag.EmployerType == "GOVT" || ViewBag.EmployerType == "NGO1")
+            {
+                <tr>
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Pay Slip", "FetchFile", new { id = item.FileNo, flag = 10 }, new { target = "_blank" })
+                    </td>
+                </tr>
+            }
             <tr>
                 <td>
                     <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Bank Account Statement", "FetchFile", new { id = item.FileNo, flag = 11 }, new { target = "_blank" })
@@ -89,14 +88,30 @@
                     <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("VNPF Statement", "FetchFile", new { id = item.FileNo, flag = 13 }, new { target = "_blank" })
                 </td>
             </tr>
+            if (ViewBag.EmployerType == "NGO1")
+            {
+                <tr>
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Standing Order", "FetchFile", new { id = item.FileNo, flag = 14 }, new { target = "_blank" })
+                    </td>
+                </tr>
+            }
+            if (ViewBag.EmployerType == "NGO2")
+            {
+                <tr>
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Employee Letter", "FetchFile", new { id = item.FileNo, flag = 8 }, new { target = "_blank" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Offset Letter", "FetchFile", new { id = item.FileNo, flag = 15 }, new { target = "_blank" })
+                    </td>
+                </tr>
+            }
             <tr>
                 <td>
-                    <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Standing Order", "FetchFile", new { id = item.FileNo, flag = 14 }, new { target = "_blank" })
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Customer ID", "FetchFile", new { id = item.FileNo, flag = 15 }, new { target = "_blank" })
+                    <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Customer ID", "FetchFile", new { id = item.FileNo, flag = 16 }, new { target = "_blank" })
                 </td>
             </tr>
         }

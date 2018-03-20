@@ -1183,6 +1183,7 @@
     <Content Include="Views\MemberFiles\NewFileNGO1.cshtml" />
     <Content Include="Views\MemberFiles\NewFileNGO2.cshtml" />
     <Content Include="Views\MemberFiles\NewFileGov.cshtml" />
+    <Content Include="Views\Account\AddNewMember.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1225,6 +1226,7 @@
     <Compile Include="ViewModels\FileViewModel.cs" />
     <Compile Include="ViewModels\GovFileViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\NewMemberViewModel.cs" />
     <Compile Include="ViewModels\NGOFileViewModel1.cs" />
     <Compile Include="ViewModels\NGOFileViewModel2.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />

@@ -38,6 +38,49 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
 
+        public ActionResult AddNewMember()
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddNewMember([Bind(Include = "Member_Fullname,Loan_Number,VNPF_Number")] NewMemberViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var newMember = new vnpf_()
+                {
+                    Member_Fullname = model.Member_Fullname,
+                    Loan_Number = model.Loan_Number,
+                    VNPF_Number = model.VNPF_Number
+                };
+
+                var MyClient = new HttpClient();
+                MyClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
+                var json = JsonConvert.SerializeObject(newMember);
+                HttpContent content = new StringContent(json);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = await client.PostAsync(Constants.BaseApiAddress + "api/PostMember", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    ModelState.Clear();
+                    ViewBag.Confirmation = 1;
+                    return View();
+                }
+
+            }
+            ViewBag.Confirmation = 0;
+            return View();
+        }
         /// <summary>
         /// Gets list of active users of the system
         /// by calling web api service

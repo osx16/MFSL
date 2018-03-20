@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c8bed73458714501be9a2c86d963a345" Name="Diagram1">
+      <Diagram DiagramId="47c8cc8932d74f869aab1113e4c31ce7" Name="Diagram1">
         <EntityTypeShape EntityType="MFSLModel.Branches" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.EmployeeStatus" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.FileReferences" Width="1.5" PointX="2.75" PointY="5.75" IsExpanded="true" />
@@ -12,7 +12,7 @@
         <EntityTypeShape EntityType="MFSLModel.FileType" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.MemberFile" Width="1.5" PointX="8" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.Officers" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="MFSLModel.vnpf_" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MFSLModel.vnpf_" Width="1.5" PointX="6.75" PointY="8.75" IsExpanded="true" />
         <AssociationConnector Association="MFSLModel.FK_Officers_Branches" ManuallyRouted="false" />
         <AssociationConnector Association="MFSLModel.FK_Officers_EmployeeStatus" ManuallyRouted="false" />
         <AssociationConnector Association="MFSLModel.FK_Files_Officers" ManuallyRouted="false" />

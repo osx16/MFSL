@@ -76,7 +76,13 @@ namespace RESTServices.Controllers
             FileList.Add(12, "LoanStatement");
             FileList.Add(13, "VNPFStatement");
             FileList.Add(14, "StandingOrder");
-            FileList.Add(15, "CustomerID");
+            FileList.Add(15, "OffsetLetter");
+            FileList.Add(16, "CustomerID");
+            FileList.Add(17, "PaymentAdvice"); 
+            FileList.Add(18, "Collateral");
+            FileList.Add(19, "MaintenanceForm");
+
+
 
             if (FileList.ContainsKey(FileTypeId))
             {
@@ -256,7 +262,8 @@ namespace RESTServices.Controllers
                         OfficerId = UserId,
                         MemberNo = memberFile.MemberNo,
                         FileNo = data.First(),
-                        FileStatus = "Not Finalized"
+                        FileStatus = "Pending Approval",
+                        EmployerType = memberFile.EmployerType
                     };
 
                     db.FileReferences.Add(NewFileRef);
@@ -320,7 +327,7 @@ namespace RESTServices.Controllers
                     #region Transaction 2 begins
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
-                    RefToUpdate.FileStatus = "Finalized";
+                    RefToUpdate.FileStatus = "Awaiting Input";
                     db.SaveChanges();
                     #endregion Transaction 2 ends
 

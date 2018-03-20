@@ -1,0 +1,71 @@
+﻿@model MFSL.ViewModels.NewMemberViewModel
+
+
+@using (Html.BeginForm("AddNewMember", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="col-md-6">
+        <!-- general form elements -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="glyphicon glyphicon-plus"></i><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> New Member</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form">
+                <div class="box-body">
+                    <div class="form-group">
+                        @Html.EditorFor(model => model.Member_Fullname, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Full Name." } })
+                        @Html.ValidationMessageFor(model => model.Member_Fullname, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.EditorFor(model => model.Loan_Number, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Loan No." } })
+                        @Html.ValidationMessageFor(model => model.Loan_Number, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.EditorFor(model => model.VNPF_Number, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter VNPF No." } })
+                        @Html.ValidationMessageFor(model => model.VNPF_Number, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <!-- /.box-body -->
+
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.box -->
+    </div>
+}
+
+<!-- Button trigger modal -->
+<div class="modal fade" id="successAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div style="width:800px; margin:0 auto;" aria-hidden="true" class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <strong>Member Added</strong><i class="fa fa-check fa-lg"></i>
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+<div class="modal fade" id="failureAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div style="width:800px; margin:0 auto;" aria-hidden="true" class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <h4><i class="glyphicon glyphicon-remove"></i> Fail to add member!</h4> Please try again.
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(function ()
+    {
+        var confirmationStatus = parseInt(@ViewBag.Confirmation);
+        if (confirmationStatus == 0) {
+            $('#failureAlertModal').modal('show');
+        }
+        else if (confirmationStatus == 1) {
+            $('#successAlertModal').modal('show');
+        }
+    });
+</script>

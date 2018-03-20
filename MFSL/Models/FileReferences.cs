@@ -13,5 +13,6 @@ namespace MFSL.Models
         public int MemberNo { get; set; }
         public int FileNo { get; set; }
         public string FileStatus { get; set; }
+        public string EmployerType { get; set; }
     }
 }
