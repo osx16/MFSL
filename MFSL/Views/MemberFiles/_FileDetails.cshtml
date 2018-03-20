@@ -31,7 +31,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title"><i class="fa fa-file-archive-o fa-lg" aria-hidden="true"></i> | Archive</h4>
+                            <h4 class="modal-title"><i class="fa fa-files-o fa-lg" aria-hidden="true"></i> | Docs</h4>
                         </div>
                         <div class="modal-body">
                             <div class="ajax-dynamic-get-data-form" />
@@ -53,6 +53,15 @@
                         <tr class="success">
                             <th>
                                 Member No
+                            </th>
+                            <th>
+                                File Type
+                            </th>
+                            <th>
+                                File No
+                            </th>
+                            <th>
+                                Status
                             </th>
                             <th>
                                 Date Created
@@ -78,6 +87,15 @@
                                        data-toggle="tooltip" title="Click for more">
                                         @Html.DisplayFor(modelItem => item.MemberNo)
                                     </a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EmployerType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FileNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FileStatus)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.DateCreated)
