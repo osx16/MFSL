@@ -189,9 +189,42 @@
         </section>
     <!-- /.content -->
     }
-    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <!-- Button trigger modal -->
+    <div class="modal fade" id="successAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div style="width:800px; margin:0 auto;" aria-hidden="true" class="alert alert-dismissable alert-success">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <h4><i class="glyphicon glyphicon-ok"></i> File created!</h4>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Button trigger modal -->
+    <div class="modal fade" id="failureAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div style="width:800px; margin:0 auto;" aria-hidden="true" class="alert alert-dismissable alert-danger">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <h4><i class="glyphicon glyphicon-remove"></i> Fail create file!</h4> Please try again.
+            </div>
+        </div>
+    </div>
+
     <script src="~/Scripts/jquery-3.1.1.min.js"></script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    $(function ()
+    {
+        var confirmationStatus = parseInt(@ViewBag.Confirmation);
+        if (confirmationStatus == 0) {
+            $('#failureAlertModal').modal('show');
+        }
+        else if (confirmationStatus == 1) {
+            $('#successAlertModal').modal('show');
+        }
+    });
+    </script>
 </body>
 </html>
 

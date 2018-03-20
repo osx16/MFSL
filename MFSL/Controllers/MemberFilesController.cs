@@ -472,18 +472,14 @@ namespace MFSL.Controllers
 
                 var isSuccess = await _apiServices.CreateNewFile(NewMemberFile);
 
-                if (!isSuccess)
+                if (isSuccess)
                 {
-                    ErrorController err = new ErrorController();
-                    err.CouldNotCreateFile();
-                }
-                else
-                {
-                    //var isSuccess2 = await _apiServices.CreateNewRef(NewMemberFile);
-
-                    return RedirectToAction("Recent");
+                    ModelState.Clear();
+                    ViewBag.Confirmation = 1;
+                    return View();
                 }
             }
+            ViewBag.Confirmation = 0;
             return View();
         }
 
@@ -567,16 +563,14 @@ namespace MFSL.Controllers
 
                 var isSuccess = await _apiServices.CreateNewFile(NewMemberFile);
 
-                if (!isSuccess)
+                if (isSuccess)
                 {
-                    ErrorController err = new ErrorController();
-                    err.CouldNotCreateFile();
-                }
-                else
-                {
-                    return RedirectToAction("Recent");
+                    ModelState.Clear();
+                    ViewBag.Confirmation = 1;
+                    return View();
                 }
             }
+            ViewBag.Confirmation = 0;
             return View();
         }
 
@@ -660,16 +654,14 @@ namespace MFSL.Controllers
 
                 var isSuccess = await _apiServices.CreateNewFile(NewMemberFile);
 
-                if (!isSuccess)
+                if (isSuccess)
                 {
-                    ErrorController err = new ErrorController();
-                    err.CouldNotCreateFile();
-                }
-                else
-                {
-                    return RedirectToAction("Recent");
+                    ModelState.Clear();
+                    ViewBag.Confirmation = 1;
+                    return View();
                 }
             }
+            ViewBag.Confirmation = 0;
             return View();
         }
 
