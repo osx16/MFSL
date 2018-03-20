@@ -6,6 +6,59 @@
 <head>
 </head>
 <body>
+    <!-- Button trigger modal -->
+    <div class="modal fade" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> | Member Info</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ajax-dynamic-get-data-form" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File modal -->
+    <div class="modal fade" id="memberFilesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-files-o fa-lg" aria-hidden="true"></i> | Docs</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ajax-dynamic-get-data-form" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update File modal -->
+    <div class="modal fade" id="updateFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-fw fa-arrow-circle-o-up fa-lg"></i> | Update file</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ajax-dynamic-get-data-form" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <section class="content">
         <div class="row">
             <div class="col-md-4">
@@ -89,61 +142,7 @@
             PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "filepartialview" }))
             </div>
         </div>
-        <!-- Button trigger modal -->
-        <div class="modal fade" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> | Member Info</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="ajax-dynamic-get-data-form" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- File modal -->
-        <div class="modal fade" id="memberFilesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title"><i class="fa fa-files-o fa-lg" aria-hidden="true"></i> | Docs</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="ajax-dynamic-get-data-form" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Update File modal -->
-        <div class="modal fade" id="updateFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title"><i class="fa fa-fw fa-arrow-circle-o-up fa-lg"></i> | Update file</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="ajax-dynamic-get-data-form" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
-
     <script src="~/Scripts/jquery-3.1.1.min.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
@@ -212,7 +211,8 @@
                         type: "GET",
                         url: "@(Url.RouteUrl("UpdateMemberFile"))",
                         data: { "FileNo": FileNo },
-                                success: function (data) {
+                                success: function (data)
+                                {
                                     $('#updateFileModal').modal();
                                     $('#updateFileModal').find('.ajax-dynamic-get-data-form').html(data);
                                     $('#updateFileModal').modal('show');
