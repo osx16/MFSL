@@ -69,7 +69,7 @@ namespace MFSL.Controllers
                 var json = JsonConvert.SerializeObject(newMember);
                 HttpContent content = new StringContent(json);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                var response = await client.PostAsync(Constants.BaseApiAddress + "api/PostMember", content);
+                var response = await client.PostAsync(Constants.BaseApiAddress + "api/Account/PostMember", content);
                 if (response.IsSuccessStatusCode)
                 {
                     ModelState.Clear();

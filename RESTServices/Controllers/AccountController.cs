@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.Net.Mail;
 using SendGrid.Helpers.Mail;
 using System.Net.Mime;
+using System.Web.Http.Description;
 
 namespace RESTServices.Controllers
 {
@@ -36,6 +37,27 @@ namespace RESTServices.Controllers
         public AccountController()
         {
             context = new ApplicationDbContext();
+        }
+
+        [Route("PostMember")]
+        [ResponseType(typeof(vnpf_))]
+        public IHttpActionResult PostMember(vnpf_ newMember)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            db.vnpf_.Add(newMember);
+            try
+            {
+                db.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            return InternalServerError();
         }
 
         public AccountController(ApplicationUserManager userManager,
