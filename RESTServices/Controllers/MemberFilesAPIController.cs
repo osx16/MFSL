@@ -251,6 +251,8 @@ namespace RESTServices.Controllers
                     #region Transaction 2 begins
                     //Create new file reference
                     var UserId = User.Identity.GetUserId();
+                    var query = db.Officers.Where(x => x.OfficerId == UserId).Select(i => new { i.EmpFname, i.EmpLname }).ToList();
+                    string officerName = query[0].EmpFname + " " + query[0].EmpLname;
                     var data = db.MemberFile.Where(x => x.OfficeId == UserId && x.MemberNo == memberFile.MemberNo)
                                                          .OrderByDescending(x => x.FileNo)
                                                          .Select(x => x.FileNo)
@@ -263,7 +265,8 @@ namespace RESTServices.Controllers
                         MemberNo = memberFile.MemberNo,
                         FileNo = data.First(),
                         FileStatus = "Pending Approval",
-                        EmployerType = memberFile.EmployerType
+                        EmployerType = memberFile.EmployerType,
+                        Officer = officerName
                     };
 
                     db.FileReferences.Add(NewFileRef);

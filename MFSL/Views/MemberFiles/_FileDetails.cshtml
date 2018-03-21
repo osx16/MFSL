@@ -52,6 +52,9 @@
                     <thead>
                         <tr class="success">
                             <th>
+                                Date Created
+                            </th>
+                            <th>
                                 Member No
                             </th>
                             <th>
@@ -64,7 +67,7 @@
                                 Status
                             </th>
                             <th>
-                                Date Created
+                                Officer
                             </th>
                             <th>
                                 Action
@@ -82,6 +85,9 @@
                         {
                             <tr>
                                 <td>
+                                    @Html.DisplayFor(modelItem => item.DateCreated)
+                                </td>
+                                <td>
                                     <a href="#" class="MemberLink"
                                        data-id="@item.MemberNo"
                                        data-toggle="tooltip" title="Click for more">
@@ -98,7 +104,7 @@
                                     @Html.DisplayFor(modelItem => item.FileStatus)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.DateCreated)
+                                    @Html.DisplayFor(modelItem => item.Officer)
                                 </td>
                                 <td>
                                     <a href="#" class="FileLink"

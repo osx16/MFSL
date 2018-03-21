@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="47c8cc8932d74f869aab1113e4c31ce7" Name="Diagram1">
+      <Diagram DiagramId="8d9dd31e62c34ec6992f604d6d37a1c8" Name="Diagram1">
         <EntityTypeShape EntityType="MFSLModel.Branches" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.EmployeeStatus" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MFSLModel.FileReferences" Width="1.5" PointX="2.75" PointY="5.75" IsExpanded="true" />

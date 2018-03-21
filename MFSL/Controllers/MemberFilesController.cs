@@ -208,17 +208,8 @@ namespace MFSL.Controllers
                     return PartialView("_FileDetails", filteredList);
                 }
             }
-
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAll");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-                var fileData = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
-                ViewBag.TotalFiles = fileData.Count;
-                IPagedList<FileReferences> files = (fileData).ToPagedList(pageIndex, pageSize);
-                return PartialView("_FileDetails", files);
-            }
-            return View("Error");
+            ViewBag.Status = "error";
+            return View("Dashboard");
         }
 
         /// <summary>

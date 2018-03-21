@@ -5,36 +5,22 @@
 <head>
 </head>
     <body>
-        <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
-        @*<script src="~/Scripts/jquery-3.1.1.js" async="async"></script>
-        <script src="~/Scripts/jquery-3.1.1.min.js" async="async"></script>*@
-        <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
-
-        <script src="~/Scripts/bootstrap.js"></script>
-        <script src="~/Scripts/bootstrap.min.js"></script>
-        <script type="text/javascript">
-            $(function ()
-            {
-                //alert("jQuery Executed");
-                $.ajaxPrefilter(function (options, original_Options, jqXHR) {
-                    options.async = true;
-                });
-
-                $('#filepartialview').load('@Url.Action("RenderInfoView", "MemberFiles")');
-                $('#search').unbind().click(function (e) {
-                    e.preventDefault();
-                    //$('#filepartialview').remove();
-                    $("#filepartialview").load('@(Url.Action("SearchFiles", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox').val());
-                });
-
-            });
-        </script>
         <ol class="breadcrumb">
             @*<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li><a href="#">UI</a></li>*@
             <li class="active"><i class="glyphicon glyphicon-home"></i> | Home</li>
         </ol>
+        <!-- Button trigger modal -->
+        <div class="modal fade" id="serverAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div style="width:800px; margin:0 auto;" aria-hidden="true" class="alert alert-dismissable alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <h4><i class="glyphicon glyphicon-remove"></i>Oops! Something went wrong.</h4>
 
+                    <p>Check your internet connection. If the problem continues to persist please contact support.</p>
+                </div>
+            </div>
+        </div>
         <section class="content">
             <div class="row">
                 <div class="box">
@@ -48,7 +34,7 @@
                                         <input type="number" min="1" id="txtbox" class="form-control" placeholder="Enter Member #" />
                                     </td>
                                     <td align="left">
-                                        <button id="search" class="btn btn-success"><span class="glyphicon glyphicon-search"></span> Search</button>
+                                        <input type="submit" id="search" value="search" class="btn btn-success" disabled="disabled"/>
                                     </td>
                                 </tr>
                             </thead>
@@ -58,6 +44,35 @@
                 </div>
             </div>
         </section>
+
+        <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+        <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+        @*
+          Need to disable button, if textbox is empty. Do not use modals  
+        *@
+        <script src="~/Scripts/bootstrap.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('#filepartialview').load('@Url.Action("RenderInfoView", "MemberFiles")');
+                $('#search').unbind().click(function (e) {
+                    e.preventDefault();
+                    $("#filepartialview").load('@(Url.Action("SearchFiles", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox').val());
+                });
+
+                var status = '@(ViewBag.Status)';
+                if (status == "error") {
+                    $('#serverAlertModal').modal('show');
+                }
+                document.getElementById("txtbox").onkeyup = function () {
+                    if ($(this).val() == 0) {
+                        $('.btn').prop('disabled', true);
+                    } else {
+                        $('.btn').prop('disabled', false);
+                    }
+                }
+            });
+        </script>
     </body>
 </html>
 

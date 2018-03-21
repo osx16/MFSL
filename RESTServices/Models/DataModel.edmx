@@ -30,6 +30,7 @@
           <Property Name="FileNo" Type="int" Nullable="false" />
           <Property Name="FileStatus" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="EmployerType" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Officer" Type="varchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="FileStatus">
           <Key>
@@ -191,6 +192,7 @@
           <Property Name="FileNo" Type="Int32" Nullable="false" />
           <Property Name="FileStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="EmployerType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Officer" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityType Name="FileStatus">
           <Key>
@@ -356,6 +358,7 @@
                 <ScalarProperty Name="FileNo" ColumnName="FileNo" />
                 <ScalarProperty Name="FileStatus" ColumnName="FileStatus" />
                 <ScalarProperty Name="EmployerType" ColumnName="EmployerType" />
+                <ScalarProperty Name="Officer" ColumnName="Officer" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
