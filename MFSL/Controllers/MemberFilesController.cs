@@ -45,6 +45,20 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
+
+        public ActionResult Dashboard()
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            return View();
+        }
+
         /// <summary>
         /// Return Modal view for displaying customer info
         /// </summary>
@@ -61,7 +75,7 @@ namespace MFSL.Controllers
         /// Returns Dashboard View
         /// </summary>
         /// <returns>Dashboard View</returns>
-        public ActionResult Dashboard()
+        public ActionResult Search()
         {
             if (Settings.AccessToken == "")
             {

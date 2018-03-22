@@ -1156,7 +1156,7 @@
     <Content Include="Views\MemberFiles\Edit.cshtml" />
     <Content Include="Views\MemberFiles\NewFile.cshtml" />
     <Content Include="Views\MemberFiles\_FileUpload.cshtml" />
-    <Content Include="Views\MemberFiles\Dashboard.cshtml" />
+    <Content Include="Views\MemberFiles\Search.cshtml" />
     <Content Include="Views\MemberFiles\_FileDetails.cshtml" />
     <Content Include="Views\MemberFiles\_Info.cshtml" />
     <Content Include="Views\MemberFiles\RecentlyAdded.cshtml" />
@@ -1184,6 +1184,7 @@
     <Content Include="Views\MemberFiles\NewFileNGO2.cshtml" />
     <Content Include="Views\MemberFiles\NewFileGov.cshtml" />
     <Content Include="Views\Account\AddNewMember.cshtml" />
+    <Content Include="Views\MemberFiles\Dashboard.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

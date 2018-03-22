@@ -18,10 +18,13 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">M E N U</li>
             <li class="@Url.IsLinkActive("Dashboard", "MemberFiles")">
-                <a href="@Url.Action("Dashboard", "MemberFiles")"><i class="glyphicon glyphicon-home"></i> <span>Home</span></a>
+                <a href="@Url.Action("Dashboard", "MemberFiles")"><i class="fa fa-dashboard" aria-hidden="true"></i> <span>Dashboard</span></a>
             </li>
             @if (UserRole == "Admin" || UserRole == "Employee" || UserRole == "Manager")
             {
+                <li class="@Url.IsLinkActive("Search", "MemberFiles")">
+                    <a href="@Url.Action("Search", "MemberFiles")"><i class="glyphicon glyphicon-search"></i> <span>Search File</span></a>
+                </li>
                 <li class="treeview">
                     <a href="#">
                         <i class="glyphicon glyphicon-file"></i><span>  New File</span>
