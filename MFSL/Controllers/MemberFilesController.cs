@@ -56,7 +56,121 @@ namespace MFSL.Controllers
             {
                 return RedirectToAction("SignOut", "Logout");
             }
+            ViewBag.UserRole = Settings.RoleForThisUser;
+            ViewBag.VNPFNo = Settings.VNPFNo;
             return View();
+        }
+
+        public async Task<ActionResult> LoadApprovalPanel(int? page)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            //Call API
+            int pageSize = 10;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllPendingApproval");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                ViewBag.TotalFiles = fileRefs.Count;
+                IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                ViewBag.ActionName = "LoadApprovalPanel";
+                ViewBag.PanelId = "1";
+                return PartialView("_FilePanel", PagedList);
+            }
+            return PartialView();
+        }
+
+        public async Task<ActionResult> LoadInputPanel(int? page)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            //Call API
+            int pageSize = 10;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingInput");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                ViewBag.TotalFiles = fileRefs.Count;
+                IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                ViewBag.ActionName = "LoadInputPanel";
+                ViewBag.PanelId = "2";
+                return PartialView("_FilePanel", PagedList);
+            }
+            return PartialView();
+        }
+
+        public async Task<ActionResult> LoadPaymentPanel(int? page)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            //Call API
+            int pageSize = 10;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingPayment");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                ViewBag.TotalFiles = fileRefs.Count;
+                IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                ViewBag.ActionName = "LoadPaymentPanel";
+                ViewBag.PanelId = "3";
+                return PartialView("_FilePanel", PagedList);
+            }
+            return PartialView();
+        }
+
+        public async Task<ActionResult> LoadCollateralPanel(int? page)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            //Call API
+            int pageSize = 10;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingCollateral");
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                ViewBag.TotalFiles = fileRefs.Count;
+                IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                ViewBag.ActionName = "LoadCollateralPanel";
+                ViewBag.PanelId = "4";
+                return PartialView("_FilePanel", PagedList);
+            }
+            return PartialView();
         }
 
         /// <summary>
@@ -722,7 +836,7 @@ namespace MFSL.Controllers
                 ViewBag.FileStatus = obj.FileStatus;
                 return PartialView("_UpdateFile", model);
             }
-            if (obj.FileStatus == "Await Posting")
+            if (obj.FileStatus == "Awaiting Payment")
             {
                 ViewBag.FileStatus = obj.FileStatus;
                 return PartialView("_UpdateFile", model);

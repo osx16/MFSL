@@ -573,6 +573,30 @@
             </summary>
             <param name="MemberNo"> Member Number</param>
         </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllPendingApproval">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllAwaitingInput">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllAwaitingPayment">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllAwaitingCollateral">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.PostMemberFile(RESTServices.Models.MemberFile)">
             <summary>
             Post new member file to database

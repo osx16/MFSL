@@ -38,7 +38,6 @@ namespace RESTServices.Controllers
     public class MemberFilesAPIController : ApiController
     {
         private MFSLEntities db = new MFSLEntities();
-        private string OfficerID = System.Web.HttpContext.Current.User.Identity.GetUserId();
 
         /// <summary>
         /// Gets all File References for all Customers
@@ -216,6 +215,52 @@ namespace RESTServices.Controllers
         {
             return db.vnpf_.Where(f => f.VNPF_Number == MemberNo);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("api/MemberFilesAPI/GetAllPendingApproval")]
+        public IEnumerable<FileReferences> GetAllPendingApproval()
+        {
+            var OfficerID = User.Identity.GetUserId();
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == "Pending Approval");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("api/MemberFilesAPI/GetAllAwaitingInput")]
+        public IEnumerable<FileReferences> GetAllAwaitingInput()
+        {
+            var OfficerID = User.Identity.GetUserId();
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == "Awaiting Input");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("api/MemberFilesAPI/GetAllAwaitingPayment")]
+        public IEnumerable<FileReferences> GetAllAwaitingPayment()
+        {
+            var OfficerID = User.Identity.GetUserId();
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == "Awaiting Payment");
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("api/MemberFilesAPI/GetAllAwaitingCollateral")]
+        public IEnumerable<FileReferences> GetAllAwaitingCollateral()
+        {
+            var OfficerID = User.Identity.GetUserId();
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == "Awaiting Collateral");
+        }
+
 
         /// <summary>
         /// Post new member file to database

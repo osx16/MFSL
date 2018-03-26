@@ -122,8 +122,8 @@
                     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
                     of @Model.PageCount
                     @Html.PagedListPager(Model, page => Url.Action("SearchFiles",
-            new { memberNo = ViewBag.MemberNo, page }),
-            PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "filepartialview" }))
+                    new { memberNo = ViewBag.MemberNo, page }),
+                    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "filepartialview" }))
                 </div>
             </div>
      </section>
