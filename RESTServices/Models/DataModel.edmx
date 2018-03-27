@@ -24,6 +24,7 @@
             <PropertyRef Name="ReferenceNo" />
           </Key>
           <Property Name="ReferenceNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Branch" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="OfficerId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="MemberNo" Type="int" Nullable="false" />
@@ -152,6 +153,7 @@
             <PropertyRef Name="ReferenceNo" />
           </Key>
           <Property Name="ReferenceNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Branch" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="OfficerId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MemberNo" Type="Int32" Nullable="false" />
@@ -284,6 +286,7 @@
             <EntityTypeMapping TypeName="MFSLModel.FileReferences">
               <MappingFragment StoreEntitySet="FileReferences">
                 <ScalarProperty Name="ReferenceNo" ColumnName="ReferenceNo" />
+                <ScalarProperty Name="Branch" ColumnName="Branch" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="OfficerId" ColumnName="OfficerId" />
                 <ScalarProperty Name="MemberNo" ColumnName="MemberNo" />

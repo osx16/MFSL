@@ -8,6 +8,7 @@ namespace MFSL.Models
     public class FileReferences
     {
         public int ReferenceNo { get; set; }
+        public string Branch { get; set; }
         public System.DateTime DateCreated { get; set; }
         public string OfficerId { get; set; }
         public int MemberNo { get; set; }

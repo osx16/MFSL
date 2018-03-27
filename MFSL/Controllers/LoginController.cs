@@ -103,6 +103,23 @@ namespace MFSL.Controllers
                     Settings.VNPFNo = data.VnpfNo;
                     Settings.LoanNo = data.LoanNo;
                     Settings.DateRegistered = data.DateCreated;
+
+                    if(data.BranchId == 1)
+                    {
+                        Settings.BranchName = "Port Vila";
+                    }
+                    else if(data.BranchId == 2)
+                    {
+                        Settings.BranchName = "Tanna";
+                    }
+                    else if(data.BranchId == 3)
+                    {
+                        Settings.BranchName = "Malekula";
+                    }
+                    else
+                    {
+                        Settings.BranchName = "Santo";
+                    }
                 }
 
                 HttpResponseMessage responseMessage = await client.GetAsync(url + "GetRoleForThisUser");

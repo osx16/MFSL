@@ -223,8 +223,21 @@ namespace RESTServices.Controllers
         [Route("api/MemberFilesAPI/GetAllPendingApproval")]
         public IEnumerable<FileReferences> GetAllPendingApproval()
         {
+            string FileStatus = "Pending Approval";
             var OfficerID = User.Identity.GetUserId();
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == "Pending Approval");
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if(role == "General Manager")
+            {
+                return db.FileReferences.Where(x => x.FileStatus == FileStatus);
+            }
+            else if(role == "SIO Operation")
+            {
+                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus);
+            }
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
         }
 
         /// <summary>
@@ -234,8 +247,21 @@ namespace RESTServices.Controllers
         [Route("api/MemberFilesAPI/GetAllAwaitingInput")]
         public IEnumerable<FileReferences> GetAllAwaitingInput()
         {
+            string FileStatus = "Awaiting Input";
             var OfficerID = User.Identity.GetUserId();
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == "Awaiting Input");
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "General Manager")
+            {
+                return db.FileReferences.Where(x => x.FileStatus == FileStatus);
+            }
+            else if (role == "SIO Operation")
+            {
+                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus);
+            }
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
         }
 
         /// <summary>
@@ -245,8 +271,21 @@ namespace RESTServices.Controllers
         [Route("api/MemberFilesAPI/GetAllAwaitingPayment")]
         public IEnumerable<FileReferences> GetAllAwaitingPayment()
         {
+            string FileStatus = "Awaiting Payment";
             var OfficerID = User.Identity.GetUserId();
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == "Awaiting Payment");
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "General Manager" || role == "Accounts Payable")
+            {
+                return db.FileReferences.Where(x => x.FileStatus == FileStatus);
+            }
+            else if (role == "SIO Operation")
+            {
+                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus);
+            }
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
         }
 
 
@@ -257,10 +296,22 @@ namespace RESTServices.Controllers
         [Route("api/MemberFilesAPI/GetAllAwaitingCollateral")]
         public IEnumerable<FileReferences> GetAllAwaitingCollateral()
         {
+            string FileStatus = "Awaiting Collateral";
             var OfficerID = User.Identity.GetUserId();
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == "Awaiting Collateral");
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "General Manager" || role == "Collateral Officer" || role == "Accounts Payable")
+            {
+                return db.FileReferences.Where(x => x.FileStatus == FileStatus);
+            }
+            else if (role == "SIO Operation")
+            {
+                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus);
+            }
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
         }
-
 
         /// <summary>
         /// Post new member file to database
@@ -296,19 +347,22 @@ namespace RESTServices.Controllers
                     #region Transaction 2 begins
                     //Create new file reference
                     var UserId = User.Identity.GetUserId();
+                    int branchId = db.Officers.Where(x => x.OfficerId == UserId).Select(x => x.BranchId).First();
+                    var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
                     var query = db.Officers.Where(x => x.OfficerId == UserId).Select(i => new { i.EmpFname, i.EmpLname }).ToList();
                     string officerName = query[0].EmpFname + " " + query[0].EmpLname;
-                    var data = db.MemberFile.Where(x => x.OfficeId == UserId && x.MemberNo == memberFile.MemberNo)
+                    int fileNo = db.MemberFile.Where(x => x.OfficeId == UserId && x.MemberNo == memberFile.MemberNo)
                                                          .OrderByDescending(x => x.FileNo)
                                                          .Select(x => x.FileNo)
-                                                         .ToList();
+                                                         .First();
 
                     FileReferences NewFileRef = new FileReferences()
                     {
                         DateCreated = memberFile.DateCreated,
+                        Branch = branchLocation,
                         OfficerId = UserId,
                         MemberNo = memberFile.MemberNo,
-                        FileNo = data.First(),
+                        FileNo = fileNo,
                         FileStatus = "Pending Approval",
                         EmployerType = memberFile.EmployerType,
                         Officer = officerName

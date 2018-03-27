@@ -93,6 +93,18 @@ namespace MFSL.Helpers
             }
         }
 
+        public static string BranchName
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("BranchName", "");
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("BranchName", value);
+            }
+        }
+
         public static string UserFirstName
         {
             get

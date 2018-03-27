@@ -82,9 +82,12 @@
                 var role = '@(ViewBag.UserRole)';
                 if (role != "Collateral Officer")
                 {
-                   $('#1').load('@Url.Action("LoadApprovalPanel", "MemberFiles")');
-                   $('#2').load('@Url.Action("LoadInputPanel", "MemberFiles")');
-                   $('#3').load('@Url.Action("LoadPaymentPanel", "MemberFiles")');
+                    if (role != "Sr. Finance Officer" && role != "Accounts Payable" && role != "Accounts Receivable")
+                    {
+                       $('#1').load('@Url.Action("LoadApprovalPanel", "MemberFiles")');
+                       $('#2').load('@Url.Action("LoadInputPanel", "MemberFiles")');
+                    }
+                    $('#3').load('@Url.Action("LoadPaymentPanel", "MemberFiles")');
                 }
                 $('#4').load('@Url.Action("LoadCollateralPanel", "MemberFiles")');
             });
