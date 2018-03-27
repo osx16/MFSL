@@ -114,30 +114,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Officers_Branches">
-          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
-          <End Role="Officers" Type="Self.Officers" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Branches">
-              <PropertyRef Name="BranchId" />
-            </Principal>
-            <Dependent Role="Officers">
-              <PropertyRef Name="BranchId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Officers_EmployeeStatus">
-          <End Role="EmployeeStatus" Type="Self.EmployeeStatus" Multiplicity="1" />
-          <End Role="Officers" Type="Self.Officers" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="EmployeeStatus">
-              <PropertyRef Name="StatusId" />
-            </Principal>
-            <Dependent Role="Officers">
-              <PropertyRef Name="StatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="MFSLModelStoreContainer">
           <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeeStatus" EntityType="Self.EmployeeStatus" Schema="dbo" store:Type="Tables" />
@@ -151,14 +127,6 @@
             <End Role="FileStatus" EntitySet="FileStatus" />
             <End Role="MemberFile" EntitySet="MemberFile" />
           </AssociationSet>
-          <AssociationSet Name="FK_Officers_Branches" Association="Self.FK_Officers_Branches">
-            <End Role="Branches" EntitySet="Branches" />
-            <End Role="Officers" EntitySet="Officers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Officers_EmployeeStatus" Association="Self.FK_Officers_EmployeeStatus">
-            <End Role="EmployeeStatus" EntitySet="EmployeeStatus" />
-            <End Role="Officers" EntitySet="Officers" />
-          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -171,7 +139,6 @@
           </Key>
           <Property Name="BranchId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="BranchLocation" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Officers" Relationship="Self.FK_Officers_Branches" FromRole="Branches" ToRole="Officers" />
         </EntityType>
         <EntityType Name="EmployeeStatus">
           <Key>
@@ -179,7 +146,6 @@
           </Key>
           <Property Name="StatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Status" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Officers" Relationship="Self.FK_Officers_EmployeeStatus" FromRole="EmployeeStatus" ToRole="Officers" />
         </EntityType>
         <EntityType Name="FileReferences">
           <Key>
@@ -254,8 +220,6 @@
           <Property Name="EmpLname" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="StatusId" Type="Int32" Nullable="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Branches" Relationship="Self.FK_Officers_Branches" FromRole="Officers" ToRole="Branches" />
-          <NavigationProperty Name="EmployeeStatus" Relationship="Self.FK_Officers_EmployeeStatus" FromRole="Officers" ToRole="EmployeeStatus" />
         </EntityType>
         <EntityType Name="vnpf_">
           <Key>
@@ -268,30 +232,6 @@
           <Property Name="Loan_Balance" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Current_Repayment_Amount" Type="Double" />
         </EntityType>
-        <Association Name="FK_Officers_Branches">
-          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
-          <End Role="Officers" Type="Self.Officers" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Branches">
-              <PropertyRef Name="BranchId" />
-            </Principal>
-            <Dependent Role="Officers">
-              <PropertyRef Name="BranchId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Officers_EmployeeStatus">
-          <End Role="EmployeeStatus" Type="Self.EmployeeStatus" Multiplicity="1" />
-          <End Role="Officers" Type="Self.Officers" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="EmployeeStatus">
-              <PropertyRef Name="StatusId" />
-            </Principal>
-            <Dependent Role="Officers">
-              <PropertyRef Name="StatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Files_Officers">
           <End Role="FileStatus" Type="Self.FileStatus" Multiplicity="1" />
           <End Role="MemberFile" Type="Self.MemberFile" Multiplicity="*" />
@@ -313,14 +253,6 @@
           <EntitySet Name="MemberFile" EntityType="Self.MemberFile" />
           <EntitySet Name="Officers" EntityType="Self.Officers" />
           <EntitySet Name="vnpf_" EntityType="Self.vnpf_" />
-          <AssociationSet Name="FK_Officers_Branches" Association="Self.FK_Officers_Branches">
-            <End Role="Branches" EntitySet="Branches" />
-            <End Role="Officers" EntitySet="Officers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Officers_EmployeeStatus" Association="Self.FK_Officers_EmployeeStatus">
-            <End Role="EmployeeStatus" EntitySet="EmployeeStatus" />
-            <End Role="Officers" EntitySet="Officers" />
-          </AssociationSet>
           <AssociationSet Name="FK_Files_Officers" Association="Self.FK_Files_Officers">
             <End Role="FileStatus" EntitySet="FileStatus" />
             <End Role="MemberFile" EntitySet="MemberFile" />

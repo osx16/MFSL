@@ -392,12 +392,13 @@ namespace RESTServices.Controllers
                 Officers NewOfficer = new Officers()
                 {
                     OfficerId = user.Id,
+                    BranchId = model.BranchId,
                     VnpfNo = model.VnpfNo,
                     LoanNo = model.LoanNo,
                     EmpFname = model.EmpFname,
-                    EmpMname = model.EmpMname,
                     EmpLname = model.EmpLname,
-                    DateCreated = model.DateCreated
+                    DateCreated = model.DateCreated,
+                    StatusId = model.StatusId
                 };
 
                 db.Officers.Add(NewOfficer);

@@ -57,19 +57,75 @@ namespace RESTServices
             }
 
             // creating Creating Manager role    
-            if (!roleManager.RoleExists("Manager"))
+            if (!roleManager.RoleExists("General Manager"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "Manager";
+                role.Name = "General Manager";
                 roleManager.Create(role);
 
             }
 
             // creating Creating Employee role    
-            if (!roleManager.RoleExists("Employee"))
+            if (!roleManager.RoleExists("SIO Marketing"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "Employee";
+                role.Name = "SIO Marketing";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("SIO Operation"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "SIO Operation";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("SIO"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "SIO";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("Investment Officer"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Investment Officer";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("Intern"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Intern";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("Sr. Finance Officer "))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Sr. Finance Officer";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("Accounts Receivable"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Accounts Receivable";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("Accounts Payable"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Accounts Payable";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("Collateral Officer"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Collateral Officer";
                 roleManager.Create(role);
             }
         }

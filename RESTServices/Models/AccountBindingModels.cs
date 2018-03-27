@@ -35,6 +35,10 @@ namespace RESTServices.Models
     public class RegisterBindingModel
     {
         [Required]
+        [Display(Name = "Branch No")]
+        public int BranchId { get; set; }
+
+        [Required]
         [Display(Name = "VNPF No: ")]
         public int VnpfNo { get; set; }
 
@@ -45,10 +49,6 @@ namespace RESTServices.Models
         [Required]
         [Display(Name = "First Name: ")]
         public string EmpFname { get; set; }
-
-        [Required]
-        [Display(Name = "Middle Name: ")]
-        public string EmpMname { get; set; }
 
         [Required]
         [Display(Name = "Last Name: ")]
@@ -78,6 +78,10 @@ namespace RESTServices.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Status")]
+        public int StatusId { get; set; }
     }
 
     public class RegisterExternalBindingModel

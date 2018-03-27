@@ -23,8 +23,5 @@ namespace RESTServices.Models
         public string EmpLname { get; set; }
         public int StatusId { get; set; }
         public System.DateTime DateCreated { get; set; }
-    
-        public virtual Branches Branches { get; set; }
-        public virtual EmployeeStatus EmployeeStatus { get; set; }
     }
 }

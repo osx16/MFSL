@@ -14,16 +14,7 @@ namespace RESTServices.Models
     
     public partial class Branches
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Branches()
-        {
-            this.Officers = new HashSet<Officers>();
-        }
-    
         public int BranchId { get; set; }
         public string BranchLocation { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Officers> Officers { get; set; }
     }
 }

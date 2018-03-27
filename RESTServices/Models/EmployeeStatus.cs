@@ -14,16 +14,7 @@ namespace RESTServices.Models
     
     public partial class EmployeeStatus
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public EmployeeStatus()
-        {
-            this.Officers = new HashSet<Officers>();
-        }
-    
         public int StatusId { get; set; }
         public string Status { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Officers> Officers { get; set; }
     }
 }

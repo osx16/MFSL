@@ -9,6 +9,10 @@ namespace MFSL.Models
     public class RegisterBindingModel
     {
         [Required]
+        [Display(Name = "Branch: ")]
+        public int BranchId { get; set; }
+
+        [Required]
         [Display(Name = "VNPF No: ")]
         public int VnpfNo { get; set; }
 
@@ -19,9 +23,6 @@ namespace MFSL.Models
         [Required]
         [Display(Name = "First Name: ")]
         public string EmpFname { get; set; }
-
-        [Display(Name = "Middle Name: ")]
-        public string EmpMname { get; set; }
 
         [Required]
         [Display(Name = "Last Name: ")]
@@ -51,5 +52,9 @@ namespace MFSL.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "User Status")]
+        public int StatusId { get; set; }
     }
 }

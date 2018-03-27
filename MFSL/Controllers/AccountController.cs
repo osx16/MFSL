@@ -95,7 +95,7 @@ namespace MFSL.Controllers
             if (responseMessage.IsSuccessStatusCode)
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-                var model = JsonConvert.DeserializeObject<IEnumerable<Officers>>(responseData);
+                var model = JsonConvert.DeserializeObject<List<Officers>>(responseData);
                 return View(model);
             }
             return View();
@@ -117,6 +117,33 @@ namespace MFSL.Controllers
             {
                 var responseData = responseMessage.Content.ReadAsStringAsync().Result;
                 ViewBag.Roles = new SelectList(JsonConvert.DeserializeObject<List<string>>(responseData));
+
+                var branches = new Dictionary<int, string>
+                {
+                    { 1, "Port Vila" },
+                    { 2, "Tanna" },
+                    { 3, "Malekula" },
+                    { 4, "Santo" }
+                };
+
+                var statuses = new Dictionary<int, string>
+                {
+                    { 1, "Active" },
+                    { 2, "Inactive" },
+                    { 3, "Retired" },
+                    { 4, "Suspended" }
+                };
+
+                List<SelectListItem> ObjList2 = new List<SelectListItem>()
+                {
+                    new SelectListItem { Text = "Active", Value = "1" },
+                    new SelectListItem { Text = "Inactive", Value = "2" },
+                    new SelectListItem { Text = "Retired", Value = "3" },
+                    new SelectListItem { Text = "Suspended", Value = "4" },
+                };
+
+                ViewBag.Branches = new SelectList(branches, "Key", "Value");
+                ViewBag.Status = new SelectList(statuses, "Key", "Value");
                 return View();
             }
             return View("Error");
