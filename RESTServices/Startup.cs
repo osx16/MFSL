@@ -87,6 +87,13 @@ namespace RESTServices
                 roleManager.Create(role);
             }
 
+            if (!roleManager.RoleExists("SIO Branch Operation"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "SIO Branch Operation";
+                roleManager.Create(role);
+            }
+
             if (!roleManager.RoleExists("Investment Officer"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();

@@ -11,3 +11,11 @@ Member No: @ViewBag.VNPFNo
 Loan No: @ViewBag.LoanNo*@
 <br />
 (@ViewBag.Role)
+@if(ViewBag.Branch != "Port Vila")
+{
+    <p>Branch: <b>@ViewBag.Branch</b></p>
+}
+else
+{
+    <p>Main Office - <b>@ViewBag.Branch</b></p>
+}

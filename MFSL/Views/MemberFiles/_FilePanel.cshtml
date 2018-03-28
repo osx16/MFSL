@@ -82,8 +82,20 @@
             <table class="table table-striped">
                 <thead>
                     <tr class="success">
+                        @if (ViewBag.Role != "Investment Officer" && ViewBag.Role != "Intern")
+                        {
+                            if (ViewBag.Role != "SIO Operation" && ViewBag.Role != "SIO Marketing")
+                            {
+                                <th>
+                                    Branch
+                                </th>
+                            }
+                            <th>
+                                Officer
+                            </th>
+                        }
                         <th>
-                            Member No
+                            Client No
                         </th>
                         <th>
                             File Type
@@ -94,6 +106,7 @@
                         <th>
                             Status
                         </th>
+
                         <th>
                             Date Created
                         </th>
@@ -112,6 +125,18 @@
                     @foreach (var item in Model)
                     {
                         <tr>
+                            @if (ViewBag.Role != "Investment Officer" && ViewBag.Role != "Intern")
+                            {
+                                if (ViewBag.Role != "SIO Operation" && ViewBag.Role != "SIO Marketing")
+                                {
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Branch)
+                                    </td>
+                                }
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Officer)
+                                </td>
+                            }
                             <td>
                                 <a href="#" class="MemberLink"
                                    data-id="@item.MemberNo"

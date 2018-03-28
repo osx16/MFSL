@@ -84,6 +84,7 @@ namespace MFSL.Controllers
                 IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
                 ViewBag.ActionName = "LoadApprovalPanel";
                 ViewBag.PanelId = "1";
+                ViewBag.Role = Settings.RoleForThisUser;
                 return PartialView("_FilePanel", PagedList);
             }
             return PartialView();
@@ -112,6 +113,7 @@ namespace MFSL.Controllers
                 IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
                 ViewBag.ActionName = "LoadInputPanel";
                 ViewBag.PanelId = "2";
+                ViewBag.Role = Settings.RoleForThisUser;
                 return PartialView("_FilePanel", PagedList);
             }
             return PartialView();
@@ -140,6 +142,7 @@ namespace MFSL.Controllers
                 IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
                 ViewBag.ActionName = "LoadPaymentPanel";
                 ViewBag.PanelId = "3";
+                ViewBag.Role = Settings.RoleForThisUser;
                 return PartialView("_FilePanel", PagedList);
             }
             return PartialView();
@@ -168,6 +171,7 @@ namespace MFSL.Controllers
                 IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
                 ViewBag.ActionName = "LoadCollateralPanel";
                 ViewBag.PanelId = "4";
+                ViewBag.Role = Settings.RoleForThisUser;
                 return PartialView("_FilePanel", PagedList);
             }
             return PartialView();

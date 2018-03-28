@@ -64,6 +64,7 @@ namespace MFSL.Controllers
         /// <returns>Profile Info</returns>
         public ActionResult MyProfile()
         {
+            ViewBag.Branch = Settings.BranchName;
             ViewBag.FirstName = Settings.UserFirstName;
             ViewBag.MiddleName = Settings.UserMidName;
             ViewBag.LastName = Settings.UserLastName;
