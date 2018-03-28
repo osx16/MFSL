@@ -611,6 +611,13 @@
             <param name="fileUpdateDTO"></param>
             <returns></returns>
         </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.Update(RESTServices.Models.FileUpdateDTO)">
+            <summary>
+            
+            </summary>
+            <param name="fileUpdateDTO"></param>
+            <returns></returns>
+        </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.DeleteMemberFile(System.Int32)">
             <summary>
             

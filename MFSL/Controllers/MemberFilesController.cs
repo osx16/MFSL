@@ -85,6 +85,7 @@ namespace MFSL.Controllers
                 ViewBag.ActionName = "LoadApprovalPanel";
                 ViewBag.PanelId = "1";
                 ViewBag.Role = Settings.RoleForThisUser;
+                ViewBag.FileStatus = "Pending Approval";
                 return PartialView("_FilePanel", PagedList);
             }
             return PartialView();
@@ -114,6 +115,7 @@ namespace MFSL.Controllers
                 ViewBag.ActionName = "LoadInputPanel";
                 ViewBag.PanelId = "2";
                 ViewBag.Role = Settings.RoleForThisUser;
+                ViewBag.FileStatus = "Awaiting Input";
                 return PartialView("_FilePanel", PagedList);
             }
             return PartialView();
@@ -143,6 +145,7 @@ namespace MFSL.Controllers
                 ViewBag.ActionName = "LoadPaymentPanel";
                 ViewBag.PanelId = "3";
                 ViewBag.Role = Settings.RoleForThisUser;
+                ViewBag.FileStatus = "Awaiting Payment";
                 return PartialView("_FilePanel", PagedList);
             }
             return PartialView();
@@ -172,6 +175,7 @@ namespace MFSL.Controllers
                 ViewBag.ActionName = "LoadCollateralPanel";
                 ViewBag.PanelId = "4";
                 ViewBag.Role = Settings.RoleForThisUser;
+                ViewBag.FileStatus = "Awaiting Collateral";
                 return PartialView("_FilePanel", PagedList);
             }
             return PartialView();

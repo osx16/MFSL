@@ -32,6 +32,9 @@
           <Property Name="FileStatus" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="EmployerType" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Officer" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Approver" Type="varchar" MaxLength="128" />
+          <Property Name="PaymentOfficer" Type="varchar" MaxLength="128" />
+          <Property Name="CollateralOfficer" Type="varchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="FileStatus">
           <Key>
@@ -161,6 +164,9 @@
           <Property Name="FileStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="EmployerType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Officer" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Approver" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentOfficer" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="CollateralOfficer" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="FileStatus">
           <Key>
@@ -294,6 +300,9 @@
                 <ScalarProperty Name="FileStatus" ColumnName="FileStatus" />
                 <ScalarProperty Name="EmployerType" ColumnName="EmployerType" />
                 <ScalarProperty Name="Officer" ColumnName="Officer" />
+                <ScalarProperty Name="Approver" ColumnName="Approver" />
+                <ScalarProperty Name="PaymentOfficer" ColumnName="PaymentOfficer" />
+                <ScalarProperty Name="CollateralOfficer" ColumnName="CollateralOfficer" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

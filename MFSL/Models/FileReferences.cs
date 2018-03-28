@@ -16,5 +16,8 @@ namespace MFSL.Models
         public string FileStatus { get; set; }
         public string EmployerType { get; set; }
         public string Officer { get; set; }
+        public string Approver { get; set; }
+        public string PaymentOfficer { get; set; }
+        public string CollateralOfficer { get; set; }
     }
 }

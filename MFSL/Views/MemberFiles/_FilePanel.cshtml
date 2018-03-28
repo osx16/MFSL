@@ -157,16 +157,43 @@
                                 @Html.DisplayFor(modelItem => item.DateCreated)
                             </td>
                             <td>
-                                <a href="#" class="FileLink"
-                                   data-id="@item.FileNo"
-                                   data-toggle="tooltip" title="Click to view">
-                                    Show
-                                </a> |
-                                <a href="#" class="UpdateLink"
-                                   data-id="@item.FileNo"
-                                   data-toggle="tooltip" title="Click to open">
-                                    Update
-                                </a>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td align="left">
+                                                <a href="#" class="FileLink"
+                                                   data-id="@item.FileNo"
+                                                   data-toggle="tooltip" title="Click to view">
+                                                    Show
+                                                </a>
+                                            </td>
+
+                                            @if (ViewBag.FileStatus != "Pending Approval")
+                                            {
+                                                <td>
+                                                    |
+                                                </td>
+                                                <td align="center">
+                                                    <a href="#" class="UpdateLink"
+                                                       data-id="@item.FileNo"
+                                                       data-toggle="tooltip" title="Click to open">
+                                                        Update
+                                                    </a>
+                                                </td>
+                                            }
+                                            @if (ViewBag.FileStatus == "Pending Approval" && (ViewBag.Role == "SIO Marketing" || ViewBag.Role == "SIO Operation" || ViewBag.Role == "SIO Branch Operation" || ViewBag.Role == "Admin"))
+                                            {
+                                                <td>
+                                                    |
+                                                </td>
+                                                <td align="right">
+                                                    <input type="submit" id="approve" value="Approve" class="btn btn-success"/>
+                                                </td>
+
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>                              
                             </td>
                         </tr>
                     }

@@ -472,6 +472,66 @@ namespace RESTServices.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="fileUpdateDTO"></param>
+        /// <returns></returns>
+        // PUT: api/MemberFilesAPI/5
+        [Route("api/MemberFilesApi/UpdateFile/")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult Update(FileUpdateDTO fileUpdateDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            //Create Transaction
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
+                try
+                {
+                    #region Transaction 1 begins
+                    //Update MemberFileTable
+                    if (file == null)
+                    {
+                        return BadRequest();
+                    }
+                    var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
+                    fileToUpdate.LoanApplication = fileUpdateDTO.LoanApplication;
+                    fileToUpdate.ChequeCopy = fileUpdateDTO.ChequeCopy;
+                    fileToUpdate.FStatusId = 2;
+                    db.SaveChanges();
+                    #endregion Transaction 1 ends
+
+                    #region Transaction 2 begins
+                    //Update FileReferences Table
+                    var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
+                    RefToUpdate.FileStatus = "Awaiting Input";
+                    db.SaveChanges();
+                    #endregion Transaction 2 ends
+
+                    //Commit Transaction
+                    transaction.Commit();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    //Rollback Transaction
+                    transaction.Rollback();
+                    if (!MemberFileExists(file.FileNo))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         // DELETE: api/MemberFilesAPI/5
