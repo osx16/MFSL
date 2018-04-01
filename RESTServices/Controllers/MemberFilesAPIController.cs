@@ -351,11 +351,6 @@ namespace RESTServices.Controllers
                 {
                     #region Transaction 1 begins
                     //Create new member File
-                    if (memberFile.ChequeCopy != null)
-                    {
-                        memberFile.FStatusId = 2;
-                    }
-
                     db.MemberFile.Add(memberFile);
                     db.SaveChanges();
                     #endregion Transaction 1 ends
@@ -415,7 +410,7 @@ namespace RESTServices.Controllers
         /// <param name="fileUpdateDTO"></param>
         /// <returns></returns>
         // PUT: api/MemberFilesAPI/5
-        [Route("api/MemberFilesApi/UpdateFile/")]
+        [Route("api/MemberFilesApi/UpdateLoanApp/")]
         [ResponseType(typeof(void))]
         public IHttpActionResult PutMemberFile(FileUpdateDTO fileUpdateDTO)
         {
@@ -437,7 +432,6 @@ namespace RESTServices.Controllers
                     }
                     var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
                     fileToUpdate.LoanApplication = fileUpdateDTO.LoanApplication;
-                    fileToUpdate.ChequeCopy = fileUpdateDTO.ChequeCopy;
                     fileToUpdate.FStatusId = 2;
                     db.SaveChanges();
                     #endregion Transaction 1 ends
@@ -475,9 +469,10 @@ namespace RESTServices.Controllers
         /// <param name="fileUpdateDTO"></param>
         /// <returns></returns>
         // PUT: api/MemberFilesAPI/5
-        [Route("api/MemberFilesApi/UpdateFile/")]
+        [AcceptVerbs("PUT")]
+        [Route("api/MemberFilesApi/UpdatePaymentAdvice/")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult Update(FileUpdateDTO fileUpdateDTO)
+        public IHttpActionResult UpdatePaymentAdviceDoc(FileUpdateDTO fileUpdateDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -496,16 +491,136 @@ namespace RESTServices.Controllers
                         return BadRequest();
                     }
                     var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
-                    fileToUpdate.LoanApplication = fileUpdateDTO.LoanApplication;
-                    fileToUpdate.ChequeCopy = fileUpdateDTO.ChequeCopy;
-                    fileToUpdate.FStatusId = 2;
+                    fileToUpdate.LoanApplication = fileUpdateDTO.PaymentAdvice;
+                    fileToUpdate.FStatusId = 3;
                     db.SaveChanges();
                     #endregion Transaction 1 ends
 
                     #region Transaction 2 begins
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
-                    RefToUpdate.FileStatus = "Awaiting Input";
+                    RefToUpdate.FileStatus = "Awaiting Payment";
+                    db.SaveChanges();
+                    #endregion Transaction 2 ends
+
+                    //Commit Transaction
+                    transaction.Commit();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    //Rollback Transaction
+                    transaction.Rollback();
+                    if (!MemberFileExists(file.FileNo))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileUpdateDTO"></param>
+        /// <returns></returns>
+        // PUT: api/MemberFilesAPI/5
+        [AcceptVerbs("PUT")]
+        [Route("api/MemberFilesApi/UpdatePaymentAndCheque/")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult UpdatePaymentAndCheque(FileUpdateDTO fileUpdateDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            //Create Transaction
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
+                try
+                {
+                    #region Transaction 1 begins
+                    //Update MemberFileTable
+                    if (file == null)
+                    {
+                        return BadRequest();
+                    }
+                    var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
+                    fileToUpdate.LoanApplication = fileUpdateDTO.PaymentAdvice;
+                    fileToUpdate.ChequeCopy = fileUpdateDTO.ChequeCopy;
+                    fileToUpdate.FStatusId = 4;
+                    db.SaveChanges();
+                    #endregion Transaction 1 ends
+
+                    #region Transaction 2 begins
+                    //Update FileReferences Table
+                    var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
+                    RefToUpdate.FileStatus = "Awaiting Collateral";
+                    db.SaveChanges();
+                    #endregion Transaction 2 ends
+
+                    //Commit Transaction
+                    transaction.Commit();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    //Rollback Transaction
+                    transaction.Rollback();
+                    if (!MemberFileExists(file.FileNo))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileUpdateDTO"></param>
+        /// <returns></returns>
+        // PUT: api/MemberFilesAPI/5
+        [AcceptVerbs("PUT")]
+        [Route("api/MemberFilesApi/UploadCollateral/")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult UploadCollateral(FileUpdateDTO fileUpdateDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            //Create Transaction
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
+                try
+                {
+                    #region Transaction 1 begins
+                    //Update MemberFileTable
+                    if (file == null)
+                    {
+                        return BadRequest();
+                    }
+                    var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
+                    fileToUpdate.LoanApplication = fileUpdateDTO.CollateralCertificate;
+                    fileToUpdate.FStatusId = 5;
+                    db.SaveChanges();
+                    #endregion Transaction 1 ends
+
+                    #region Transaction 2 begins
+                    //Update FileReferences Table
+                    var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
+                    RefToUpdate.FileStatus = "Finalized";
                     db.SaveChanges();
                     #endregion Transaction 2 ends
 

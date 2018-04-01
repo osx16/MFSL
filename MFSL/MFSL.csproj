@@ -1176,7 +1176,7 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\ResetPasswordError.cshtml" />
     <Content Include="Views\MemberFiles\_UserFiles.cshtml" />
-    <Content Include="Views\MemberFiles\_UpdateFile.cshtml" />
+    <Content Include="ViewModels\_UpdateFile.cshtml" />
     <Content Include="Views\Error\CouldNotUpdateFile.cshtml" />
     <Content Include="Views\MemberFiles\_FileUpdateMessage.cshtml" />
     <Content Include="Views\MemberFiles\NewFileNGO1.cshtml" />
@@ -1185,6 +1185,14 @@
     <Content Include="Views\Account\AddNewMember.cshtml" />
     <Content Include="Views\MemberFiles\Dashboard.cshtml" />
     <Content Include="Views\MemberFiles\_FilePanel.cshtml" />
+    <Content Include="Views\MemberFiles\_UploadApprovedLoanApp.cshtml" />
+    <Content Include="Views\MemberFiles\_UploadPaymentAdvice.cshtml" />
+    <Content Include="Views\MemberFiles\_UploadPaymentAndChequeCpy.cshtml" />
+    <Content Include="Views\MemberFiles\_UploadCollateralCertificate.cshtml" />
+    <Content Include="Views\MemberFiles\_ApprovalPanel.cshtml" />
+    <Content Include="Views\MemberFiles\_PaymentAdvicePanel.cshtml" />
+    <Content Include="Views\MemberFiles\_PaymentPanel.cshtml" />
+    <Content Include="Views\MemberFiles\_CollateralPanel.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1201,14 +1209,18 @@
     <Compile Include="Controllers\MemberFilesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Helpers\Settings.cs" />
+    <Compile Include="ViewModels\ApprovedLoanFileViewModel.cs" />
+    <Compile Include="ViewModels\CollateralFileViewModel.cs" />
     <Compile Include="Models\FileReferences.cs" />
     <Compile Include="Models\FileStatus.cs" />
     <Compile Include="Models\FileUpdateDTO.cs" />
+    <Compile Include="ViewModels\FinanceFileViewModel.cs" />
     <Compile Include="Models\ForgotPasswordViewModel.cs" />
     <Compile Include="Models\MemberFile.cs" />
     <Compile Include="Models\Officers.cs" />
     <Compile Include="Models\PagedLister.cs" />
     <Compile Include="Models\PasswordConfigModel.cs" />
+    <Compile Include="ViewModels\PaymentAdviceViewModel.cs" />
     <Compile Include="Models\RegisterBindingModel.cs" />
     <Compile Include="Models\ResetPasswordViewModel.cs" />
     <Compile Include="Models\User.cs" />
@@ -1364,6 +1376,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

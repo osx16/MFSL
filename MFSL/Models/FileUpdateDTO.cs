@@ -9,6 +9,8 @@ namespace MFSL.Models
     {
         public int FileNo { get; set; }
         public byte[] LoanApplication { get; set; }
+        public byte[] PaymentAdvice { get; set; }
         public byte[] ChequeCopy { get; set; }
+        public byte[] CollateralCertificate { get; set; }
     }
 }

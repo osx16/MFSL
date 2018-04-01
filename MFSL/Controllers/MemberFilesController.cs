@@ -72,7 +72,7 @@ namespace MFSL.Controllers
                 return RedirectToAction("SignOut", "Logout");
             }
             //Call API
-            int pageSize = 10;
+            int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
             HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllPendingApproval");
@@ -86,7 +86,8 @@ namespace MFSL.Controllers
                 ViewBag.PanelId = "1";
                 ViewBag.Role = Settings.RoleForThisUser;
                 ViewBag.FileStatus = "Pending Approval";
-                return PartialView("_FilePanel", PagedList);
+                ViewBag.Flag = "I am declared at loadApprovalPanel. and passed to _FilePanel. I'm omnipresent";
+                return PartialView("_ApprovalPanel", PagedList);
             }
             return PartialView();
         }
@@ -102,7 +103,7 @@ namespace MFSL.Controllers
                 return RedirectToAction("SignOut", "Logout");
             }
             //Call API
-            int pageSize = 10;
+            int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
             HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingInput");
@@ -116,7 +117,7 @@ namespace MFSL.Controllers
                 ViewBag.PanelId = "2";
                 ViewBag.Role = Settings.RoleForThisUser;
                 ViewBag.FileStatus = "Awaiting Input";
-                return PartialView("_FilePanel", PagedList);
+                return PartialView("_PaymentAdvicePanel", PagedList);
             }
             return PartialView();
         }
@@ -132,7 +133,7 @@ namespace MFSL.Controllers
                 return RedirectToAction("SignOut", "Logout");
             }
             //Call API
-            int pageSize = 10;
+            int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
             HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingPayment");
@@ -146,7 +147,7 @@ namespace MFSL.Controllers
                 ViewBag.PanelId = "3";
                 ViewBag.Role = Settings.RoleForThisUser;
                 ViewBag.FileStatus = "Awaiting Payment";
-                return PartialView("_FilePanel", PagedList);
+                return PartialView("_PaymentPanel", PagedList);
             }
             return PartialView();
         }
@@ -162,7 +163,7 @@ namespace MFSL.Controllers
                 return RedirectToAction("SignOut", "Logout");
             }
             //Call API
-            int pageSize = 10;
+            int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
             HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingCollateral");
@@ -176,7 +177,7 @@ namespace MFSL.Controllers
                 ViewBag.PanelId = "4";
                 ViewBag.Role = Settings.RoleForThisUser;
                 ViewBag.FileStatus = "Awaiting Collateral";
-                return PartialView("_FilePanel", PagedList);
+                return PartialView("_CollateralPanel", PagedList);
             }
             return PartialView();
         }
@@ -798,7 +799,7 @@ namespace MFSL.Controllers
         /// <param name="fileNo"></param>
         /// <returns></returns>
         [AcceptVerbs(HttpVerbs.Get)]
-        public async Task<ActionResult> UpdateMemberFile(int fileNo)
+        public async Task<ActionResult> UploadLoanApproval(int fileNo)
         {
             if (Settings.AccessToken == "")
             {
@@ -808,8 +809,8 @@ namespace MFSL.Controllers
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-
-            FileUpdateViewModel model = new FileUpdateViewModel()
+            var userRole = Settings.RoleForThisUser;
+            ApprovedLoanFileViewModel model = new ApprovedLoanFileViewModel()
             {
                 FileNo = fileNo
             };
@@ -834,27 +835,14 @@ namespace MFSL.Controllers
 
             }
 
-            if (obj.FileStatus == "Pending Approval")
-            {
-                ViewBag.FileStatus = obj.FileStatus;
-                return PartialView("_FileUpdateMessage", model);
-            }
-            if (obj.FileStatus == "Awaiting Input")
-            {
-                ViewBag.FileStatus = obj.FileStatus;
-                return PartialView("_UpdateFile", model);
-            }
-            if (obj.FileStatus == "Awaiting Payment")
-            {
-                ViewBag.FileStatus = obj.FileStatus;
-                return PartialView("_UpdateFile", model);
-            }
-            return PartialView("_FileUpdateMessage", model);
+            ViewBag.Role = userRole;
+            ViewBag.FileStatus = obj.FileStatus;
+            return PartialView("_UploadApprovedLoanApp", model);      
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateMemberFile([Bind(Include = "FileNo,LoanApplication,ChequeCopy")] FileUpdateViewModel File)
+        public async Task<ActionResult> UploadLoanApproval([Bind(Include = "FileNo,LoanApplication")] ApprovedLoanFileViewModel File)
         {
             if (Settings.AccessToken == "")
             {
@@ -870,12 +858,200 @@ namespace MFSL.Controllers
                 var LoanApplication = new MemoryStream();
                 var ChequeCopy = new MemoryStream();
                 File.LoanApplication.InputStream.CopyTo(LoanApplication);
-                File.ChequeCopy.InputStream.CopyTo(ChequeCopy);
 
                 var FileDTO = new FileUpdateDTO
                 {
                     FileNo = File.FileNo,
                     LoanApplication = LoanApplication.ToArray(),
+                };
+
+                var json = JsonConvert.SerializeObject(FileDTO);
+                HttpContent content = new StringContent(json);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                try
+                {
+                    var response = await client.PutAsync(url+ "UpdateLoanApp/", content);
+                    Debug.WriteLine(response);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Dashboard");
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    Debug.WriteLine("\nException Caught!");
+                    Debug.WriteLine("Message :{0} ", e.Message);
+                    return RedirectToAction("CouldNotUpdateFile", "Error");
+                }
+            }
+            return RedirectToAction("InternalServerError", "Error");
+        }
+
+        /// <summary>
+        /// Update Payment Advice
+        /// </summary>
+        /// <param name="fileNo"></param>
+        /// <returns></returns>
+        [AcceptVerbs(HttpVerbs.Get)]
+        public async Task<ActionResult> UploadPaymentAdvice(int fileNo)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            var userRole = Settings.RoleForThisUser;
+            PaymentAdviceViewModel model = new PaymentAdviceViewModel()
+            {
+                FileNo = fileNo
+            };
+            //Get File Reference
+            var obj = new FileReferences();
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileRefByFileNo/" + fileNo);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                try
+                {
+                    var list = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    foreach (var i in list)
+                    {
+                        obj = i;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
+            }
+            ViewBag.Role = userRole;
+            ViewBag.FileStatus = obj.FileStatus;
+            return PartialView("_UploadPaymentAdvice", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UploadPaymentAdvice([Bind(Include = "FileNo,PaymentAdvice")] PaymentAdviceViewModel File)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var PaymentAdvice = new MemoryStream();
+                File.PaymentAdvice.InputStream.CopyTo(PaymentAdvice);
+
+                var FileDTO = new FileUpdateDTO
+                {
+                    FileNo = File.FileNo,
+                    PaymentAdvice = PaymentAdvice.ToArray()
+                };
+
+                var json = JsonConvert.SerializeObject(FileDTO);
+                HttpContent content = new StringContent(json);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                try
+                {
+                    var response = await client.PutAsync(url + "UpdatePaymentAdvice/", content);
+                    Debug.WriteLine(response);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Dashboard");
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    Debug.WriteLine("\nException Caught!");
+                    Debug.WriteLine("Message :{0} ", e.Message);
+                    return RedirectToAction("CouldNotUpdateFile", "Error");
+                }
+            }
+            return RedirectToAction("InternalServerError", "Error");
+        }
+
+        //-----------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Update Payment Advice and Cheque Copy
+        /// </summary>
+        /// <param name="fileNo"></param>
+        /// <returns></returns>
+        [AcceptVerbs(HttpVerbs.Get)]
+        public async Task<ActionResult> UploadPaymentAndCheque(int fileNo)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            var userRole = Settings.RoleForThisUser;
+            FinanceFileViewModel model = new FinanceFileViewModel()
+            {
+                FileNo = fileNo
+            };
+            //Get File Reference
+            var obj = new FileReferences();
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileRefByFileNo/" + fileNo);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                try
+                {
+                    var list = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    foreach (var i in list)
+                    {
+                        obj = i;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
+            }
+            ViewBag.Role = userRole;
+            ViewBag.FileStatus = obj.FileStatus;
+            return PartialView("_UploadPaymentAndChequeCpy", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UploadPaymentAndCheque([Bind(Include = "FileNo,PaymentAdvice,ChequeCopy")] FinanceFileViewModel File)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var PaymentAdvice = new MemoryStream();
+                var ChequeCopy = new MemoryStream();
+                File.PaymentAdvice.InputStream.CopyTo(PaymentAdvice);
+                File.ChequeCopy.InputStream.CopyTo(ChequeCopy);
+
+                var FileDTO = new FileUpdateDTO
+                {
+                    FileNo = File.FileNo,
+                    PaymentAdvice = PaymentAdvice.ToArray(),
                     ChequeCopy = ChequeCopy.ToArray()
                 };
 
@@ -885,11 +1061,106 @@ namespace MFSL.Controllers
 
                 try
                 {
-                    var response = await client.PutAsync(url+ "UpdateFile/", content);
+                    var response = await client.PutAsync(url + "UpdatePaymentAndCheque/", content);
                     Debug.WriteLine(response);
                     if (response.IsSuccessStatusCode)
                     {
-                        return RedirectToAction("Recent");
+                        return RedirectToAction("Dashboard");
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    Debug.WriteLine("\nException Caught!");
+                    Debug.WriteLine("Message :{0} ", e.Message);
+                    return RedirectToAction("CouldNotUpdateFile", "Error");
+                }
+            }
+            return RedirectToAction("InternalServerError", "Error");
+        }
+
+        //-----------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Update Member File
+        /// </summary>
+        /// <param name="fileNo"></param>
+        /// <returns></returns>
+        [AcceptVerbs(HttpVerbs.Get)]
+        public async Task<ActionResult> UploadCollateral(int fileNo)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            var userRole = Settings.RoleForThisUser;
+            CollateralFileViewModel model = new CollateralFileViewModel()
+            {
+                FileNo = fileNo
+            };
+            //Get File Reference
+            var obj = new FileReferences();
+            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetFileRefByFileNo/" + fileNo);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                try
+                {
+                    var list = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    foreach (var i in list)
+                    {
+                        obj = i;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
+            }
+
+            ViewBag.Role = userRole;
+            ViewBag.FileStatus = obj.FileStatus;
+            return PartialView("_UploadCollateralCertificate", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UploadCollateral([Bind(Include = "FileNo,CollateralCertificate")] CollateralFileViewModel File)
+        {
+            if (Settings.AccessToken == "")
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var CollateralCertificate = new MemoryStream();
+                File.CollateralCertificate.InputStream.CopyTo(CollateralCertificate);
+
+                var FileDTO = new FileUpdateDTO
+                {
+                    FileNo = File.FileNo,
+                    CollateralCertificate = CollateralCertificate.ToArray()
+                };
+
+                var json = JsonConvert.SerializeObject(FileDTO);
+                HttpContent content = new StringContent(json);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                try
+                {
+                    var response = await client.PutAsync(url + "UploadCollateral/", content);
+                    Debug.WriteLine(response);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Dashboard");
                     }
                 }
                 catch (HttpRequestException e)

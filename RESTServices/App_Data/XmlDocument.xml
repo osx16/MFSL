@@ -611,7 +611,21 @@
             <param name="fileUpdateDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:RESTServices.Controllers.MemberFilesAPIController.Update(RESTServices.Models.FileUpdateDTO)">
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.UpdatePaymentAdviceDoc(RESTServices.Models.FileUpdateDTO)">
+            <summary>
+            
+            </summary>
+            <param name="fileUpdateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.UpdatePaymentAndCheque(RESTServices.Models.FileUpdateDTO)">
+            <summary>
+            
+            </summary>
+            <param name="fileUpdateDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.UploadCollateral(RESTServices.Models.FileUpdateDTO)">
             <summary>
             
             </summary>

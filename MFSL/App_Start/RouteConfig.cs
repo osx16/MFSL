@@ -25,9 +25,24 @@ namespace MFSL
                 new { controller = "MemberFiles", action = "GetFileRefsByFileNo" },
                 new[] { "MFSL.Controllers" });
 
-            routes.MapRoute("UpdateMemberFile",
-                "memberfiles/updatememberfile/",
-                new { controller = "MemberFiles", action = "UpdateMemberFile" },
+            routes.MapRoute("UploadLoanApproval",
+                "memberfiles/uploadloanapproval/",
+                new { controller = "MemberFiles", action = "UploadLoanApproval" },
+                new[] { "MFSL.Controllers" });
+
+            routes.MapRoute("UploadPaymentAdvice",
+                "memberfiles/uploadpaymentadvice/",
+                new { controller = "MemberFiles", action = "UploadPaymentAdvice" },
+                new[] { "MFSL.Controllers" });
+
+            routes.MapRoute("UploadPaymentAndCheque",
+                "memberfiles/uploadpaymentandcheque/",
+                new { controller = "MemberFiles", action = "UploadPaymentAndCheque" },
+                new[] { "MFSL.Controllers" });
+
+            routes.MapRoute("UploadCollateral",
+                "memberfiles/uploadcollateral/",
+                new { controller = "MemberFiles", action = "UploadCollateral" },
                 new[] { "MFSL.Controllers" });
 
             routes.MapRoute("SysUser",
