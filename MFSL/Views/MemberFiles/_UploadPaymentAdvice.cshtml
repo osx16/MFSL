@@ -26,7 +26,7 @@
                                         <tr>
                                             <td>Payment Advice:</td>
                                             <td>
-                                                @Html.TextBoxFor(model => model.PaymentAdvice, "", new { id = "uploader", @type = "file", @multiple = "multiple" })
+                                                @Html.TextBoxFor(model => model.PaymentAdvice, "", new { id = "upld", @type = "file", @multiple = "multiple" })
                                                 @Html.ValidationMessageFor(model => model.PaymentAdvice, "", new { @class = "text-danger" })
                                             </td>
                                         </tr>
@@ -51,7 +51,7 @@
     <script type="text/javascript">
     $(document).ready(
         function () {
-            $('#uploader').change(
+            $('#upld').change(
                 function () {
                     if ($(this).val()) {
                         $('input:submit').attr('disabled', false);

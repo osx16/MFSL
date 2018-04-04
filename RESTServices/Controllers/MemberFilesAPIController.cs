@@ -42,6 +42,7 @@ namespace RESTServices.Controllers
         /// <summary>
         /// Gets all File References for all Customers
         /// </summary>
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetAll")]
         public IQueryable<FileReferences> GetAllMemberFile()
         {
@@ -146,6 +147,7 @@ namespace RESTServices.Controllers
         /// <summary>
         /// Get file references created by current user
         /// </summary>
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetFileForUser")]
         public IQueryable<FileReferences> GetFileForUser()
         {
@@ -158,6 +160,7 @@ namespace RESTServices.Controllers
         /// Get file reference(s) for member
         /// </summary>
         /// <param name="MemberNo">Member No</param>
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetFileByMemberNo/{MemberNo:int}")]
         public IQueryable<FileReferences> GetFileByMemberNo(int MemberNo)
         {
@@ -170,6 +173,7 @@ namespace RESTServices.Controllers
         /// </summary>
         /// <param name="FileNo"></param>
         /// <returns></returns>
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetFileRefByFileNo/{FileNo:int}")]
         public IQueryable<FileReferences> GetFileRefByFileNo(int FileNo)
         {
@@ -182,6 +186,7 @@ namespace RESTServices.Controllers
         /// </summary>
         /// <param name="MemberNo"> Member No</param>
         /// <returns></returns>
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetMyFileByMemberNo/{MemberNo:int}")]
         public IQueryable<FileReferences> GetMyFileByMemberNo(int MemberNo)
         {
@@ -194,6 +199,7 @@ namespace RESTServices.Controllers
         /// </summary>
         /// <param name="FileNo"></param>
         /// <returns></returns>
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetFileStatusId/{FileNo:int}")]
         public int GetFileStatusId(int FileNo)
         {
@@ -209,6 +215,7 @@ namespace RESTServices.Controllers
         /// Get member info by member number
         /// </summary>
         /// <param name="MemberNo"> Member Number</param>
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetMemberInfoByNo/{MemberNo:int}")]
         //[ResponseType(typeof(MemberFile))]
         public IEnumerable<vnpf_> GetMemberInfoByNo(int MemberNo)
@@ -220,6 +227,8 @@ namespace RESTServices.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
+
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetAllPendingApproval")]
         public IEnumerable<FileReferences> GetAllPendingApproval()
         {
@@ -244,10 +253,36 @@ namespace RESTServices.Controllers
             return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
         }
 
+        [HttpGet]
+        [Route("api/MemberFilesAPI/SearchPendingApproval/{memberNo:int}")]
+        public IEnumerable<FileReferences> SearchPendingApproval(int memberNo)
+        {
+            string FileStatus = "Pending Approval";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "General Manager" || role == "Admin")
+            {
+                return db.FileReferences.Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo);
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetAllAwaitingInput")]
         public IEnumerable<FileReferences> GetAllAwaitingInput()
         {
@@ -272,10 +307,36 @@ namespace RESTServices.Controllers
             return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
         }
 
+        [HttpGet]
+        [Route("api/MemberFilesAPI/SearchAwaitingInput/{memberNo:int}")]
+        public IEnumerable<FileReferences> SearchAwaitingInput(int memberNo)
+        {
+            string FileStatus = "Awaiting Input";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "General Manager" || role == "Admin")
+            {
+                return db.FileReferences.Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo);
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetAllAwaitingPayment")]
         public IEnumerable<FileReferences> GetAllAwaitingPayment()
         {
@@ -300,11 +361,36 @@ namespace RESTServices.Controllers
             return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
         }
 
+        [HttpGet]
+        [Route("api/MemberFilesAPI/SearchAwaitingPayment/{memberNo:int}")]
+        public IEnumerable<FileReferences> SearchAwaitingPayment(int memberNo)
+        {
+            string FileStatus = "Awaiting Payment";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "General Manager" || role == "Admin")
+            {
+                return db.FileReferences.Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo);
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         [Route("api/MemberFilesAPI/GetAllAwaitingCollateral")]
         public IEnumerable<FileReferences> GetAllAwaitingCollateral()
         {
@@ -327,6 +413,31 @@ namespace RESTServices.Controllers
                 return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus);
             }
             return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
+        }
+
+        [HttpGet]
+        [Route("api/MemberFilesAPI/SearchAwaitingCollateral/{memberNo:int}")]
+        public IEnumerable<FileReferences> SearchAwaitingCollateral(int memberNo)
+        {
+            string FileStatus = "Awaiting Collateral";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "General Manager" || role == "Admin")
+            {
+                return db.FileReferences.Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+            }
+            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo);
         }
 
         /// <summary>

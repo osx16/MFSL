@@ -8,20 +8,20 @@
 <body>
     <section class="content">
         <div class="row">
-            @*<div class="box-body">
+            <div class="box-body">
                     <table class="table">
                         <thead>
                             <tr>
                                 <td align="right">
-                                    <input type="number" min="1" id="@("t"+ViewBag.PanelId)" class="form-control" placeholder="Enter Member #" />
+                                    <input type="number" min="1" id="8" class="form-control" placeholder="Enter Member #" />
                                 </td>
                                 <td align="left">
-                                    <input type="submit" id="search" value="search" class="btn btn-success" disabled="disabled" />
+                                    <input type="submit" id="search4" value="search" class="btn btn-success" disabled="disabled" />
                                 </td>
                             </tr>
                         </thead>
                     </table>
-                </div>*@
+                </div>
             <div class="col-md-4">
                 <h4 class="box-title">Total: @ViewBag.TotalFiles <i class="fa fa-fw fa-folder"></i></h4>
             </div>
@@ -163,7 +163,6 @@
             </div>
         </div>
     </section>
-
     <!-- Button trigger modal -->
     <div class="modal" id="memberDetailsModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -218,64 +217,79 @@
         </div>
     </div>
     <script type="text/javascript">
-        jQuery(document).ready(function () {
-                //$('[data-toggle="tooltip"]').tooltip();
-                $('.MemberLink4').on('click', function (e) {
-                    var MemberNum = $(this).attr("data-id");
-                    $.ajax({
-                        async: true,
-                        cache: false,
-                        type: "GET",
-                        url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
-                        data: { "MemberNum": MemberNum },
-                        success: function (data) {
-                            jQuery('#memberDetailsModal4').modal();
-                            jQuery('#memberDetailsModal4').find('.ajax-dynamic-get-data-form').html(data);
-                            jQuery('#memberDetailsModal4').modal('show');
-                        },
-                        error: function () {
-                            alert('Error. Please try again.');
-                        }
-                    });//EndOf Ajax
-                });
+    jQuery('#search4').unbind().click(function (e) {
+        e.preventDefault();
+        if ($('#8').val() != null) {
+            $("#4").load('@(Url.Action("LoadCollateralPanel", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#8').val());
+        }
+    });
 
-                jQuery('.FileLink4').on('click', function (e) {
-                    var FileNo = $(this).attr("data-id");
-                    $.ajax({
-                        cache: false,
-                        type: "GET",
-                        url: "@(Url.RouteUrl("GetFileRefsByFileNo"))",
-                        data: { "FileNo": FileNo },
-                        success: function (data) {
-                            jQuery('#memberFilesModal4').modal();
-                            jQuery('#memberFilesModal4').find('.ajax-dynamic-get-data-form').html(data);
-                            jQuery('#memberFilesModal4').modal('show');
-                        },
-                        error: function () {
-                            alert('Error. Please try again.');
-                        }
-                    });//EndOf Ajax
-                });
+    var status = '@(ViewBag.Status)';
+    if (status == "error") {
+        $('#serverAlertModal').modal('show');
+    }
 
-                jQuery('.UpdateLink4').on('click', function (e) {
-                    var FileNo = $(this).attr("data-id");
-                    $.ajax({
-                        cache: false,
-                        type: "GET",
-                        url: "@(Url.RouteUrl("UploadCollateral"))",
-                        data: { "FileNo": FileNo },
-                        success: function (data) {
-                            jQuery('#updateFileModal4').modal();
-                            jQuery('#updateFileModal4').find('.ajax-dynamic-get-data-form').html(data);
-                            jQuery('#updateFileModal4').modal('show');
-                        },
-                        error: function () {
-                            alert('Error. Please try again.');
-                        }
-                    });//EndOf Ajax
-                });
+    document.getElementById("8").onkeyup = function () {
+        if ($(this).val() == 0) {
+            $('.btn').prop('disabled', true);
+        } else {
+            $('.btn').prop('disabled', false);
+        }
+    }
+    $('.MemberLink4').on('click', function (e) {
+        var MemberNum = $(this).attr("data-id");
+        $.ajax({
+            async: true,
+            cache: false,
+            type: "GET",
+            url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
+            data: { "MemberNum": MemberNum },
+            success: function (data) {
+                jQuery('#memberDetailsModal4').modal();
+                jQuery('#memberDetailsModal4').find('.ajax-dynamic-get-data-form').html(data);
+                jQuery('#memberDetailsModal4').modal('show');
+            },
+            error: function () {
+                alert('Error. Please try again.');
+            }
+        });//EndOf Ajax
+    });
 
-            });//EndOf document.ready
+    jQuery('.FileLink4').on('click', function (e) {
+        var FileNo = $(this).attr("data-id");
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: "@(Url.RouteUrl("GetFileRefsByFileNo"))",
+            data: { "FileNo": FileNo },
+            success: function (data) {
+                jQuery('#memberFilesModal4').modal();
+                jQuery('#memberFilesModal4').find('.ajax-dynamic-get-data-form').html(data);
+                jQuery('#memberFilesModal4').modal('show');
+            },
+            error: function () {
+                alert('Error. Please try again.');
+            }
+        });//EndOf Ajax
+    });
+
+    jQuery('.UpdateLink4').on('click', function (e) {
+        var FileNo = $(this).attr("data-id");
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: "@(Url.RouteUrl("UploadCollateral"))",
+            data: { "FileNo": FileNo },
+            success: function (data) {
+                jQuery('#updateFileModal4').modal();
+                jQuery('#updateFileModal4').find('.ajax-dynamic-get-data-form').html(data);
+                jQuery('#updateFileModal4').modal('show');
+            },
+            error: function () {
+                alert('Error. Please try again.');
+            }
+        });//EndOf Ajax
+    });
     </script>
 </body>
 </html>

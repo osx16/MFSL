@@ -8,7 +8,7 @@
     <body>
         <section class="content">
             <!-- Member info modal -->
-            <div class="modal fade" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -26,7 +26,7 @@
             </div>
 
             <!-- File modal -->
-            <div class="modal fade" id="memberFilesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+            <div class="modal" id="memberFilesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -70,6 +70,8 @@
                                 Officer
                             </th>
                             <th>
+                                Branch
+                            </th>                            <th>
                                 Action
                             </th>
                         </tr>
@@ -88,9 +90,9 @@
                                     @Html.DisplayFor(modelItem => item.DateCreated)
                                 </td>
                                 <td>
-                                    <a href="#" class="MemberLink"
+                                    <a href="" class="MemberLink"
                                        data-id="@item.MemberNo"
-                                       data-toggle="tooltip" title="Click for more">
+                                       data-toggle="modal" title="Click for more">
                                         @Html.DisplayFor(modelItem => item.MemberNo)
                                     </a>
                                 </td>
@@ -107,9 +109,12 @@
                                     @Html.DisplayFor(modelItem => item.Officer)
                                 </td>
                                 <td>
-                                    <a href="#" class="FileLink"
+                                    @Html.DisplayFor(modelItem => item.Branch)
+                                </td>
+                                <td>
+                                    <a href="" class="FileLink"
                                        data-id="@item.FileNo"
-                                       data-toggle="tooltip" title="Click to view">
+                                       data-toggle="modal" title="Click to view">
                                         Show
                                     </a>
                                 </td>
@@ -128,59 +133,42 @@
             </div>
      </section>
 
-        <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-        <script src="~/Scripts/bootstrap.js"></script>
-        <script src="~/Scripts/bootstrap.min.js"></script>
-        <script type="text/javascript">
-            $(function () {
-                $(document).ready(function () {
-                    $('[data-toggle="tooltip"]').tooltip();
-                });
-
-                $('.MemberLink').on('click', function (e) {
-                    var MemberNum = $(this).attr("data-id");
-                    $.ajax({
-                        cache: false,
-                        type: "GET",
-                        url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
-                        data: { "MemberNum": MemberNum },
-                                success: function (data) {
-                                    $('#memberDetailsModal').modal();
-                                    $('#memberDetailsModal').find('.ajax-dynamic-get-data-form').html(data);
-                                    $('#memberDetailsModal').modal('show');
-                                },
-                                error: function () {
-                                    alert('Error. Please try again.');
-                                }
-                        });//EndOf Ajax
-                })
-            });//EndOf Main Func
-        </script>
-        <script type="text/javascript">
-            $(function () {
-                $(document).ready(function () {
-                    $('[data-toggle="tooltip"]').tooltip();
-                });
-
-                $('.FileLink').on('click', function (e) {
-                    var FileNo = $(this).attr("data-id");
-                    $.ajax({
-                        cache: false,
-                        type: "GET",
-                        url: "@(Url.RouteUrl("GetFileRefsByFileNo"))",
-                        data: { "FileNo": FileNo },
-                                success: function (data) {
-                                    $('#memberFilesModal').modal();
-                                    $('#memberFilesModal').find('.ajax-dynamic-get-data-form').html(data);
-                                    $('#memberFilesModal').modal('show');
-                                },
-                                error: function () {
-                                    alert('Error. Please try again.');
-                                }
-                        });//EndOf Ajax
-                })
-            });//EndOf Main Func
-        </script>
+    <script type="text/javascript">
+        $('.MemberLink').on('click', function (e) {
+            var MemberNum = $(this).attr("data-id");
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
+                data: { "MemberNum": MemberNum },
+                success: function (data) {
+                    $('#memberDetailsModal').modal();
+                    $('#memberDetailsModal').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#memberDetailsModal').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
+        $('.FileLink').on('click', function (e) {
+            var FileNo = $(this).attr("data-id");
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("GetFileRefsByFileNo"))",
+                data: { "FileNo": FileNo },
+                        success: function (data) {
+                            $('#memberFilesModal').modal();
+                            $('#memberFilesModal').find('.ajax-dynamic-get-data-form').html(data);
+                            $('#memberFilesModal').modal('show');
+                        },
+                        error: function () {
+                            alert('Error. Please try again.');
+                        }
+                });//EndOf Ajax
+        })
+    </script>
 </body>
 </html>
 

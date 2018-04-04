@@ -61,7 +61,7 @@ namespace MFSL.Controllers
             return View();
         }
 
-        public async Task<ActionResult> LoadApprovalPanel(int? page)
+        public async Task<ActionResult> LoadApprovalPanel(int? memberNo, int? page)
         {
             if (Settings.AccessToken == "")
             {
@@ -75,23 +75,44 @@ namespace MFSL.Controllers
             int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllPendingApproval");
-            if (responseMessage.IsSuccessStatusCode)
+            if (memberNo != null)
             {
-                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-                var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
-                ViewBag.TotalFiles = fileRefs.Count;
-                IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
-                ViewBag.ActionName = "LoadApprovalPanel";
-                ViewBag.PanelId = "1";
-                ViewBag.Role = Settings.RoleForThisUser;
-                ViewBag.FileStatus = "Pending Approval";
-                return PartialView("_ApprovalPanel", PagedList);
+                ViewBag.MemberNo = memberNo;
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "SearchPendingApproval/" + memberNo);
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    var resData = responseMsg.Content.ReadAsStringAsync().Result;
+                    var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
+                    ViewBag.TotalFiles = data.Count;
+                    IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadApprovalPanel";
+                    ViewBag.PanelId = "1";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Pending Approval";
+                    return PartialView("_ApprovalPanel", filteredList);
+                }
             }
+            else
+            {
+                HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllPendingApproval");
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                    var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    ViewBag.TotalFiles = fileRefs.Count;
+                    IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadApprovalPanel";
+                    ViewBag.PanelId = "1";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Pending Approval";
+                    return PartialView("_ApprovalPanel", PagedList);
+                }
+            }
+            ViewBag.Status = "error";
             return PartialView();
         }
 
-        public async Task<ActionResult> LoadInputPanel(int? page)
+        public async Task<ActionResult> LoadInputPanel(int? memberNo, int? page)
         {
             if (Settings.AccessToken == "")
             {
@@ -105,23 +126,44 @@ namespace MFSL.Controllers
             int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingInput");
-            if (responseMessage.IsSuccessStatusCode)
+            if (memberNo != null)
             {
-                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-                var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
-                ViewBag.TotalFiles = fileRefs.Count;
-                IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
-                ViewBag.ActionName = "LoadInputPanel";
-                ViewBag.PanelId = "2";
-                ViewBag.Role = Settings.RoleForThisUser;
-                ViewBag.FileStatus = "Awaiting Input";
-                return PartialView("_PaymentAdvicePanel", PagedList);
+                ViewBag.MemberNo = memberNo;
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "SearchAwaitingInput/" + memberNo);
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    var resData = responseMsg.Content.ReadAsStringAsync().Result;
+                    var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
+                    ViewBag.TotalFiles = data.Count;
+                    IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadInputPanel";
+                    ViewBag.PanelId = "2";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Awaiting Input";
+                    return PartialView("_PaymentAdvicePanel", filteredList);
+                }
             }
+            else
+            {
+                HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingInput");
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                    var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    ViewBag.TotalFiles = fileRefs.Count;
+                    IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadInputPanel";
+                    ViewBag.PanelId = "2";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Awaiting Input";
+                    return PartialView("_PaymentAdvicePanel", PagedList);
+                }
+            }
+            ViewBag.Status = "error";
             return PartialView();
         }
 
-        public async Task<ActionResult> LoadPaymentPanel(int? page)
+        public async Task<ActionResult> LoadPaymentPanel(int? memberNo, int? page)
         {
             if (Settings.AccessToken == "")
             {
@@ -135,23 +177,44 @@ namespace MFSL.Controllers
             int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingPayment");
-            if (responseMessage.IsSuccessStatusCode)
+            if (memberNo != null)
             {
-                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-                var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
-                ViewBag.TotalFiles = fileRefs.Count;
-                IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
-                ViewBag.ActionName = "LoadPaymentPanel";
-                ViewBag.PanelId = "3";
-                ViewBag.Role = Settings.RoleForThisUser;
-                ViewBag.FileStatus = "Awaiting Payment";
-                return PartialView("_PaymentPanel", PagedList);
+                ViewBag.MemberNo = memberNo;
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "SearchAwaitingPayment/" + memberNo);
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    var resData = responseMsg.Content.ReadAsStringAsync().Result;
+                    var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
+                    ViewBag.TotalFiles = data.Count;
+                    IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadPaymentPanel";
+                    ViewBag.PanelId = "3";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Awaiting Payment";
+                    return PartialView("_PaymentPanel", filteredList);
+                }
             }
+            else
+            {
+                HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingPayment");
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                    var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    ViewBag.TotalFiles = fileRefs.Count;
+                    IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadPaymentPanel";
+                    ViewBag.PanelId = "3";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Awaiting Payment";
+                    return PartialView("_PaymentPanel", PagedList);
+                }
+            }
+            ViewBag.Status = "error";
             return PartialView();
         }
 
-        public async Task<ActionResult> LoadCollateralPanel(int? page)
+        public async Task<ActionResult> LoadCollateralPanel(int? memberNo, int? page)
         {
             if (Settings.AccessToken == "")
             {
@@ -165,19 +228,40 @@ namespace MFSL.Controllers
             int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingCollateral");
-            if (responseMessage.IsSuccessStatusCode)
+            if (memberNo != null)
             {
-                var responseData = responseMessage.Content.ReadAsStringAsync().Result;
-                var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
-                ViewBag.TotalFiles = fileRefs.Count;
-                IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
-                ViewBag.ActionName = "LoadCollateralPanel";
-                ViewBag.PanelId = "4";
-                ViewBag.Role = Settings.RoleForThisUser;
-                ViewBag.FileStatus = "Awaiting Collateral";
-                return PartialView("_CollateralPanel", PagedList);
+                ViewBag.MemberNo = memberNo;
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "SearchAwaitingCollateral/" + memberNo);
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    var resData = responseMsg.Content.ReadAsStringAsync().Result;
+                    var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
+                    ViewBag.TotalFiles = data.Count;
+                    IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadCollateralPanel";
+                    ViewBag.PanelId = "4";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Awaiting Collateral";
+                    return PartialView("_CollateralPanel", filteredList);
+                }
             }
+            else
+            {
+                HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllAwaitingCollateral");
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                    var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    ViewBag.TotalFiles = fileRefs.Count;
+                    IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadCollateralPanel";
+                    ViewBag.PanelId = "4";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Awaiting Collateral";
+                    return PartialView("_CollateralPanel", PagedList);
+                }
+            }
+            ViewBag.Status = "error";
             return PartialView();
         }
 
@@ -345,7 +429,7 @@ namespace MFSL.Controllers
                 }
             }
             ViewBag.Status = "error";
-            return View("Dashboard");
+            return View("Search");
         }
 
         /// <summary>
