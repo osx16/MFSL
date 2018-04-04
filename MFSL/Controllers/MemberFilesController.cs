@@ -86,7 +86,6 @@ namespace MFSL.Controllers
                 ViewBag.PanelId = "1";
                 ViewBag.Role = Settings.RoleForThisUser;
                 ViewBag.FileStatus = "Pending Approval";
-                ViewBag.Flag = "I am declared at loadApprovalPanel. and passed to _FilePanel. I'm omnipresent";
                 return PartialView("_ApprovalPanel", PagedList);
             }
             return PartialView();

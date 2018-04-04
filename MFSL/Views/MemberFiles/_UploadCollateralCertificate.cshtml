@@ -26,7 +26,7 @@
                                         <tr>
                                             <td>Collateral Certificate:</td>
                                             <td>
-                                                @Html.TextBoxFor(model => model.CollateralCertificate, "", new { id = "uploader", @type = "file", @multiple = "multiple" })
+                                                @Html.TextBoxFor(model => model.CollateralCertificate, "", new { id = "upload", @type = "file", @multiple = "multiple" })
                                                 @Html.ValidationMessageFor(model => model.CollateralCertificate, "", new { @class = "text-danger" })
                                             </td>
                                         </tr>
@@ -48,15 +48,11 @@
         <!-- /.row -->
     </section>
     <!-- /.content -->
-}
-<script src="~/Scripts/jquery-3.1.1.js"></script>
-<script src="~/Scripts/jquery-3.1.1.min.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-<script type="text/javascript">
+    <script type="text/javascript">
     $(function () {
         $(document).ready(
             function () {
-                $('#uploader').change(
+                $('#upload').change(
                     function () {
                         if ($(this).val()) {
                             $('input:submit').attr('disabled', false);
@@ -65,7 +61,10 @@
                 );
             });
     });
-</script>
+    </script>
+}
+
+
 
 
 

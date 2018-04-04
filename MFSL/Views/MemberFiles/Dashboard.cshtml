@@ -66,32 +66,26 @@
             </div>
             <!-- /.row -->
         </section>
-
-        <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+        <script src="~/Scripts/jquery-3.3.1.min.js"></script>
         <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
-        <script src="~/Scripts/bootstrap.js"></script>
         <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/Scripts/bootstrap.js"></script>
         <script type="text/javascript">
-            $(function ()
-            {
                 //alert("Inside jQuery Func!");
-
-                $.ajaxPrefilter(function (options, original_Options, jqXHR) {
-                    options.async = true;
-                });
-                var role = '@(ViewBag.UserRole)';
-                if (role != "Collateral Officer")
-                {
-                    if (role != "Sr. Finance Officer" && role != "Accounts Payable" && role != "Accounts Receivable")
-                    {
-                       $('#1').load('@Url.Action("LoadApprovalPanel", "MemberFiles")');
-                       $('#2').load('@Url.Action("LoadInputPanel", "MemberFiles")');
-                    }
-                    $('#3').load('@Url.Action("LoadPaymentPanel", "MemberFiles")');
-                }
-                $('#4').load('@Url.Action("LoadCollateralPanel", "MemberFiles")');
+            $.ajaxPrefilter(function (options, original_Options, jqXHR) {
+                options.async = true;
             });
+            var role = '@(ViewBag.UserRole)';
+            if (role != "Collateral Officer")
+            {
+                if (role != "Sr. Finance Officer" && role != "Accounts Payable" && role != "Accounts Receivable")
+                {
+                    $('#1').load('@Url.Action("LoadApprovalPanel", "MemberFiles")');
+                    $('#2').load('@Url.Action("LoadInputPanel", "MemberFiles")');
+                }
+                $('#3').load('@Url.Action("LoadPaymentPanel", "MemberFiles")');
+            }
+            $('#4').load('@Url.Action("LoadCollateralPanel", "MemberFiles")');
         </script>
     </body>
 </html>
-
