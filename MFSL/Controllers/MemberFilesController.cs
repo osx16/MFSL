@@ -138,6 +138,7 @@ namespace MFSL.Controllers
                     IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
                     ViewBag.ActionName = "LoadInputPanel";
                     ViewBag.PanelId = "2";
+                    ViewBag.FullName = Settings.UserFirstName + " " + Settings.UserLastName;
                     ViewBag.Role = Settings.RoleForThisUser;
                     ViewBag.FileStatus = "Awaiting Input";
                     return PartialView("_PaymentAdvicePanel", filteredList);
@@ -155,6 +156,7 @@ namespace MFSL.Controllers
                     ViewBag.ActionName = "LoadInputPanel";
                     ViewBag.PanelId = "2";
                     ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FullName = Settings.UserFirstName + " " + Settings.UserLastName;
                     ViewBag.FileStatus = "Awaiting Input";
                     return PartialView("_PaymentAdvicePanel", PagedList);
                 }
@@ -174,7 +176,12 @@ namespace MFSL.Controllers
                 return RedirectToAction("SignOut", "Logout");
             }
             //Call API
+            var role = Settings.RoleForThisUser;
             int pageSize = 5;
+            if (role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
+            {
+                pageSize = 10;
+            }
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
             if (memberNo != null)
@@ -226,6 +233,10 @@ namespace MFSL.Controllers
             }
             //Call API
             int pageSize = 5;
+            if(Settings.RoleForThisUser == "Collateral Officer")
+            {
+                pageSize = 10;
+            }
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
             if (memberNo != null)

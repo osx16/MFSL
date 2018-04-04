@@ -238,19 +238,23 @@ namespace RESTServices.Controllers
             var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
-            if(role == "General Manager" || role == "Admin")
+            if(role == "Admin" || role == "General Manager")
             {
-                return db.FileReferences.Where(x => x.FileStatus == FileStatus);
+                return db.FileReferences.Where(x => x.FileStatus == FileStatus).OrderByDescending(x=>x.DateCreated);
             }
             else if(role == "SIO Operation" || role == "SIO Marketing")
             {
-                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus);
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if(role == "SIO Branch Operation")
             {
-                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus);
+                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus).OrderByDescending(x => x.DateCreated);
             }
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus)
+                     .OrderByDescending(x => x.DateCreated);
         }
 
         [HttpGet]
@@ -263,19 +267,26 @@ namespace RESTServices.Controllers
             var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
-            if (role == "General Manager" || role == "Admin")
+            if (role == "Admin" || role == "General Manager")
             {
-                return db.FileReferences.Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences.Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo).OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Operation" || role == "SIO Marketing")
             {
-                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Branch Operation")
             {
-                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && 
+                         x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo);
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo)
+                     .OrderByDescending(x => x.DateCreated);
         }
 
         /// <summary>
@@ -292,19 +303,27 @@ namespace RESTServices.Controllers
             var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
-            if (role == "General Manager" || role == "Admin")
+            if (role == "Admin" || role == "General Manager")
             {
-                return db.FileReferences.Where(x => x.FileStatus == FileStatus);
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Operation" || role == "SIO Marketing")
             {
-                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus);
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Branch Operation")
             {
-                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus);
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
             }
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus)
+                     .OrderByDescending(x => x.DateCreated);
         }
 
         [HttpGet]
@@ -317,19 +336,29 @@ namespace RESTServices.Controllers
             var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
-            if (role == "General Manager" || role == "Admin")
+            if (role == "Admin" || role == "General Manager")
             {
-                return db.FileReferences.Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Operation" || role == "SIO Marketing")
             {
-                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Branch Operation")
             {
-                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") 
+                         && x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo);
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID 
+                     && f.FileStatus == FileStatus && f.MemberNo == memberNo)
+                     .OrderByDescending(x => x.DateCreated);
         }
 
         /// <summary>
@@ -346,19 +375,27 @@ namespace RESTServices.Controllers
             var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
-            if (role == "General Manager" || role == "Accounts Payable" || role == "Admin")
+            if (role == "Admin" || role == "General Manager" || role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
             {
-                return db.FileReferences.Where(x => x.FileStatus == FileStatus);
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Operation" || role == "SIO Marketing")
             {
-                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus);
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Branch Operation")
             {
-                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus);
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
             }
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus)
+                     .OrderByDescending(x => x.DateCreated);
         }
 
         [HttpGet]
@@ -371,19 +408,29 @@ namespace RESTServices.Controllers
             var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
-            if (role == "General Manager" || role == "Admin")
+            if (role == "Admin" || role == "General Manager" || role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
             {
-                return db.FileReferences.Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus && 
+                         x.MemberNo == memberNo).OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Operation" || role == "SIO Marketing")
             {
-                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && 
+                         x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Branch Operation")
             {
-                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo")
+                         && x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo);
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo)
+                     .OrderByDescending(x => x.DateCreated);
         }
 
         /// <summary>
@@ -400,19 +447,27 @@ namespace RESTServices.Controllers
             var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
-            if (role == "General Manager" || role == "Collateral Officer" || role == "Accounts Payable" || role == "Admin")
+            if (role == "Admin" || role == "General Manager" || role == "Collateral Officer" || role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
             {
-                return db.FileReferences.Where(x => x.FileStatus == FileStatus);
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Operation" || role == "SIO Marketing")
             {
-                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus);
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Branch Operation")
             {
-                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus);
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
             }
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus);
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus)
+                     .OrderByDescending(x => x.DateCreated);
         }
 
         [HttpGet]
@@ -425,19 +480,29 @@ namespace RESTServices.Controllers
             var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
-            if (role == "General Manager" || role == "Admin")
+            if (role == "Admin" || role == "General Manager" || role == "Collateral Officer" || role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
             {
-                return db.FileReferences.Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Operation" || role == "SIO Marketing")
             {
-                return db.FileReferences.Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && 
+                         x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Branch Operation")
             {
-                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus && x.MemberNo == memberNo);
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && 
+                         x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
-            return db.FileReferences.Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo);
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo)
+                     .OrderByDescending(x => x.DateCreated);
         }
 
         /// <summary>
