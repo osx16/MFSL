@@ -13,7 +13,7 @@
                         <thead>
                             <tr>
                                 <td align="right">
-                                    <input type="number" min="1" id="7" class="form-control" placeholder="Enter Member #" />
+                                    <input type="number" min="1" id="txtbox3" class="form-control" placeholder="Enter Member #" />
                                 </td>
                                 <td align="left">
                                     <input type="submit" id="search3" value="search" class="btn btn-success" disabled="disabled" />
@@ -220,8 +220,8 @@
     <script type="text/javascript">
     jQuery('#search3').unbind().click(function (e) {
         e.preventDefault();
-        if ($('#7').val() != null) {
-            $("#3").load('@(Url.Action("LoadPaymentPanel", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#7').val());
+        if ($('#txtbox3').val() != null) {
+            $("#3").load('@(Url.Action("LoadPaymentPanel", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox3').val());
         }
 
     });
@@ -230,7 +230,7 @@
     if (status == "error") {
         $('#serverAlertModal').modal('show');
     }
-    document.getElementById("7").onkeyup = function () {
+    document.getElementById("txtbox3").onkeyup = function () {
         if ($(this).val() == 0) {
             $('.btn').prop('disabled', true);
         } else {
