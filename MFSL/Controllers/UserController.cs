@@ -42,7 +42,7 @@ namespace MFSL.Controllers
         /// <returns>User First Name</returns>
         public ActionResult RenderUserFrstName()
         {
-            if (Settings.AccessToken == "")
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -64,6 +64,11 @@ namespace MFSL.Controllers
         /// <returns>Profile Info</returns>
         public ActionResult MyProfile()
         {
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
             ViewBag.Branch = Settings.BranchName;
             ViewBag.FirstName = Settings.UserFirstName;
             ViewBag.MiddleName = Settings.UserMidName;

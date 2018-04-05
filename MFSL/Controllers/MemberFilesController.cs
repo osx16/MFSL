@@ -16,25 +16,33 @@ using System.Diagnostics;
 
 namespace MFSL.Controllers
 {
-    /// <summary>
-    /// Controller Methods:
-    /// 1. RenderInfoView - Renders brief info about customer
-    /// 2. Dashboard - Renders Dashboard of the system
-    /// 3. Recent - Renders history of files created by an officer
-    /// 4. FetchFile - Fetch a particular file based on number and file type
-    /// 5. MyFiles - Search facility for an officer's files
-    /// 6. SearchFiles - Search facility for all customer files
-    /// 7. GetMemberInfoByNum - Gets member details by member number
-    /// 8. GetFileRefsByFileNo - Gets file reference by file number
-    /// 9. NewFile - Create new file for member
-    /// </summary>
+
+    // Controller Methods:
+    // 1. RenderInfoView - Renders brief info about customer
+    // 2. Dashboard - Renders Dashboard of the system
+    // 3. Recent - Renders history of files created by an officer
+    // 4. FetchFile - Fetch a particular file based on number and file type
+    // 5. MyFiles - Search facility for an officer's files
+    // 6. SearchFiles - Search facility for all customer files
+    // 7. GetMemberInfoByNum - Gets member details by member number
+    // 8. GetFileRefsByFileNo - Gets file reference by file number
+    // 9. NewFile - Create new file for member
+    // 10. GetFileRefsByFileNo - Gets file reference by FileNo
+    // 11. NewFileGov - Post method for Govt Member File
+    // 12. NewFileNGO1 - Posts NGO1 Member File
+    // 13. NewFileNGO2 - Post NGO Member File
+    // 14. UploadLoanApproval - Post Update loan application file
+    // 15. UploadPaymentAdvice - Post Payment Advice
+    // 16. UploadPaymentAndCheque - Posts Updated Payment Advice and Cheque Copy
+    // 17. UploadCollateral - Post Collateral File
+
     public class MemberFilesController : Controller
     {
 
         ApiServices _apiServices = new ApiServices();
         HttpClient client;
 
-        //The URL of the WEB API Service
+        //Web API Web URL
         string url = "http://localhost:64890/api/MemberFilesAPI/";
 
         public MemberFilesController()
@@ -45,33 +53,35 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
-
+        /// <summary>
+        ///  Returns Dashboard menu
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Dashboard()
         {
-            if (Settings.AccessToken == "")
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
+
             ViewBag.UserRole = Settings.RoleForThisUser;
             ViewBag.VNPFNo = Settings.VNPFNo;
             return View();
         }
 
+        /// <summary>
+        /// Pulls pending approval files and renders them
+        /// </summary>
+        /// <param name="memberNo"></param>
+        /// <param name="page"></param>
+        /// <returns>Pending Approval file references</returns>
         public async Task<ActionResult> LoadApprovalPanel(int? memberNo, int? page)
         {
-            if (Settings.AccessToken == "")
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            //Call API
+            
             int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
@@ -112,17 +122,19 @@ namespace MFSL.Controllers
             return PartialView();
         }
 
+        /// <summary>
+        /// Pulls files Awaiting Input and renders them
+        /// </summary>
+        /// <param name="memberNo"></param>
+        /// <param name="page"></param>
+        /// <returns>Awaiting input file references</returns>
         public async Task<ActionResult> LoadInputPanel(int? memberNo, int? page)
         {
-            if (Settings.AccessToken == "")
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            //Call API
+
             int pageSize = 5;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
@@ -165,13 +177,15 @@ namespace MFSL.Controllers
             return PartialView();
         }
 
+        /// <summary>
+        /// Pulls Awaiting Payment files and renders them
+        /// </summary>
+        /// <param name="memberNo"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public async Task<ActionResult> LoadPaymentPanel(int? memberNo, int? page)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -220,14 +234,15 @@ namespace MFSL.Controllers
             ViewBag.Status = "error";
             return PartialView();
         }
-
+        /// <summary>
+        /// Pulls files Awaiting Collateral certiface and renders them
+        /// </summary>
+        /// <param name="memberNo"></param>
+        /// <param name="page"></param>
+        /// <returns>Waiting Collateral file references</returns>
         public async Task<ActionResult> LoadCollateralPanel(int? memberNo, int? page)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -282,44 +297,39 @@ namespace MFSL.Controllers
         /// <returns>Customer Info View</returns>
         public ActionResult RenderInfoView()
         {
-            if (Settings.AccessToken == "")
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
             return PartialView("_Info");
         }
+
         /// <summary>
         /// Returns Dashboard View
         /// </summary>
         /// <returns>Dashboard View</returns>
         public ActionResult Search()
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
             return View();
         }
+
         /// <summary>
         /// Returns View For File History for Officer
         /// </summary>
         /// <returns>History of files created by user</returns>
         public ActionResult Recent()
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
             return View();
         }
+
         /// <summary>
         /// Calls web api to return a particular file
         /// </summary>
@@ -328,11 +338,7 @@ namespace MFSL.Controllers
         /// <returns>PDF File</returns>
         public async Task<ActionResult> FetchFile(string id, string flag)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -362,11 +368,7 @@ namespace MFSL.Controllers
         /// <returns>Member File Details</returns>
         public async Task<ActionResult> MyFiles(string memberNo, int? page)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -412,11 +414,7 @@ namespace MFSL.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> SearchFiles(string memberNo, int? page)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -451,11 +449,7 @@ namespace MFSL.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> GetMemberInfoByNum(string MemberNum)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -482,11 +476,7 @@ namespace MFSL.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> GetFileRefsByFileNo(int fileNo)
         {
-            if(Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if(DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -516,11 +506,7 @@ namespace MFSL.Controllers
         /// <returns>New File Creation Form</returns>
         public ActionResult NewFile()
         {
-            if(Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -618,11 +604,7 @@ namespace MFSL.Controllers
         /// <returns>New File Creation Form</returns>
         public ActionResult NewFileGov()
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -711,17 +693,18 @@ namespace MFSL.Controllers
         /// <returns>New File Creation Form</returns>
         public ActionResult NewFileNGO1()
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
             return View();
         }
 
+        /// <summary>
+        /// Posts NGO1 Member File
+        /// </summary>
+        /// <param name="File"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> NewFileNGO1(
@@ -813,6 +796,11 @@ namespace MFSL.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Post NGO Member File
+        /// </summary>
+        /// <param name="File"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> NewFileNGO2(
@@ -888,18 +876,14 @@ namespace MFSL.Controllers
         }
 
         /// <summary>
-        /// Update Member File
+        /// Render Update Member File View
         /// </summary>
-        /// <param name="fileNo"></param>
+        /// <param name="fileNo">File Number</param>
         /// <returns></returns>
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> UploadLoanApproval(int fileNo)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -934,15 +918,16 @@ namespace MFSL.Controllers
             return PartialView("_UploadApprovedLoanApp", model);      
         }
 
+        /// <summary>
+        ///  Post Update loan application file
+        /// </summary>
+        /// <param name="File">ApprovedLoanFileViewModel</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadLoanApproval([Bind(Include = "FileNo,LoanApplication")] ApprovedLoanFileViewModel File)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -956,6 +941,7 @@ namespace MFSL.Controllers
                 var FileDTO = new FileUpdateDTO
                 {
                     FileNo = File.FileNo,
+                    Approver = Settings.UserFirstName + " " + Settings.UserLastName,
                     LoanApplication = LoanApplication.ToArray(),
                 };
 
@@ -983,18 +969,14 @@ namespace MFSL.Controllers
         }
 
         /// <summary>
-        /// Update Payment Advice
+        /// Renders Update Payment Advice View
         /// </summary>
-        /// <param name="fileNo"></param>
+        /// <param name="fileNo">File Number</param>
         /// <returns></returns>
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> UploadPaymentAdvice(int fileNo)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -1027,16 +1009,16 @@ namespace MFSL.Controllers
             ViewBag.FileStatus = obj.FileStatus;
             return PartialView("_UploadPaymentAdvice", model);
         }
-
+        /// <summary>
+        /// Post Payment Advice
+        /// </summary>
+        /// <param name="File"></param>
+        /// <returns>PaymentAdviceViewModel</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadPaymentAdvice([Bind(Include = "FileNo,PaymentAdvice")] PaymentAdviceViewModel File)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -1075,23 +1057,19 @@ namespace MFSL.Controllers
             return RedirectToAction("InternalServerError", "Error");
         }
 
-        //-----------------------------------------------------------------------------------------------
         /// <summary>
-        /// Update Payment Advice and Cheque Copy
+        /// Render Update Payment Advice and Cheque Copy
         /// </summary>
         /// <param name="fileNo"></param>
         /// <returns></returns>
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> UploadPaymentAndCheque(int fileNo)
         {
-            if (Settings.AccessToken == "")
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
+
             var userRole = Settings.RoleForThisUser;
             FinanceFileViewModel model = new FinanceFileViewModel()
             {
@@ -1122,15 +1100,16 @@ namespace MFSL.Controllers
             return PartialView("_UploadPaymentAndChequeCpy", model);
         }
 
+        /// <summary>
+        /// Posts Updated Payment Advice and Cheque Copy
+        /// </summary>
+        /// <param name="File"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadPaymentAndCheque([Bind(Include = "FileNo,PaymentAdvice,ChequeCopy")] FinanceFileViewModel File)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -1145,6 +1124,7 @@ namespace MFSL.Controllers
                 var FileDTO = new FileUpdateDTO
                 {
                     FileNo = File.FileNo,
+                    PaymentOfficer = Settings.UserFirstName + " " + Settings.UserLastName,
                     PaymentAdvice = PaymentAdvice.ToArray(),
                     ChequeCopy = ChequeCopy.ToArray()
                 };
@@ -1172,23 +1152,19 @@ namespace MFSL.Controllers
             return RedirectToAction("InternalServerError", "Error");
         }
 
-        //-----------------------------------------------------------------------------------------------
         /// <summary>
-        /// Update Member File
+        /// Render Update Member File View
         /// </summary>
         /// <param name="fileNo"></param>
         /// <returns></returns>
         [AcceptVerbs(HttpVerbs.Get)]
         public async Task<ActionResult> UploadCollateral(int fileNo)
         {
-            if (Settings.AccessToken == "")
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
+
             var userRole = Settings.RoleForThisUser;
             CollateralFileViewModel model = new CollateralFileViewModel()
             {
@@ -1220,15 +1196,16 @@ namespace MFSL.Controllers
             return PartialView("_UploadCollateralCertificate", model);
         }
 
+        /// <summary>
+        /// Post Collateral File
+        /// </summary>
+        /// <param name="File"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadCollateral([Bind(Include = "FileNo,CollateralCertificate")] CollateralFileViewModel File)
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -1241,6 +1218,7 @@ namespace MFSL.Controllers
                 var FileDTO = new FileUpdateDTO
                 {
                     FileNo = File.FileNo,
+                    CollateralOfficer = Settings.UserFirstName + " " + Settings.UserLastName,
                     CollateralCertificate = CollateralCertificate.ToArray()
                 };
 

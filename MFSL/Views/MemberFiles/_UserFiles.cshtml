@@ -114,6 +114,30 @@
                     <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Customer ID", "FetchFile", new { id = item.FileNo, flag = 16 }, new { target = "_blank" })
                 </td>
             </tr>
+            if (item.FileStatus != "Pending Approval" || item.FileStatus != "Awaiting Input")
+            {
+                <tr>
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Payment Advice", "FetchFile", new { id = item.FileNo, flag = 17 }, new { target = "_blank" })
+                    </td>
+                </tr>
+                if (item.FileStatus != "Awaiting Payment" || item.FileStatus != "Awaiting Collateral")
+                {
+                    <tr>
+                        <td>
+                            <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Collateral Certificate", "FetchFile", new { id = item.FileNo, flag = 18 }, new { target = "_blank" })
+                        </td>
+                    </tr>
+                }
+            }
+            if (item.FileStatus == "Maintenance")
+            {
+                <tr>
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Maintenance Form", "FetchFile", new { id = item.FileNo, flag = 19 }, new { target = "_blank" })
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>

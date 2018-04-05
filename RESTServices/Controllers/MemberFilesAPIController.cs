@@ -19,21 +19,35 @@ using System.Diagnostics;
 
 namespace RESTServices.Controllers
 {
+    // List of Controller and Non-Controller API methods used
+    // 1. GetAllMemberFile - Gets all File References for all Customers
+    // 2. FetchFile - Fetch specific file for a user based on File Id and Flag
+    // 3. GetFileForUser - Get file references created by current user
+    // 4. GetFileByMemberNo - Get file reference(s) for member
+    // 5. GetFileRefByFileNo - Get file reference by file number
+    // 6. GetMyFileByMemberNo - Get file references for member by member no under an officer 
+    // 7. GetMemberInfoByNo - Get member info by member number
+    // 8. GetAllPendingApproval - Get All Pending Approval File References
+    // 9. SearchPendingApproval - Gets specific file reference where status is pending approval
+    //    based on member number
+    // 10. GetAllAwaitingInput - Get All Awaiting Input File References
+    // 11. SearchAwaitingInput - Gets specific file reference where status is awaiting input
+    // 12. GetAllAwaitingPayment - Get All Awaiting Payment File References
+    // 13. SearchAwaitingPayment - Gets specific file reference where status is Awaiting Input
+    // 14. GetAllAwaitingCollateral - Get All Awaiting Collateral File References
+    // 15. SearchAwaitingCollateral - Gets specific file reference where status is Awaiting Collateral
+    //     based on member number
+    // 16. PostMemberFile - Post new member file
+    // 17. UpdateLoanApp - Update Loan Application file
+    // 18. UpdatePaymentAdvice - Update Payment Advice File
+    // 19. UpdatePaymentAndCheque - Update Payment Advice and Cheque Copy File
+    // 20. UploadCollateral - Update Collateral File
+    // 21. DeleteMemberFile - Unused (Reserve)
+    // 22. Dispose (Non-Controller Method) - Dispose controller data
+    // 23. MemberFileExists (Non-Controller Method) - Returns 1 if Member File exists
+
     /// <summary>
-    /// List of Controller and Non-Controller methods used
-    /// 1. GetAllMemberFile - Gets all File References for all Customers
-    /// 2. FetchFile - Fetch specific file for a user based on File Id and Flag
-    /// 3. GetFileForUser - Get file references created by current user
-    /// 4. GetFileByMemberNo - Get file reference(s) for member
-    /// 5. GetFileRefByFileNo - Get file reference by file number
-    /// 6. GetMyFileByMemberNo - Get file references for member by member no under an officer 
-    /// 7. GetMemberInfoByNo - Get member info by member number
-    /// 8. PutMemberFile - Unused (Reserve)
-    /// 9. PostMemberFile - Post new member file
-    /// 10. PostReference - Post new file reference for customer to database
-    /// 11. DeleteMemberFile - Unused (Reserve)
-    /// 12. Dispose (Non-Controller Method) - Dispose controller data
-    /// 13. MemberFileExists (Non-Controller Method) - Returns 1 if Member File exists
+    /// Member Files API Controller
     /// </summary>
     public class MemberFilesAPIController : ApiController
     {
@@ -224,7 +238,7 @@ namespace RESTServices.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get All Pending Approval File References
         /// </summary>
         /// <returns></returns>
 
@@ -250,13 +264,20 @@ namespace RESTServices.Controllers
             }
             else if(role == "SIO Branch Operation")
             {
-                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus).OrderByDescending(x => x.DateCreated);
+                return db.FileReferences.Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") 
+                         && x.FileStatus == FileStatus).OrderByDescending(x => x.DateCreated);
             }
             return db.FileReferences
                      .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus)
                      .OrderByDescending(x => x.DateCreated);
         }
 
+        /// <summary>
+        /// Gets specific file reference where status is pending approval
+        /// based on member number
+        /// </summary>
+        /// <param name="memberNo">Member Number</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/MemberFilesAPI/SearchPendingApproval/{memberNo:int}")]
         public IEnumerable<FileReferences> SearchPendingApproval(int memberNo)
@@ -269,7 +290,9 @@ namespace RESTServices.Controllers
             var role = roleApi.GetRoleForThisUser();
             if (role == "Admin" || role == "General Manager")
             {
-                return db.FileReferences.Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo).OrderByDescending(x => x.DateCreated);
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
             }
             else if (role == "SIO Operation" || role == "SIO Marketing")
             {
@@ -290,7 +313,7 @@ namespace RESTServices.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get All Awaiting Input File References
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -326,6 +349,12 @@ namespace RESTServices.Controllers
                      .OrderByDescending(x => x.DateCreated);
         }
 
+        /// <summary>
+        /// Gets specific file reference where status is awaiting input
+        /// based on member number
+        /// </summary>
+        /// <param name="memberNo">Member Number</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/MemberFilesAPI/SearchAwaitingInput/{memberNo:int}")]
         public IEnumerable<FileReferences> SearchAwaitingInput(int memberNo)
@@ -362,7 +391,7 @@ namespace RESTServices.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get All Awaiting Payment File References
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -398,6 +427,12 @@ namespace RESTServices.Controllers
                      .OrderByDescending(x => x.DateCreated);
         }
 
+        /// <summary>
+        /// Gets specific file reference where status is Awaiting Input
+        /// based on member number
+        /// </summary>
+        /// <param name="memberNo">Member Number</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/MemberFilesAPI/SearchAwaitingPayment/{memberNo:int}")]
         public IEnumerable<FileReferences> SearchAwaitingPayment(int memberNo)
@@ -434,7 +469,7 @@ namespace RESTServices.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get All Awaiting Collateral File References
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -447,7 +482,8 @@ namespace RESTServices.Controllers
             var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
-            if (role == "Admin" || role == "General Manager" || role == "Collateral Officer" || role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
+            if (role == "Admin" || role == "General Manager" || role == "Collateral Officer" || 
+                role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
             {
                 return db.FileReferences
                          .Where(x => x.FileStatus == FileStatus)
@@ -470,6 +506,12 @@ namespace RESTServices.Controllers
                      .OrderByDescending(x => x.DateCreated);
         }
 
+        /// <summary>
+        /// Gets specific file reference where status is Awaiting Collateral
+        /// based on member number
+        /// </summary>
+        /// <param name="memberNo">Member Number</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/MemberFilesAPI/SearchAwaitingCollateral/{memberNo:int}")]
         public IEnumerable<FileReferences> SearchAwaitingCollateral(int memberNo)
@@ -480,7 +522,8 @@ namespace RESTServices.Controllers
             var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
-            if (role == "Admin" || role == "General Manager" || role == "Collateral Officer" || role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
+            if (role == "Admin" || role == "General Manager" || role == "Collateral Officer" || 
+                role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
             {
                 return db.FileReferences
                          .Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo)
@@ -581,14 +624,14 @@ namespace RESTServices.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Update Loan Application file
         /// </summary>
-        /// <param name="fileUpdateDTO"></param>
+        /// <param name="fileUpdateDTO">FileUpdateDTO</param>
         /// <returns></returns>
         // PUT: api/MemberFilesAPI/5
         [Route("api/MemberFilesApi/UpdateLoanApp/")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutMemberFile(FileUpdateDTO fileUpdateDTO)
+        public IHttpActionResult UpdateLoanApp(FileUpdateDTO fileUpdateDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -615,6 +658,7 @@ namespace RESTServices.Controllers
                     #region Transaction 2 begins
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
+                    RefToUpdate.Approver = fileUpdateDTO.Approver;
                     RefToUpdate.FileStatus = "Awaiting Input";
                     db.SaveChanges();
                     #endregion Transaction 2 ends
@@ -640,15 +684,15 @@ namespace RESTServices.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Update Payment Advice File
         /// </summary>
-        /// <param name="fileUpdateDTO"></param>
+        /// <param name="fileUpdateDTO">FileUpdateDTO</param>
         /// <returns></returns>
         // PUT: api/MemberFilesAPI/5
         [AcceptVerbs("PUT")]
         [Route("api/MemberFilesApi/UpdatePaymentAdvice/")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult UpdatePaymentAdviceDoc(FileUpdateDTO fileUpdateDTO)
+        public IHttpActionResult UpdatePaymentAdvice(FileUpdateDTO fileUpdateDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -700,9 +744,9 @@ namespace RESTServices.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Update Payment Advice and Cheque Copy File
         /// </summary>
-        /// <param name="fileUpdateDTO"></param>
+        /// <param name="fileUpdateDTO">FileUpdateDTO</param>
         /// <returns></returns>
         // PUT: api/MemberFilesAPI/5
         [AcceptVerbs("PUT")]
@@ -736,6 +780,7 @@ namespace RESTServices.Controllers
                     #region Transaction 2 begins
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
+                    RefToUpdate.PaymentOfficer = fileUpdateDTO.PaymentOfficer;
                     RefToUpdate.FileStatus = "Awaiting Collateral";
                     db.SaveChanges();
                     #endregion Transaction 2 ends
@@ -761,9 +806,9 @@ namespace RESTServices.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Update Collateral File
         /// </summary>
-        /// <param name="fileUpdateDTO"></param>
+        /// <param name="fileUpdateDTO">FileUpdateDTO</param>
         /// <returns></returns>
         // PUT: api/MemberFilesAPI/5
         [AcceptVerbs("PUT")]
@@ -796,6 +841,7 @@ namespace RESTServices.Controllers
                     #region Transaction 2 begins
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
+                    RefToUpdate.CollateralOfficer = fileUpdateDTO.CollateralOfficer;
                     RefToUpdate.FileStatus = "Finalized";
                     db.SaveChanges();
                     #endregion Transaction 2 ends

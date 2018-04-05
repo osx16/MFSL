@@ -40,11 +40,7 @@ namespace MFSL.Controllers
 
         public ActionResult AddNewMember()
         {
-            if (Settings.AccessToken == "")
-            {
-                return RedirectToAction("SignOut", "Logout");
-            }
-            else if (DateTime.UtcNow.AddSeconds(10) > Settings.AccessTokenExpirationDate)
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -87,7 +83,7 @@ namespace MFSL.Controllers
         /// </summary>
         public async Task<ActionResult> ActiveUsers()
         {
-            if (Settings.AccessToken == "")
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -107,7 +103,7 @@ namespace MFSL.Controllers
         /// <returns>New User Creation Form</returns>
         public async Task<ActionResult> Register()
         {
-            if (Settings.AccessToken == "")
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }
@@ -183,7 +179,7 @@ namespace MFSL.Controllers
         /// <returns>Forgot Password View</returns>
         public ActionResult ForgotPassword()
         {
-            if (Settings.AccessToken == "")
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
             }

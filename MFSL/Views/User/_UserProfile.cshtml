@@ -1,6 +1,13 @@
 ﻿<i class="fa fa-bank" aria-hidden="true"></i>
 <br />
-<b>Member Financial Services Ltd</b>
+@if (ViewBag.Role == "Collateral Officer")
+{
+    <b>V N P F</b>
+}
+else
+{
+    <b>Member Financial Services Ltd</b>
+}
 <br />
 <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>
 <br />

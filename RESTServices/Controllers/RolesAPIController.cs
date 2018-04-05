@@ -10,11 +10,16 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RESTServices.Controllers
 {
+    /// <summary>
+    /// Roles API Controller
+    /// </summary>
     public class RolesAPIController : ApiController
     {
         ApplicationDbContext context;
         AccountController Account;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public RolesAPIController()
         {
             Account = new AccountController();

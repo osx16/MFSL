@@ -55,6 +55,12 @@
                                 Date Created
                             </th>
                             <th>
+                                Officer
+                            </th>
+                            <th>
+                                Branch
+                            </th> 
+                            <th>
                                 Member No
                             </th>
                             <th>
@@ -67,11 +73,16 @@
                                 Status
                             </th>
                             <th>
-                                Officer
+                                Loan Approver
                             </th>
                             <th>
-                                Branch
-                            </th>                            <th>
+                                Payment Officer
+                            </th>
+                            <th>
+                                Collateral Officer
+                            </th>
+                           
+                            <th>
                                 Action
                             </th>
                         </tr>
@@ -90,6 +101,12 @@
                                     @Html.DisplayFor(modelItem => item.DateCreated)
                                 </td>
                                 <td>
+                                    @Html.DisplayFor(modelItem => item.Officer)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Branch)
+                                </td>
+                                <td>
                                     <a href="" class="MemberLink"
                                        data-id="@item.MemberNo"
                                        data-toggle="modal" title="Click for more">
@@ -106,10 +123,34 @@
                                     @Html.DisplayFor(modelItem => item.FileStatus)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Officer)
+                                    @if(item.Approver == null)
+                                    {
+                                        <p>N/A</p>
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(modelItem => item.Approver)
+                                    }
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Branch)
+                                    @if (item.PaymentOfficer == null)
+                                    {
+                                        <p>N/A</p>
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(modelItem => item.PaymentOfficer)
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.CollateralOfficer == null)
+                                    {
+                                        <p>N/A</p>
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(modelItem => item.CollateralOfficer)
+                                    }
                                 </td>
                                 <td>
                                     <a href="" class="FileLink"

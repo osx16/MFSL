@@ -6,59 +6,6 @@
 <head>
 </head>
 <body>
-    <!-- Button trigger modal -->
-    <div class="modal fade" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> | Member Info</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="ajax-dynamic-get-data-form" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- File modal -->
-    <div class="modal fade" id="memberFilesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title"><i class="fa fa-files-o fa-lg" aria-hidden="true"></i> | Docs</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="ajax-dynamic-get-data-form" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Update File modal -->
-    <div class="modal fade" id="updateFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title"><i class="fa fa-fw fa-arrow-circle-o-up fa-lg"></i> | Update file</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="ajax-dynamic-get-data-form" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <section class="content">
         <div class="row">
             <div class="col-md-4">
@@ -68,6 +15,9 @@
             <table class="table table-striped">
                 <thead>
                     <tr class="success">
+                        <th>
+                            Date Created
+                        </th>
                         <th>
                             Member No
                         </th>
@@ -81,7 +31,13 @@
                             Status
                         </th>
                         <th>
-                            Date Created
+                            Loan Approver
+                        </th>
+                        <th>
+                            Payment Officer
+                        </th>
+                        <th>
+                            Collateral Officer
                         </th>
                         <th>
                             Action
@@ -99,9 +55,12 @@
                     {
                         <tr>
                             <td>
-                                <a href="#" class="MemberLink"
+                                @Html.DisplayFor(modelItem => item.DateCreated)
+                            </td>
+                            <td>
+                                <a href="" class="MemberLink"
                                    data-id="@item.MemberNo"
-                                   data-toggle="tooltip" title="Click for more">
+                                   data-toggle="modal" title="Click for more">
                                     @Html.DisplayFor(modelItem => item.MemberNo)
                                 </a>
                             </td>
@@ -115,20 +74,94 @@
                                 @Html.DisplayFor(modelItem => item.FileStatus)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.DateCreated)
+                                @if (item.Approver == null)
+                                {
+                                    <p>N/A</p>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.Approver)
+                                }
                             </td>
                             <td>
-                                <a href="#" class="FileLink"
+                                @if (item.PaymentOfficer == null)
+                                {
+                                    <p>N/A</p>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.PaymentOfficer)
+                                }
+                            </td>
+                            <td>
+                                @if (item.CollateralOfficer == null)
+                                {
+                                    <p>N/A</p>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.CollateralOfficer)
+                                }
+                            </td>
+                            <td>
+                                <a href="" class="FileLink"
                                    data-id="@item.FileNo"
-                                   data-toggle="tooltip" title="Click to view">
+                                   data-toggle="modal" title="Click to view">
                                     Show
-                                </a> |
-                                <a href="#" class="UpdateLink"
-                                   data-id="@item.FileNo"
-                                   data-toggle="tooltip" title="Click to open">
-                                   Update
                                 </a>
                             </td>
+                            @if (item.FileStatus == "Pending Approval" && (ViewBag.Role == "General Manager" || ViewBag.Role == "SIO Marketing" || ViewBag.Role == "SIO Operation" || ViewBag.Role == "SIO Branch Operation" || ViewBag.Role == "Admin"))
+                            {
+                                <td>
+                                    |
+                                </td>
+                                <td align="center">
+                                    <a href="" class="UpdateLink1"
+                                        data-id="@item.FileNo"
+                                        data-toggle="modal" title="Click to open">
+                                        Update
+                                    </a>
+                                </td>
+                            }
+                            @if ((item.FileStatus == "Awaiting Input" && ViewBag.FullName == item.Officer) || ViewBag.Role == "Admin")
+                            {
+                                <td>
+                                    |
+                                </td>
+                                <td align="center">
+                                    <a href="" class="UpdateLink2"
+                                        data-id="@item.FileNo"
+                                        data-toggle="modal" title="Click to open">
+                                        Update
+                                    </a>
+                                </td>
+                            }
+                            @if (item.FileStatus == "Awaiting Payment" && (ViewBag.Role == "Accounts Payable" || ViewBag.Role == "Accounts Receivable" || ViewBag.Role == "Sr. Finance Officer" || ViewBag.Role == "Admin"))
+                            {
+                                <td>
+                                    |
+                                </td>
+                                <td align="center">
+                                    <a href="" class="UpdateLink3"
+                                        data-id="@item.FileNo"
+                                        data-toggle="modal" title="Click to open">
+                                        Update
+                                    </a>
+                                </td>
+                            }
+                            @if (item.FileStatus == "Awaiting Collateral" && (ViewBag.Role == "Collateral Officer" || ViewBag.Role == "Admin"))
+                            {
+                                <td>
+                                    |
+                                </td>
+                                <td align="center">
+                                    <a href="" class="UpdateLink4"
+                                        data-id="@item.FileNo"
+                                        data-toggle="modal" title="Click to open">
+                                        Update
+                                    </a>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>
@@ -143,86 +176,187 @@
             </div>
         </div>
     </section>
-    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
-    <script src="~/Scripts/bootstrap.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
+    <!-- Button trigger modal -->
+    <div class="modal" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> | Member Info</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ajax-dynamic-get-data-form" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- File modal -->
+    <div class="modal" id="memberFilesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-files-o fa-lg" aria-hidden="true"></i> | Docs</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ajax-dynamic-get-data-form" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update File modal -->
+    <div class="modal" id="updateFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-fw fa-arrow-circle-o-up fa-lg"></i> | Update file</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ajax-dynamic-get-data-form" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
-    $(function () {
 
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
+        var status = '@(ViewBag.Status)';
+        if (status == "error") {
+            $('#serverAlertModal').modal('show');
+        }
 
-        $('.MemberLink').on('click', function (e) {
+        jQuery('.MemberLink').on('click', function (e) {
             var MemberNum = $(this).attr("data-id");
             $.ajax({
+                async: true,
                 cache: false,
                 type: "GET",
                 url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
                 data: { "MemberNum": MemberNum },
-                        success: function (data) {
-                            $('#memberDetailsModal').modal();
-                            $('#memberDetailsModal').find('.ajax-dynamic-get-data-form').html(data);
-                            $('#memberDetailsModal').modal('show');
-                        },
-                        error: function () {
-                            alert('Error. Please try again.');
-                        }
-                });//EndOf Ajax
-        })
-    });//EndOf Main Func
-    </script>
-    <script type="text/javascript">
-            $(function () {
-                $(document).ready(function () {
-                    $('[data-toggle="tooltip"]').tooltip();
-                });
+                success: function (data) {
+                    $('#memberDetailsModal').modal();
+                    $('#memberDetailsModal').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#memberDetailsModal').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
 
-                $('.FileLink').on('click', function (e) {
-                    var FileNo = $(this).attr("data-id");
-                    $.ajax({
-                        cache: false,
-                        type: "GET",
-                        url: "@(Url.RouteUrl("GetFileRefsByFileNo"))",
-                        data: { "FileNo": FileNo },
-                                success: function (data) {
-                                    $('#memberFilesModal').modal();
-                                    $('#memberFilesModal').find('.ajax-dynamic-get-data-form').html(data);
-                                    $('#memberFilesModal').modal('show');
-                                },
-                                error: function () {
-                                    alert('Error. Please try again.');
-                                }
-                        });//EndOf Ajax
-                })
-            });//EndOf Main Func
-    </script>
-    <script type="text/javascript">
-            $(function () {
-                $(document).ready(function () {
-                    $('[data-toggle="tooltip"]').tooltip();
-                });
+        jQuery('.FileLink').on('click', function (e) {
+            var FileNo = $(this).attr("data-id");
+            $.ajax({
+                async: true,
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("GetFileRefsByFileNo"))",
+                data: { "FileNo": FileNo },
+                success: function (data) {
+                    $('#memberFilesModal').modal();
+                    $('#memberFilesModal').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#memberFilesModal').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
 
-                $('.UpdateLink').on('click', function (e) {
-                    var FileNo = $(this).attr("data-id");
-                    $.ajax({
-                        cache: false,
-                        type: "GET",
-                        url: "@(Url.RouteUrl("UpdateMemberFile"))",
-                        data: { "FileNo": FileNo },
-                                success: function (data)
-                                {
-                                    $('#updateFileModal').modal();
-                                    $('#updateFileModal').find('.ajax-dynamic-get-data-form').html(data);
-                                    $('#updateFileModal').modal('show');
-                                },
-                                error: function () {
-                                    alert('Error. Please try again.');
-                                }
-                        });//EndOf Ajax
-                })
-            });//EndOf Main Func
+        jQuery('.UpdateLink1').on('click', function (e) {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) { options.async = true;});
+            var FileNo = $(this).attr("data-id");
+
+            $.ajax({
+                async: true,
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("UploadLoanApproval"))",
+                data: { "FileNo": FileNo },
+                success: function (data) {
+                    $('#updateFileModal').modal();
+                    $('#updateFileModal').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#updateFileModal').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
+
+        jQuery('.UpdateLink2').on('click', function (e) {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) { options.async = true;});
+            var FileNo = $(this).attr("data-id");
+
+            $.ajax({
+                async: true,
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("UploadPaymentAdvice"))",
+                data: { "FileNo": FileNo },
+                success: function (data) {
+                    $('#updateFileModal').modal();
+                    $('#updateFileModal').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#updateFileModal').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
+
+        jQuery('.UpdateLink3').on('click', function (e) {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) { options.async = true;});
+            var FileNo = $(this).attr("data-id");
+
+            $.ajax({
+                async: true,
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("UploadPaymentAndCheque"))",
+                data: { "FileNo": FileNo },
+                success: function (data) {
+                    $('#updateFileModal').modal();
+                    $('#updateFileModal').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#updateFileModal').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
+        
+        jQuery('.UpdateLink3').on('click', function (e) {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) { options.async = true;});
+            var FileNo = $(this).attr("data-id");
+
+            $.ajax({
+                async: true,
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("UploadCollateral"))",
+                data: { "FileNo": FileNo },
+                success: function (data) {
+                    $('#updateFileModal').modal();
+                    $('#updateFileModal').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#updateFileModal').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
     </script>
 </body>
 </html>
