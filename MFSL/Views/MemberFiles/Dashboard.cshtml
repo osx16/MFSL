@@ -34,12 +34,10 @@
                         <!--/.box 2-->
                     </div>
                 <!--/left column -->
-                }
+
+
                 <!--right column-->
                 <div class="col-md-6">
-
-                @if (ViewBag.UserRole != "Collateral Officer")
-                {
                     <!--.box 3-->
                     <div class="box box-warning">
                         <div class="box-header with-border">
@@ -50,7 +48,7 @@
                         </div>
                     </div>
                     <!--/.box 3-->
-                }
+
                     <!--.box 4-->
                     <div class="box box-success">
                         <div class="box-header with-border">
@@ -63,7 +61,34 @@
                     <!--/.box 4-->
                 </div>
                 <!--/right column-->
+                }
             </div>
+            @if (ViewBag.UserRole == "Collateral Officer" || ViewBag.UserRole == "Sr. Finance Officer" || ViewBag.UserRole == "Accounts Payable" || ViewBag.UserRole == "Accounts Receivable")
+            {
+                if (ViewBag.UserRole != "Collateral Officer")
+                {
+                 <!--.box 5-->
+                    <div class="box box-warning">
+                        <div class="box-header with-border">
+                            <b>Awaiting Payment</b>
+                        </div>
+                        <div class="box-body">
+                            <div id="5"></div>
+                        </div>
+                    </div>
+                <!--/.box 5-->
+                }
+                <!--.box 6-->
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <b>Awaiting Collateral</b>
+                    </div>
+                    <div class="box-body">
+                        <div id="6"></div>
+                    </div>
+                </div>
+                <!--/.box 6-->
+            }
             <!-- /.row -->
         </section>
         <!-- Button trigger modal -->
@@ -87,16 +112,23 @@
                 options.async = true;
             });
             var role = '@(ViewBag.UserRole)';
-            if (role != "Collateral Officer")
+            if (role != "Collateral Officer" && role != "Sr. Finance Officer" && role != "Accounts Payable" && role != "Accounts Receivable")
             {
-                if (role != "Sr. Finance Officer" && role != "Accounts Payable" && role != "Accounts Receivable")
-                {
-                    $('#1').load('@Url.Action("LoadApprovalPanel", "MemberFiles")');
-                    $('#2').load('@Url.Action("LoadInputPanel", "MemberFiles")');
-                }
+                $('#1').load('@Url.Action("LoadApprovalPanel", "MemberFiles")');
+                $('#2').load('@Url.Action("LoadInputPanel", "MemberFiles")');
                 $('#3').load('@Url.Action("LoadPaymentPanel", "MemberFiles")');
+                $('#4').load('@Url.Action("LoadCollateralPanel", "MemberFiles")');
             }
-            $('#4').load('@Url.Action("LoadCollateralPanel", "MemberFiles")');
+            if (role == "Sr. Finance Officer" || role == "Accounts Payable" || role == "Accounts Receivable") {
+                $('#5').load('@Url.Action("LoadPaymentPanel", "MemberFiles")');
+                $('#6').load('@Url.Action("LoadCollateralPanel", "MemberFiles")');
+            }
+            if (role == "Collateral Officer")
+            {
+                $('#6').load('@Url.Action("LoadCollateralPanel", "MemberFiles")');
+            }
+
+
         </script>
     </body>
 </html>

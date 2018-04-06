@@ -208,8 +208,14 @@
     <script type="text/javascript">
     jQuery('#search3').unbind().click(function (e) {
         e.preventDefault();
+        var role = '@(ViewBag.Role)';
         if ($('#txtbox3').val() != null) {
-            $("#3").load('@(Url.Action("LoadPaymentPanel", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox3').val());
+            if (role != "Sr. Finance Officer" && role != "Accounts Payable" && role != "Accounts Receivable") {
+                $("#3").load('@(Url.Action("LoadPaymentPanel", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox3').val());
+            }
+            else {
+                $("#5").load('@(Url.Action("LoadPaymentPanel", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox3').val());
+            }
         }
 
     });

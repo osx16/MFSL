@@ -210,10 +210,16 @@
         </div>
     </div>
     <script type="text/javascript">
-    jQuery('#search4').unbind().click(function (e) {
+    jQuery('#search4').unbind().click(function (e){
         e.preventDefault();
+        var role = '@(ViewBag.Role)';
         if ($('#txtbox4').val() != null) {
-            $("#4").load('@(Url.Action("LoadCollateralPanel", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox4').val());
+            if (role != "Collateral Officer" && role != "Sr. Finance Officer" && role != "Accounts Payable" && role != "Accounts Receivable") {
+                $("#4").load('@(Url.Action("LoadCollateralPanel", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox4').val());
+            }
+            else {
+                $("#6").load('@(Url.Action("LoadCollateralPanel", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox4').val());
+            }
         }
     });
 

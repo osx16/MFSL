@@ -507,20 +507,7 @@
         </member>
         <member name="T:RESTServices.Controllers.MemberFilesAPIController">
             <summary>
-            List of Controller and Non-Controller methods used
-            1. GetAllMemberFile - Gets all File References for all Customers
-            2. FetchFile - Fetch specific file for a user based on File Id and Flag
-            3. GetFileForUser - Get file references created by current user
-            4. GetFileByMemberNo - Get file reference(s) for member
-            5. GetFileRefByFileNo - Get file reference by file number
-            6. GetMyFileByMemberNo - Get file references for member by member no under an officer 
-            7. GetMemberInfoByNo - Get member info by member number
-            8. PutMemberFile - Unused (Reserve)
-            9. PostMemberFile - Post new member file
-            10. PostReference - Post new file reference for customer to database
-            11. DeleteMemberFile - Unused (Reserve)
-            12. Dispose (Non-Controller Method) - Dispose controller data
-            13. MemberFileExists (Non-Controller Method) - Returns 1 if Member File exists
+            Member Files API Controller
             </summary>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllMemberFile">
@@ -575,26 +562,58 @@
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllPendingApproval">
             <summary>
-            
+            Get All Pending Approval File References
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.SearchPendingApproval(System.Int32)">
+            <summary>
+            Gets specific file reference where status is pending approval
+            based on member number
+            </summary>
+            <param name="memberNo">Member Number</param>
             <returns></returns>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllAwaitingInput">
             <summary>
-            
+            Get All Awaiting Input File References
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.SearchAwaitingInput(System.Int32)">
+            <summary>
+            Gets specific file reference where status is awaiting input
+            based on member number
+            </summary>
+            <param name="memberNo">Member Number</param>
             <returns></returns>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllAwaitingPayment">
             <summary>
-            
+            Get All Awaiting Payment File References
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.SearchAwaitingPayment(System.Int32)">
+            <summary>
+            Gets specific file reference where status is Awaiting Input
+            based on member number
+            </summary>
+            <param name="memberNo">Member Number</param>
             <returns></returns>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllAwaitingCollateral">
             <summary>
-            
+            Get All Awaiting Collateral File References
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.SearchAwaitingCollateral(System.Int32)">
+            <summary>
+            Gets specific file reference where status is Awaiting Collateral
+            based on member number
+            </summary>
+            <param name="memberNo">Member Number</param>
             <returns></returns>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.PostMemberFile(RESTServices.Models.MemberFile)">
@@ -604,32 +623,32 @@
             <param name="memberFile">MembeFile</param>
             <returns></returns>
         </member>
-        <member name="M:RESTServices.Controllers.MemberFilesAPIController.PutMemberFile(RESTServices.Models.FileUpdateDTO)">
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.UpdateLoanApp(RESTServices.Models.FileUpdateDTO)">
             <summary>
-            
+            Update Loan Application file
             </summary>
-            <param name="fileUpdateDTO"></param>
+            <param name="fileUpdateDTO">FileUpdateDTO</param>
             <returns></returns>
         </member>
-        <member name="M:RESTServices.Controllers.MemberFilesAPIController.UpdatePaymentAdviceDoc(RESTServices.Models.FileUpdateDTO)">
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.UpdatePaymentAdvice(RESTServices.Models.FileUpdateDTO)">
             <summary>
-            
+            Update Payment Advice File
             </summary>
-            <param name="fileUpdateDTO"></param>
+            <param name="fileUpdateDTO">FileUpdateDTO</param>
             <returns></returns>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.UpdatePaymentAndCheque(RESTServices.Models.FileUpdateDTO)">
             <summary>
-            
+            Update Payment Advice and Cheque Copy File
             </summary>
-            <param name="fileUpdateDTO"></param>
+            <param name="fileUpdateDTO">FileUpdateDTO</param>
             <returns></returns>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.UploadCollateral(RESTServices.Models.FileUpdateDTO)">
             <summary>
-            
+            Update Collateral File
             </summary>
-            <param name="fileUpdateDTO"></param>
+            <param name="fileUpdateDTO">FileUpdateDTO</param>
             <returns></returns>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.DeleteMemberFile(System.Int32)">
@@ -644,6 +663,16 @@
             
             </summary>
             <param name="disposing"></param>
+        </member>
+        <member name="T:RESTServices.Controllers.RolesAPIController">
+            <summary>
+            Roles API Controller
+            </summary>
+        </member>
+        <member name="M:RESTServices.Controllers.RolesAPIController.#ctor">
+            <summary>
+            Constructor
+            </summary>
         </member>
         <member name="M:RESTServices.Controllers.RolesAPIController.GetRoles">
             <summary>

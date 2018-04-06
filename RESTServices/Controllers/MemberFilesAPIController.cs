@@ -628,7 +628,7 @@ namespace RESTServices.Controllers
         /// </summary>
         /// <param name="fileUpdateDTO">FileUpdateDTO</param>
         /// <returns></returns>
-        // PUT: api/MemberFilesAPI/5
+        [AcceptVerbs("PUT")]
         [Route("api/MemberFilesApi/UpdateLoanApp/")]
         [ResponseType(typeof(void))]
         public IHttpActionResult UpdateLoanApp(FileUpdateDTO fileUpdateDTO)
