@@ -711,16 +711,16 @@ namespace RESTServices.Controllers
                         return BadRequest();
                     }
                     var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
-                    fileToUpdate.LoanApplication = fileUpdateDTO.PaymentAdvice;
+                    fileToUpdate.PaymentAdvice = fileUpdateDTO.PaymentAdvice;
                     fileToUpdate.FStatusId = 3;
-                    db.SaveChanges();
+                    var result = db.SaveChanges();
                     #endregion Transaction 1 ends
 
                     #region Transaction 2 begins
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
                     RefToUpdate.FileStatus = "Awaiting Payment";
-                    db.SaveChanges();
+                    var result2 = db.SaveChanges();
                     #endregion Transaction 2 ends
 
                     //Commit Transaction
@@ -771,7 +771,7 @@ namespace RESTServices.Controllers
                         return BadRequest();
                     }
                     var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
-                    fileToUpdate.LoanApplication = fileUpdateDTO.PaymentAdvice;
+                    fileToUpdate.PaymentAdvice = fileUpdateDTO.PaymentAdvice;
                     fileToUpdate.ChequeCopy = fileUpdateDTO.ChequeCopy;
                     fileToUpdate.FStatusId = 4;
                     db.SaveChanges();
@@ -833,7 +833,7 @@ namespace RESTServices.Controllers
                         return BadRequest();
                     }
                     var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
-                    fileToUpdate.LoanApplication = fileUpdateDTO.CollateralCertificate;
+                    fileToUpdate.Collateral = fileUpdateDTO.CollateralCertificate;
                     fileToUpdate.FStatusId = 5;
                     db.SaveChanges();
                     #endregion Transaction 1 ends
