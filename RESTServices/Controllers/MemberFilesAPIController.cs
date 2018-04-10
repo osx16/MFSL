@@ -191,7 +191,11 @@ namespace RESTServices.Controllers
         [Route("api/MemberFilesAPI/GetFileRefByFileNo/{FileNo:int}")]
         public IQueryable<FileReferences> GetFileRefByFileNo(int FileNo)
         {
-            var fileRef = db.FileReferences.Where(x => x.FileNo == FileNo);
+            var fileRef = db.FileReferences.Where(x => x.FileNo == FileNo).Distinct();
+            if (fileRef.Count() == 0)
+            {
+                return null;
+            }
             return fileRef;
         }
 

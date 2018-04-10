@@ -15,20 +15,23 @@
             <table class="table table-striped">
                 <thead>
                     <tr class="success">
-                        <th>
+                        <th class="alert-success">
                             Date Created
                         </th>
-                        <th>
+                        <th class="alert-success">
                             Member No
+                        </th>
+                        <th class="alert-success">
+                            File No
                         </th>
                         <th>
                             File Type
                         </th>
-                        <th>
-                            File No
-                        </th>
-                        <th>
+                        <th class="alert-success">
                             Status
+                        </th>
+                        <th class="alert-info">
+                            Comment
                         </th>
                         <th>
                             Loan Approver
@@ -39,7 +42,7 @@
                         <th>
                             Collateral Officer
                         </th>
-                        <th>
+                        <th class="alert-danger">
                             Action
                         </th>
                     </tr>
@@ -54,24 +57,27 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>
+                            <td class="danger">
                                 @Html.DisplayFor(modelItem => item.DateCreated)
                             </td>
-                            <td>
+                            <td class="warning">
                                 <a href="" class="MemberLink"
                                    data-id="@item.MemberNo"
                                    data-toggle="modal" title="Click for more">
                                     @Html.DisplayFor(modelItem => item.MemberNo)
                                 </a>
                             </td>
+                            <td class="warning">
+                                <b>@Html.DisplayFor(modelItem => item.FileNo)</b>
+                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.EmployerType)
                             </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FileNo)
+                            <td class="alert-warning">
+                                <b>@Html.DisplayFor(modelItem => item.FileStatus)</b>
                             </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FileStatus)
+                            <td class="danger">
+                                @Html.DisplayFor(modelItem => item.Comment)
                             </td>
                             <td>
                                 @if (item.Approver == null)
@@ -103,65 +109,85 @@
                                     @Html.DisplayFor(modelItem => item.CollateralOfficer)
                                 }
                             </td>
-                            <td>
-                                <a href="" class="FileLink"
-                                   data-id="@item.FileNo"
-                                   data-toggle="modal" title="Click to view">
-                                    Show
-                                </a>
+                            <td class="active">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td align="left">
+                                                <a href="" class="FileLink"
+                                                   data-id="@item.FileNo"
+                                                   data-toggle="modal" title="Click to view">
+                                                    Show
+                                                </a>
+                                            </td>
+                                            @if (item.FileStatus.Equals("Pending Approval"))
+                                            {
+                                                if (ViewBag.Role == "General Manager" || ViewBag.Role == "SIO Marketing" || ViewBag.Role == "SIO Operation" || ViewBag.Role == "SIO Branch Operation" || ViewBag.Role == "Admin")
+                                                {
+                                                    <td>
+                                                        |
+                                                    </td>
+                                                    <td align="center">
+                                                        <a href="" class="UpdateLink1"
+                                                           data-id="@item.FileNo"
+                                                           data-toggle="modal" title="Click to open">
+                                                            Update
+                                                        </a>
+                                                    </td>
+                                                }
+                                            }
+                                            @if (item.FileStatus.Equals("Awaiting Input"))
+                                            {
+                                                if (ViewBag.Role == "Admin" || ViewBag.OfficerFullName == item.Officer)
+                                                {
+                                                    <td>
+                                                        |
+                                                    </td>
+                                                    <td align="center">
+                                                        <a href="" class="UpdateLink2"
+                                                           data-id="@item.FileNo"
+                                                           data-toggle="modal" title="Click to open">
+                                                            Update
+                                                        </a>
+                                                    </td>
+                                                }
+                                            }
+                                            @if (item.FileStatus.Equals("Awaiting Payment"))
+                                            {
+                                                if (ViewBag.Role == "Accounts Payable" || ViewBag.Role == "Accounts Receivable" || ViewBag.Role == "Sr. Finance Officer" || ViewBag.Role == "Admin")
+                                                {
+                                                    <td>
+                                                        |
+                                                    </td>
+                                                    <td align="center">
+                                                        <a href="" class="UpdateLink3"
+                                                           data-id="@item.FileNo"
+                                                           data-toggle="modal" title="Click to open">
+                                                            Update
+                                                        </a>
+                                                    </td>
+                                                }
+                                            }
+                                            @if (item.FileStatus.Equals("Awaiting Collateral"))
+                                            {
+                                                if (ViewBag.Role == "Collateral Officer" || ViewBag.Role == "Admin")
+                                                {
+                                                    <td>
+                                                        |
+                                                    </td>
+                                                    <td align="center">
+                                                        <a href="" class="UpdateLink4"
+                                                           data-id="@item.FileNo"
+                                                           data-toggle="modal" title="Click to open">
+                                                            Update
+                                                        </a>
+                                                    </td>
+                                                }
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </td>
-                            @if (item.FileStatus == "Pending Approval" && (ViewBag.Role == "General Manager" || ViewBag.Role == "SIO Marketing" || ViewBag.Role == "SIO Operation" || ViewBag.Role == "SIO Branch Operation" || ViewBag.Role == "Admin"))
-                            {
-                                <td>
-                                    |
-                                </td>
-                                <td align="center">
-                                    <a href="" class="UpdateLink1"
-                                        data-id="@item.FileNo"
-                                        data-toggle="modal" title="Click to open">
-                                        Update
-                                    </a>
-                                </td>
-                            }
-                            @if ((item.FileStatus == "Awaiting Input" && ViewBag.FullName == item.Officer) || ViewBag.Role == "Admin")
-                            {
-                                <td>
-                                    |
-                                </td>
-                                <td align="center">
-                                    <a href="" class="UpdateLink2"
-                                        data-id="@item.FileNo"
-                                        data-toggle="modal" title="Click to open">
-                                        Update
-                                    </a>
-                                </td>
-                            }
-                            @if (item.FileStatus == "Awaiting Payment" && (ViewBag.Role == "Accounts Payable" || ViewBag.Role == "Accounts Receivable" || ViewBag.Role == "Sr. Finance Officer" || ViewBag.Role == "Admin"))
-                            {
-                                <td>
-                                    |
-                                </td>
-                                <td align="center">
-                                    <a href="" class="UpdateLink3"
-                                        data-id="@item.FileNo"
-                                        data-toggle="modal" title="Click to open">
-                                        Update
-                                    </a>
-                                </td>
-                            }
-                            @if (item.FileStatus == "Awaiting Collateral" && (ViewBag.Role == "Collateral Officer" || ViewBag.Role == "Admin"))
-                            {
-                                <td>
-                                    |
-                                </td>
-                                <td align="center">
-                                    <a href="" class="UpdateLink4"
-                                        data-id="@item.FileNo"
-                                        data-toggle="modal" title="Click to open">
-                                        Update
-                                    </a>
-                                </td>
-                            }
                         </tr>
                     }
                 </tbody>
@@ -337,7 +363,7 @@
             });//EndOf Ajax
         });
         
-        jQuery('.UpdateLink3').on('click', function (e) {
+        jQuery('.UpdateLink4').on('click', function (e) {
             $.ajaxPrefilter(function (options, originalOptions, jqXHR) { options.async = true;});
             var FileNo = $(this).attr("data-id");
 

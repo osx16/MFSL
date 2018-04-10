@@ -1,0 +1,101 @@
+﻿@model MFSL.ViewModels.UpdateFileStatusViewModel
+
+@using (Html.BeginForm("UpdateFileStatus", "UpdateFiles", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- Member info modal -->
+        <div class="modal" id="memberDetailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> | Member Info</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ajax-dynamic-get-data-form" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="box box-primary">
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form role="form">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <b>File No. </b>
+                                @Html.EditorFor(model => model.FileNo, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                            </div>
+                            <div class="form-group">
+                                <b>Officer </b>
+                                @Html.EditorFor(model => model.Officer, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                            </div>
+                            <div class="form-group">
+                                <b>Member No. </b>
+                                <a href="" class="MemberLink"
+                                   data-id="@Model.MemberNo"
+                                   data-toggle="modal" title="Click for more">
+                                    @Html.EditorFor(model => model.MemberNo, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                                </a>
+                            </div>
+                            <div class="form-group">
+                                @Html.DropDownList("FileStatus", (SelectList)ViewBag.FileStatuses, "Select New Status", new { id = "ddlfilestatus", @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Comment" } })
+                                @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+
+                        <div class="box-footer">
+                            <input type="submit" class="btn btn-success" value="Submit" disabled="disabled" />
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- right column -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+    <script type="text/javascript">
+        $('.MemberLink').on('click', function (e) {
+            var MemberNum = $(this).attr("data-id");
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
+                data: { "MemberNum": MemberNum },
+                success: function (data) {
+                    $('#memberDetailsModal').modal();
+                    $('#memberDetailsModal').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#memberDetailsModal').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
+
+        $(document).ready(
+            function () {
+                $('#ddlfilestatus').change(
+                    function () {
+                            $('input:submit').attr('disabled', false);
+                    }
+                );
+            });
+    </script>
+}

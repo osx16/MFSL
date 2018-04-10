@@ -19,7 +19,7 @@
                             <div class="ajax-dynamic-get-data-form" />
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                             <div class="ajax-dynamic-get-data-form" />
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr class="success">
-                            <th>
+                            <th class="alert-success">
                                 Date Created
                             </th>
                             <th>
@@ -60,17 +60,21 @@
                             <th>
                                 Branch
                             </th> 
-                            <th>
+                            <th class="alert-success">
                                 Member No
+                            </th>
+                            <th class="alert-success">
+                                File No
                             </th>
                             <th>
                                 File Type
                             </th>
-                            <th>
-                                File No
-                            </th>
-                            <th>
+
+                            <th class="alert-success">
                                 Status
+                            </th>
+                            <th class="alert-info">
+                                Comment
                             </th>
                             <th>
                                 Loan Approver
@@ -82,7 +86,7 @@
                                 Collateral Officer
                             </th>
                            
-                            <th>
+                            <th class="alert-danger">
                                 Action
                             </th>
                         </tr>
@@ -91,13 +95,13 @@
                         @if (Model.Count() == 0)
                         {
                             <tr>
-                                <td colspan="7">No results Found</td>
+                                <td colspan="12">No results Found</td>
                             </tr>
                         }
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>
+                                <td class="danger">
                                     @Html.DisplayFor(modelItem => item.DateCreated)
                                 </td>
                                 <td>
@@ -106,21 +110,24 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Branch)
                                 </td>
-                                <td>
+                                <td class="warning">
                                     <a href="" class="MemberLink"
                                        data-id="@item.MemberNo"
                                        data-toggle="modal" title="Click for more">
                                         @Html.DisplayFor(modelItem => item.MemberNo)
                                     </a>
                                 </td>
+                                <td class="warning">
+                                    <b>@Html.DisplayFor(modelItem => item.FileNo)</b>
+                                </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.EmployerType)
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.FileNo)
+                                <td class="alert-warning">
+                                   <b>@Html.DisplayFor(modelItem => item.FileStatus)</b> 
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.FileStatus)
+                                <td class="danger">
+                                    @Html.DisplayFor(modelItem => item.Comment)
                                 </td>
                                 <td>
                                     @if(item.Approver == null)
@@ -152,7 +159,7 @@
                                         @Html.DisplayFor(modelItem => item.CollateralOfficer)
                                     }
                                 </td>
-                                <td>
+                                <td class="active">
                                     <a href="" class="FileLink"
                                        data-id="@item.FileNo"
                                        data-toggle="modal" title="Click to view">

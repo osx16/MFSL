@@ -53,6 +53,7 @@ namespace MFSL.Controllers
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Settings.AccessToken);
         }
+
         /// <summary>
         ///  Returns Dashboard menu
         /// </summary>
@@ -375,7 +376,9 @@ namespace MFSL.Controllers
             int pageSize = 10;
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-
+            var OfficerFullName = Settings.UserFirstName + " " + Settings.UserLastName;
+            var UserRole = Settings.RoleForThisUser;
+            
             if (!String.IsNullOrEmpty(memberNo))
             {
                 ViewBag.MemberNo = memberNo;
@@ -387,6 +390,8 @@ namespace MFSL.Controllers
                     var resData = responseMsg.Content.ReadAsStringAsync().Result;
                     var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
                     ViewBag.TotalFiles = data.Count;
+                    ViewBag.OfficerFullName = OfficerFullName;
+                    ViewBag.Role = UserRole;
                     IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
                     return PartialView("_MyFileDetails", filteredList);
                 }
@@ -399,6 +404,8 @@ namespace MFSL.Controllers
                 var fileData = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
                 IPagedList<FileReferences> files = (fileData).ToPagedList(pageIndex, pageSize);
                 ViewBag.TotalFiles = fileData.Count;
+                ViewBag.OfficerFullName = OfficerFullName;
+                ViewBag.Role = UserRole;
                 return PartialView("_MyFileDetails", files);
             }
             return View("Error");
@@ -1092,8 +1099,8 @@ namespace MFSL.Controllers
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    return PartialView();
                 }
-
             }
             ViewBag.Role = userRole;
             ViewBag.FileStatus = obj.FileStatus;

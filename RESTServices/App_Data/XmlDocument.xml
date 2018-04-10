@@ -686,5 +686,30 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:RESTServices.Controllers.UpdateFilesAPIController">
+            <summary>
+            Update Files Controller - Handles File Status Updates
+            </summary>
+        </member>
+        <member name="M:RESTServices.Controllers.UpdateFilesAPIController.CheckFileProgress(System.Int32)">
+            <summary>
+            Check if file is in progress
+            </summary>
+            <param name="fileNo"> File Number</param>
+            <returns>true or false</returns>
+        </member>
+        <member name="M:RESTServices.Controllers.UpdateFilesAPIController.GetAllFileStatus">
+            <summary>
+            Returns all file Status
+            </summary>
+            <returns>List of file statuses</returns>
+        </member>
+        <member name="M:RESTServices.Controllers.UpdateFilesAPIController.UpdateFileStatus(RESTServices.Models.UpdateFileStatusViewModel)">
+            <summary>
+            Update file status by file number
+            </summary>
+            <param name="fileUpdateDTO">fileUpdateDTO</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

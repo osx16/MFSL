@@ -65,11 +65,10 @@ namespace RESTServices
 
             }
 
-            // creating Creating Employee role    
-            if (!roleManager.RoleExists("SIO Marketing"))
+            if (!roleManager.RoleExists("Chief Operation"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "SIO Marketing";
+                role.Name = "Chief Operation";
                 roleManager.Create(role);
             }
 
@@ -80,17 +79,24 @@ namespace RESTServices
                 roleManager.Create(role);
             }
 
-            if (!roleManager.RoleExists("SIO"))
-            {
-                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "SIO";
-                roleManager.Create(role);
-            }
-
             if (!roleManager.RoleExists("SIO Branch Operation"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
                 role.Name = "SIO Branch Operation";
+                roleManager.Create(role);
+            }
+  
+            if (!roleManager.RoleExists("SIO Marketing"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "SIO Marketing";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("SIO"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "SIO";
                 roleManager.Create(role);
             }
 

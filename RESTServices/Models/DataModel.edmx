@@ -12,6 +12,17 @@
           <Property Name="BranchId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BranchLocation" Type="varchar" MaxLength="128" Nullable="false" />
         </EntityType>
+        <EntityType Name="CustomerBehavior">
+          <Key>
+            <PropertyRef Name="LogNo" />
+          </Key>
+          <Property Name="LogNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OfficerId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="MemberNo" Type="int" Nullable="false" />
+          <Property Name="FIleStatus" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="EmployeeStatus">
           <Key>
             <PropertyRef Name="StatusId" />
@@ -35,6 +46,7 @@
           <Property Name="Approver" Type="varchar" MaxLength="128" />
           <Property Name="PaymentOfficer" Type="varchar" MaxLength="128" />
           <Property Name="CollateralOfficer" Type="varchar" MaxLength="128" />
+          <Property Name="Comment" Type="varchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="FileStatus">
           <Key>
@@ -120,6 +132,7 @@
         </Association>
         <EntityContainer Name="MFSLModelStoreContainer">
           <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerBehavior" EntityType="Self.CustomerBehavior" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeeStatus" EntityType="Self.EmployeeStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileReferences" EntityType="Self.FileReferences" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileStatus" EntityType="Self.FileStatus" Schema="dbo" store:Type="Tables" />
@@ -144,6 +157,17 @@
           <Property Name="BranchId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="BranchLocation" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
+        <EntityType Name="CustomerBehavior">
+          <Key>
+            <PropertyRef Name="LogNo" />
+          </Key>
+          <Property Name="LogNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OfficerId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MemberNo" Type="Int32" Nullable="false" />
+          <Property Name="FIleStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         <EntityType Name="EmployeeStatus">
           <Key>
             <PropertyRef Name="StatusId" />
@@ -167,6 +191,7 @@
           <Property Name="Approver" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="PaymentOfficer" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="CollateralOfficer" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="FileStatus">
           <Key>
@@ -254,6 +279,7 @@
         </Association>
         <EntityContainer Name="MFSLEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Branches" EntityType="Self.Branches" />
+          <EntitySet Name="CustomerBehavior" EntityType="Self.CustomerBehavior" />
           <EntitySet Name="EmployeeStatus" EntityType="Self.EmployeeStatus" />
           <EntitySet Name="FileReferences" EntityType="Self.FileReferences" />
           <EntitySet Name="FileStatus" EntityType="Self.FileStatus" />
@@ -280,6 +306,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="CustomerBehavior">
+            <EntityTypeMapping TypeName="MFSLModel.CustomerBehavior">
+              <MappingFragment StoreEntitySet="CustomerBehavior">
+                <ScalarProperty Name="LogNo" ColumnName="LogNo" />
+                <ScalarProperty Name="OfficerId" ColumnName="OfficerId" />
+                <ScalarProperty Name="MemberNo" ColumnName="MemberNo" />
+                <ScalarProperty Name="FIleStatus" ColumnName="FIleStatus" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="EmployeeStatus">
             <EntityTypeMapping TypeName="MFSLModel.EmployeeStatus">
               <MappingFragment StoreEntitySet="EmployeeStatus">
@@ -303,6 +341,7 @@
                 <ScalarProperty Name="Approver" ColumnName="Approver" />
                 <ScalarProperty Name="PaymentOfficer" ColumnName="PaymentOfficer" />
                 <ScalarProperty Name="CollateralOfficer" ColumnName="CollateralOfficer" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -48,6 +48,9 @@
                         </li>
                     </ul>
                 </li>
+                <li class="@Url.IsLinkActive("UpdateFileStatus", "UpdateFiles")">
+                    <a href="@Url.Action("UpdateFileStatus", "UpdateFiles")"><i class="glyphicon glyphicon-edit"></i> <span>Update File Status</span></a>
+                </li>
                 <li class="@Url.IsLinkActive("AddNewMember", "Account")">
                     <a href="@Url.Action("AddNewMember", "Account")"><i class="glyphicon glyphicon-user"></i> <span>Add Member</span></a>
                 </li>

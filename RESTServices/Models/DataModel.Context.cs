@@ -26,6 +26,7 @@ namespace RESTServices.Models
         }
     
         public virtual DbSet<Branches> Branches { get; set; }
+        public virtual DbSet<CustomerBehavior> CustomerBehavior { get; set; }
         public virtual DbSet<EmployeeStatus> EmployeeStatus { get; set; }
         public virtual DbSet<FileReferences> FileReferences { get; set; }
         public virtual DbSet<FileStatus> FileStatus { get; set; }

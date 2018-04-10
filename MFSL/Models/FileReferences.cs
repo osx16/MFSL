@@ -19,5 +19,6 @@ namespace MFSL.Models
         public string Approver { get; set; }
         public string PaymentOfficer { get; set; }
         public string CollateralOfficer { get; set; }
+        public string Comment { get; set; }
     }
 }
