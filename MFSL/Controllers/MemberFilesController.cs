@@ -623,6 +623,7 @@ namespace MFSL.Controllers
         /// </summary>
         /// <param name="File">FileViewModel</param>
         /// <returns>HTTP Status Message</returns>
+        [OverrideAuthorization]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> NewFileGov(

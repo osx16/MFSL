@@ -42,13 +42,16 @@
                             </th>
                         }
                         <th>
+                            Date Created
+                        </th>
+                        <th>
                             Client No
                         </th>
                         <th>
-                            File Type
+                            File No
                         </th>
                         <th>
-                            File No
+                            File Type
                         </th>
                         <th>
                             Status
@@ -56,10 +59,7 @@
                         <th>
                             Loan Approver
                         </th>
-                        <th>
-                            Date Created
-                        </th>
-                        <th>
+                        <th class="alert-success">
                             Action
                         </th>
                     </tr>
@@ -78,37 +78,37 @@
                             {
                                 if (ViewBag.Role != "SIO Operation" && ViewBag.Role != "SIO Marketing")
                                 {
-                                    <td>
+                                    <td class="alert-danger">
                                         @Html.DisplayFor(modelItem => item.Branch)
                                     </td>
                                 }
-                                <td>
+                                <td class="alert-info">
                                     @Html.DisplayFor(modelItem => item.Officer)
                                 </td>
                             }
-                            <td>
+                            <td class="danger">
+                                @Html.DisplayFor(modelItem => item.DateCreated)
+                            </td>
+                            <td class="warning">
                                 <a href="" class="MemberLink2"
                                    data-id="@item.MemberNo"
                                    data-toggle="modal" title="Click for more">
                                     @Html.DisplayFor(modelItem => item.MemberNo)
                                 </a>
                             </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.EmployerType)
-                            </td>
-                            <td>
+                            <td class="warning">
                                 @Html.DisplayFor(modelItem => item.FileNo)
                             </td>
                             <td>
+                                @Html.DisplayFor(modelItem => item.EmployerType)
+                            </td>
+                            <td class="alert-warning">
                                 @Html.DisplayFor(modelItem => item.FileStatus)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Approver)
                             </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DateCreated)
-                            </td>
-                            <td>
+                            <td class="active">
                                 <table>
                                     <tbody>
                                         <tr>
