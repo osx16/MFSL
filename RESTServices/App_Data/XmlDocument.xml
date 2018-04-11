@@ -505,9 +505,33 @@
             <param name="model">ForgotPasswordViewModel</param>
             <returns>PasswordConfigModel</returns>
         </member>
+        <member name="T:RESTServices.Controllers.EmailController">
+            <summary>
+            Email Controller handles all email messaging
+            </summary>
+        </member>
+        <member name="M:RESTServices.Controllers.EmailController.SendPendingApprovalNotif1(System.String,System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Send Pending Approval Notification within Main Office Port Vila
+            </summary>
+            <param name="emailbody"> Email Body</param>
+            <param name="addressList"> Address List</param>
+        </member>
+        <member name="M:RESTServices.Controllers.EmailController.SendPendingApprovalNotif2(System.String,System.String)">
+            <summary>
+            Send Pending Approval Notification to Operation Santo Branch
+            </summary>
+            <param name="emailbody"></param>
+            <param name="emailAddress"></param>
+        </member>
         <member name="T:RESTServices.Controllers.MemberFilesAPIController">
             <summary>
             Member Files API Controller
+            </summary>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.#ctor">
+            <summary>
+            Constructor
             </summary>
         </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllMemberFile">

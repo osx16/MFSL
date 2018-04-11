@@ -86,6 +86,7 @@ namespace RESTServices.Controllers
                 var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
                 try
                 {
+                    bool isCommitted = false;
                     #region Transaction 1 begins
                     //Update MemberFileTable
                     if (file == null)
@@ -133,7 +134,7 @@ namespace RESTServices.Controllers
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
                     RefToUpdate.FileStatus = fileUpdateDTO.FileStatus;
-                    RefToUpdate.Comment = fileUpdateDTO.Comment + " \nDate: " + DateTime.Now.ToString();
+                    RefToUpdate.Comment = fileUpdateDTO.Comment + " \n [Date: " + DateTime.Now.ToString()+"]";
                     db.SaveChanges();
                     #endregion Transaction 2 ends
 

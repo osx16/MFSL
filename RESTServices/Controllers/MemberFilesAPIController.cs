@@ -52,6 +52,16 @@ namespace RESTServices.Controllers
     public class MemberFilesAPIController : ApiController
     {
         private MFSLEntities db = new MFSLEntities();
+        ApplicationDbContext context;
+        AccountController Account;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public MemberFilesAPIController()
+        {
+            Account = new AccountController();
+            context = new ApplicationDbContext();
+        }
 
         /// <summary>
         /// Gets all File References for all Customers
@@ -572,6 +582,7 @@ namespace RESTServices.Controllers
             {
                 try
                 {
+                    bool isCommitted = false;
                     #region Transaction 1 begins
                     //Create new member File
                     db.MemberFile.Add(memberFile);
@@ -608,6 +619,35 @@ namespace RESTServices.Controllers
                     
                     //Commit Transaction
                     transaction.Commit();
+                    isCommitted = true;
+
+                    if (isCommitted)
+                    {
+                        //Send email
+                        EmailController api = new EmailController();
+                        List<string> addressList = new List<string>();
+                        var clientName = db.vnpf_.Where(x => x.VNPF_Number == memberFile.MemberNo).Select(x => x.Member_Fullname).First();
+                        string emailBody = "You have a loan application pending approval from " + officerName + " for " + clientName + " (" + memberFile.MemberNo + ").";
+
+
+                        if (branchLocation == "Port Vila")
+                        {
+                            var SIOMarketingRoleId = context.Roles.Where(x => x.Name == "SIO Marketing").Select(x => x.Id).First();
+                            var SIOOperationRoleId = context.Roles.Where(x => x.Name == "SIO Operation").Select(x => x.Id).First();
+                            var SIOMarketingEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOMarketingRoleId))).Select(i => i.Email).First();
+                            var SIOOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOOperationRoleId))).Select(i => i.Email).First();
+                            addressList.Add(SIOMarketingEmailAddress);
+                            addressList.Add(SIOOperationEmailAddress);
+                            api.SendPendingApprovalNotif1(officerName,emailBody, addressList);
+                        }
+                        else
+                        {
+                            var SIOBranchOperationRoleId = context.Roles.Where(x => x.Name == "SIO Branch Operation").Select(x => x.Id).First();
+                            var SIOBranchOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOBranchOperationRoleId))).Select(i => i.Email).First();
+                            api.SendPendingApprovalNotif2(emailBody, SIOBranchOperationEmailAddress);
+
+                        }
+                    }
                 }
                 catch (DbEntityValidationException dbEx)
                 {
@@ -647,6 +687,7 @@ namespace RESTServices.Controllers
                 var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
                 try
                 {
+                    bool isCommitted = false;
                     #region Transaction 1 begins
                     //Update MemberFileTable
                     if (file == null)
@@ -669,6 +710,18 @@ namespace RESTServices.Controllers
 
                     //Commit Transaction
                     transaction.Commit();
+                    isCommitted = true;
+                    if (isCommitted)
+                    {
+                        var UserId = User.Identity.GetUserId();
+                        var query = db.Officers.Where(x => x.OfficerId == UserId).Select(i => new { i.EmpFname, i.EmpLname }).ToList();
+                        string ApproverName = query[0].EmpFname + " " + query[0].EmpLname;
+                        var OfficerEmail = context.Users.Where(x => x.Id == file.OfficerId).Select(e => e.Email).First();
+                        var clientName = db.vnpf_.Where(x => x.VNPF_Number == file.MemberNo).Select(x => x.Member_Fullname).First();                   
+                        string emailBody = "Your loan application for member, "+ clientName + " ("+file.MemberNo+ ")" + " has been approved by " + ApproverName + "\non " + DateTime.Now.ToString() + ".";
+                        EmailController api = new EmailController();
+                        api.SendConfirmLoanApprovalNotif(clientName, emailBody, OfficerEmail);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
