@@ -188,7 +188,7 @@ namespace RESTServices.Controllers
                         {
                             var SIOBranchOperationRoleId = context.Roles.Where(x => x.Name == "SIO Branch Operation").Select(x => x.Id).First();
                             var SIOBranchOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOBranchOperationRoleId))).Select(i => i.Email).First();
-                            api.BroadCastChangedStatusNotif2(RefToUpdate.FileStatus, emailBody, emailBody);
+                            api.BroadCastChangedStatusNotif2(RefToUpdate.FileStatus, emailBody, SIOBranchOperationEmailAddress);
                         }
                     }
                 }
