@@ -514,13 +514,46 @@
             <summary>
             Send Pending Approval Notification within Main Office Port Vila
             </summary>
-            <param name="emailbody"> Email Body</param>
-            <param name="addressList"> Address List</param>
+            <param name="subjInfo"></param>
+            <param name="emailbody"></param>
+            <param name="addressList"></param>
         </member>
         <member name="M:RESTServices.Controllers.EmailController.SendPendingApprovalNotif2(System.String,System.String)">
             <summary>
             Send Pending Approval Notification to Operation Santo Branch
             </summary>
+            <param name="emailbody"></param>
+            <param name="emailAddress"></param>
+        </member>
+        <member name="M:RESTServices.Controllers.EmailController.SendConfirmLoanApprovalNotif(System.String,System.String,System.String)">
+            <summary>
+            Send loan approval confirmation
+            </summary>
+            <param name="memberInfo">Member info</param>
+            <param name="emailbody">Email body</param>
+            <param name="emailAddress">Email address</param>
+        </member>
+        <member name="M:RESTServices.Controllers.EmailController.SendAwaitingPaymentNotif(System.String,System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Send Awaiting payment notification to payment officer
+            </summary>
+            <param name="subjInfo"></param>
+            <param name="emailbody"></param>
+            <param name="addressList"></param>
+        </member>
+        <member name="M:RESTServices.Controllers.EmailController.SendRequestPaymentConfirmationNotif(System.String,System.String,System.String)">
+            <summary>
+            Send loan payment confirmation
+            </summary>
+            <param name="memberInfo">Member info</param>
+            <param name="emailbody">Email body</param>
+            <param name="emailAddress">Email address</param>
+        </member>
+        <member name="M:RESTServices.Controllers.EmailController.SendCollateralConfirmationNotif(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="memberInfo"></param>
             <param name="emailbody"></param>
             <param name="emailAddress"></param>
         </member>

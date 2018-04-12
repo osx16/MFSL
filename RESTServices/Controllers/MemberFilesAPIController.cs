@@ -627,7 +627,7 @@ namespace RESTServices.Controllers
                         EmailController api = new EmailController();
                         List<string> addressList = new List<string>();
                         var clientName = db.vnpf_.Where(x => x.VNPF_Number == memberFile.MemberNo).Select(x => x.Member_Fullname).First();
-                        string emailBody = "You have a loan application pending approval from " + officerName + " for " + clientName + " (" + memberFile.MemberNo + ").";
+                        string emailBody = "You have a loan request pending approval from " + officerName + " for " + clientName + " (" + memberFile.MemberNo + ").";
 
 
                         if (branchLocation == "Port Vila")
@@ -718,7 +718,7 @@ namespace RESTServices.Controllers
                         string ApproverName = query[0].EmpFname + " " + query[0].EmpLname;
                         var OfficerEmail = context.Users.Where(x => x.Id == file.OfficerId).Select(e => e.Email).First();
                         var clientName = db.vnpf_.Where(x => x.VNPF_Number == file.MemberNo).Select(x => x.Member_Fullname).First();                   
-                        string emailBody = "Your loan application for member, "+ clientName + " ("+file.MemberNo+ ")" + " has been approved by " + ApproverName + "\non " + DateTime.Now.ToString() + ".";
+                        string emailBody = "Your loan request for member, "+ clientName + " ("+file.MemberNo+ ")" + " has been approved by " + ApproverName + "\non " + DateTime.Now.ToString() + ".";
                         EmailController api = new EmailController();
                         api.SendConfirmLoanApprovalNotif(clientName, emailBody, OfficerEmail);
                     }
@@ -761,6 +761,7 @@ namespace RESTServices.Controllers
                 var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
                 try
                 {
+                    bool isCommitted = false;
                     #region Transaction 1 begins
                     //Update MemberFileTable
                     if (file == null)
@@ -782,6 +783,25 @@ namespace RESTServices.Controllers
 
                     //Commit Transaction
                     transaction.Commit();
+                    isCommitted = true;
+                    if (isCommitted)
+                    {
+                        EmailController api = new EmailController();
+                        List<string> addressList = new List<string>();
+                        var clientName = db.vnpf_.Where(x => x.VNPF_Number == fileToUpdate.MemberNo).Select(x => x.Member_Fullname).First();
+                        string emailBody = "You have a loan request awaiting payment from " + RefToUpdate.Officer + " for " + clientName + " (" + fileToUpdate.MemberNo + ").";
+                        var AccountsPayableRoleId = context.Roles.Where(x => x.Name == "Accounts Payable").Select(x => x.Id).First();
+                        var AccountReceivableRoleId = context.Roles.Where(x => x.Name == "Accounts Receivable").Select(x => x.Id).First();
+                        var SrFinanceOfficerRoleId = context.Roles.Where(x => x.Name == "Sr. Finance Officer").Select(x => x.Id).First();
+                        //var AccountsPayableEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(AccountsPayableRoleId))).Select(i => i.Email).First();
+                        //var AccountReceivableEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(AccountReceivableRoleId))).Select(i => i.Email).First();
+                        //var SrFinanceOfficerEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SrFinanceOfficerRoleId))).Select(i => i.Email).First();
+                        //addressList.Add(AccountsPayableEmailAddress);
+                        //addressList.Add(AccountReceivableEmailAddress);
+                        //addressList.Add(SrFinanceOfficerEmailAddress);
+                        api.SendAwaitingPaymentNotif(RefToUpdate.Officer, emailBody, addressList);
+
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -821,6 +841,7 @@ namespace RESTServices.Controllers
                 var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
                 try
                 {
+                    bool isCommitted = false;
                     #region Transaction 1 begins
                     //Update MemberFileTable
                     if (file == null)
@@ -844,6 +865,25 @@ namespace RESTServices.Controllers
 
                     //Commit Transaction
                     transaction.Commit();
+                    isCommitted = true;
+                    if (isCommitted)
+                    {
+                        EmailController api = new EmailController();
+                        var UserId = User.Identity.GetUserId();
+                        var query = db.Officers.Where(x => x.OfficerId == UserId).Select(i => new { i.EmpFname, i.EmpLname }).ToList();
+                        string ApproverName = query[0].EmpFname + " " + query[0].EmpLname;
+                        var OfficerEmail = context.Users.Where(x => x.Id == file.OfficerId).Select(e => e.Email).First();
+                        var clientName = db.vnpf_.Where(x => x.VNPF_Number == file.MemberNo).Select(x => x.Member_Fullname).First();
+                        string emailBody = "Your loan request for member, " + clientName + " (" + file.MemberNo + ")" + " has been paid by " + ApproverName + "\non " + DateTime.Now.ToString() + ".";
+                        api.SendRequestPaymentConfirmationNotif(clientName, emailBody, OfficerEmail);
+
+                        List<string> addressList = new List<string>();
+                        string emailBody2 = "You have a loan request awaiting collateral certifate from " + RefToUpdate.Officer + " for " + clientName + " (" + fileToUpdate.MemberNo + ").";
+                        var CollateralOfficerRoleId = context.Roles.Where(x => x.Name == "Collateral Officer").Select(x => x.Id).First();
+                        var CollateralOfficerEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(CollateralOfficerRoleId))).Select(i => i.Email).First();
+                        addressList.Add(CollateralOfficerEmailAddress);
+                        api.SendAwaitingCollateralNotif(RefToUpdate.Officer, emailBody2, addressList);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -883,6 +923,7 @@ namespace RESTServices.Controllers
                 var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
                 try
                 {
+                    bool isCommitted = false;
                     #region Transaction 1 begins
                     //Update MemberFileTable
                     if (file == null)
@@ -905,6 +946,18 @@ namespace RESTServices.Controllers
 
                     //Commit Transaction
                     transaction.Commit();
+                    isCommitted = true;
+                    if (isCommitted)
+                    {
+                        var UserId = User.Identity.GetUserId();
+                        var query = db.Officers.Where(x => x.OfficerId == UserId).Select(i => new { i.EmpFname, i.EmpLname }).ToList();
+                        string ApproverName = query[0].EmpFname + " " + query[0].EmpLname;
+                        var OfficerEmail = context.Users.Where(x => x.Id == file.OfficerId).Select(e => e.Email).First();
+                        var clientName = db.vnpf_.Where(x => x.VNPF_Number == file.MemberNo).Select(x => x.Member_Fullname).First();
+                        string emailBody = "Loan request collateral certificate for member, " + clientName + " (" + file.MemberNo + ")" + " has been attached by " + ApproverName + "\non " + DateTime.Now.ToString() + ".";
+                        EmailController api = new EmailController();
+                        api.SendCollateralConfirmationNotif(clientName, emailBody, OfficerEmail);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
