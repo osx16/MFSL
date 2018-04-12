@@ -1,4 +1,5 @@
-﻿using RESTServices.Models;
+﻿using Microsoft.AspNet.Identity;
+using RESTServices.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -16,6 +17,14 @@ namespace RESTServices.Controllers
     public class UpdateFilesAPIController : ApiController
     {
         private MFSLEntities db = new MFSLEntities();
+        ApplicationDbContext context;
+        AccountController Account;
+
+        public UpdateFilesAPIController()
+        {
+            Account = new AccountController();
+            context = new ApplicationDbContext();
+        }
 
         /// <summary>
         /// Check if file is in progress
@@ -84,6 +93,7 @@ namespace RESTServices.Controllers
             using (var transaction = db.Database.BeginTransaction())
             {
                 var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
+                string CurrentStatus = file.FileStatus;
                 try
                 {
                     bool isCommitted = false;
@@ -140,6 +150,47 @@ namespace RESTServices.Controllers
 
                     //Commit Transaction
                     transaction.Commit();
+                    isCommitted = true;
+                    if (isCommitted)
+                    {
+                        var UserId = User.Identity.GetUserId();
+                        var UserEmail = context.Users.Where(x => x.Id == UserId).Select(e => e.Email).First();
+                        var query = db.Officers.Where(x => x.OfficerId == UserId).Select(i => new { i.EmpFname, i.EmpLname }).ToList();
+                        string officerName = query[0].EmpFname + " " + query[0].EmpLname;
+                        int branchId = db.Officers.Where(x => x.OfficerId == UserId).Select(x => x.BranchId).First();
+                        var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+
+                        //Send email
+                        EmailController api = new EmailController();
+                        List<string> addressList = new List<string>();
+                        var clientName = db.vnpf_.Where(x => x.VNPF_Number == RefToUpdate.MemberNo).Select(x => x.Member_Fullname).First();
+                        //This message will be sent to marketing and operations
+                        string emailBody = "Loan status for member " + clientName + " (" + RefToUpdate.MemberNo + "), has been changed from " +
+                                            CurrentStatus + " \nto " + RefToUpdate.FileStatus + " by " + officerName + " on " + DateTime.Now.ToString() + ".\n" +
+                                            "Officer's comment: " + RefToUpdate.Comment;
+
+                        string emailBody2 = "You've changed the loan status for member " + clientName + " (" + RefToUpdate.MemberNo + "), from " +
+                                            CurrentStatus + " \nto " + RefToUpdate.FileStatus + " on " + DateTime.Now.ToString() + ".\n" +
+                                            "Your comment: " + RefToUpdate.Comment;
+
+                        api.SendChangedStatusNotif(RefToUpdate.FileStatus, emailBody2, UserEmail);
+                        if (branchLocation == "Port Vila")
+                        {
+                            var SIOMarketingRoleId = context.Roles.Where(x => x.Name == "SIO Marketing").Select(x => x.Id).First();
+                            var SIOOperationRoleId = context.Roles.Where(x => x.Name == "SIO Operation").Select(x => x.Id).First();
+                            var SIOMarketingEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOMarketingRoleId))).Select(i => i.Email).First();
+                            var SIOOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOOperationRoleId))).Select(i => i.Email).First();
+                            addressList.Add(SIOMarketingEmailAddress);
+                            addressList.Add(SIOOperationEmailAddress);
+                            api.BroadCastChangedStatusNotif1(RefToUpdate.FileStatus, emailBody, addressList);
+                        }
+                        else
+                        {
+                            var SIOBranchOperationRoleId = context.Roles.Where(x => x.Name == "SIO Branch Operation").Select(x => x.Id).First();
+                            var SIOBranchOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOBranchOperationRoleId))).Select(i => i.Email).First();
+                            api.BroadCastChangedStatusNotif2(RefToUpdate.FileStatus, emailBody, emailBody);
+                        }
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {

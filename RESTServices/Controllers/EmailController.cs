@@ -256,5 +256,97 @@ namespace RESTServices.Controllers
             }
 
         }
+
+        [NonAction]
+        public void BroadCastChangedStatusNotif1(string subjInfo, string emailbody, List<string> addressList)
+        {
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("samsamson2016@gmail.com");
+            //mailMessage.To.Add(addressList.First());
+            //mailMessage.To.Add(addressList.Last());
+            mailMessage.To.Add("s11075775@student.usp.ac.fj");
+            mailMessage.Subject = "[DO NOT REPLY] Customer Loan Status Changed to " + subjInfo;
+            mailMessage.Body = emailbody;
+            //mailMessage.IsBodyHtml = true;
+
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new System.Net.NetworkCredential()
+            {
+                UserName = "samsamson2016@gmail.com",
+                Password = "1215Jean.b45"
+            };
+            smtpClient.EnableSsl = true;
+            try
+            {
+                smtpClient.Send(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
+
+        [NonAction]
+        public void BroadCastChangedStatusNotif2(string subjInfo, string emailbody, string emailAddress)
+        {
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("samsamson2016@gmail.com");
+            //mailMessage.To.Add(emailAddress);
+            mailMessage.To.Add("s11075775@student.usp.ac.fj");
+            mailMessage.Subject = "[DO NOT REPLY] Customer Loan Status Changed to " + subjInfo;
+            mailMessage.Body = emailbody;
+            //mailMessage.IsBodyHtml = true;
+
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new System.Net.NetworkCredential()
+            {
+                UserName = "samsamson2016@gmail.com",
+                Password = "1215Jean.b45"
+            };
+            smtpClient.EnableSsl = true;
+            try
+            {
+                smtpClient.Send(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
+
+        [NonAction]
+        public void SendChangedStatusNotif(string subjInfo, string emailbody, string emailAddress)
+        {
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("samsamson2016@gmail.com");
+            //mailMessage.To.Add(addressList.First());
+            //mailMessage.To.Add(addressList.Last());
+            mailMessage.To.Add("s11075775@student.usp.ac.fj");
+            mailMessage.Subject = "[DO NOT REPLY] Customer Loan Status Changed to " + subjInfo;
+            mailMessage.Body = emailbody;
+            //mailMessage.IsBodyHtml = true;
+
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new System.Net.NetworkCredential()
+            {
+                UserName = "samsamson2016@gmail.com",
+                Password = "1215Jean.b45"
+            };
+            smtpClient.EnableSsl = true;
+            try
+            {
+                smtpClient.Send(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
     }
 }
