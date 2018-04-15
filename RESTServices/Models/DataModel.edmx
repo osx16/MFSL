@@ -41,11 +41,24 @@
           <Property Name="MemberNo" Type="int" Nullable="false" />
           <Property Name="FileNo" Type="int" Nullable="false" />
           <Property Name="FileStatus" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="EmployerType" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Officer" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="Approver" Type="varchar" MaxLength="128" />
-          <Property Name="PaymentOfficer" Type="varchar" MaxLength="128" />
-          <Property Name="CollateralOfficer" Type="varchar" MaxLength="128" />
+          <Property Name="EmployerType" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Officer" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LoanApprover" Type="varchar" MaxLength="50" />
+          <Property Name="LoanApprovalDate" Type="datetime" />
+          <Property Name="PaymentOfficer" Type="varchar" MaxLength="50" />
+          <Property Name="PaymentDate" Type="datetime" />
+          <Property Name="CollateralOfficer" Type="varchar" MaxLength="50" />
+          <Property Name="CollateralDate" Type="datetime" />
+          <Property Name="MaintenanceOfficer" Type="varchar" MaxLength="50" />
+          <Property Name="PostingDate" Type="datetime" />
+          <Property Name="MaintenanceApprover" Type="datetime" />
+          <Property Name="MaintenanceApprovalDate" Type="datetime" />
+          <Property Name="RefundValidationOfficer" Type="varchar" MaxLength="50" />
+          <Property Name="ValidationDate" Type="datetime" />
+          <Property Name="RefundApprovalOfficer" Type="varchar" MaxLength="50" />
+          <Property Name="RefundApprovalDate" Type="datetime" />
+          <Property Name="RefundPaymentOfficer" Type="varchar" MaxLength="50" />
+          <Property Name="RefundPaymentDate" Type="datetime" />
           <Property Name="Comment" Type="varchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="FileStatus">
@@ -54,13 +67,6 @@
           </Key>
           <Property Name="FileStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FStatus" Type="varchar" MaxLength="128" Nullable="false" />
-        </EntityType>
-        <EntityType Name="FileType">
-          <Key>
-            <PropertyRef Name="FileTypeId" />
-          </Key>
-          <Property Name="FileTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FileDesc" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="MemberFile">
           <Key>
@@ -90,6 +96,7 @@
           <Property Name="PaymentAdvice" Type="varbinary(max)" />
           <Property Name="Collateral" Type="varbinary(max)" />
           <Property Name="MaintenanceForm" Type="varbinary(max)" />
+          <Property Name="DiaryMemo" Type="varbinary(max)" />
           <Property Name="fileGUID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="FStatusId" Type="int" Nullable="false" />
         </EntityType>
@@ -106,6 +113,18 @@
           <Property Name="EmpLname" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="StatusId" Type="int" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Refunds">
+          <Key>
+            <PropertyRef Name="FileNo" />
+          </Key>
+          <Property Name="FileNo" Type="int" Nullable="false" />
+          <Property Name="RequestDate" Type="datetime" Nullable="false" />
+          <Property Name="PaymentRequest" Type="varbinary(max)" />
+          <Property Name="LoanStatement" Type="varbinary(max)" />
+          <Property Name="ReconciliationSheet" Type="varbinary(max)" />
+          <Property Name="RefundChequeCopy" Type="varbinary(max)" />
+          <Property Name="fileGUID" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="vnpf$">
           <Key>
@@ -130,19 +149,35 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Refunds_MemberFile">
+          <End Role="MemberFile" Type="Self.MemberFile" Multiplicity="1" />
+          <End Role="Refunds" Type="Self.Refunds" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MemberFile">
+              <PropertyRef Name="FileNo" />
+            </Principal>
+            <Dependent Role="Refunds">
+              <PropertyRef Name="FileNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="MFSLModelStoreContainer">
           <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CustomerBehavior" EntityType="Self.CustomerBehavior" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeeStatus" EntityType="Self.EmployeeStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileReferences" EntityType="Self.FileReferences" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileStatus" EntityType="Self.FileStatus" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FileType" EntityType="Self.FileType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MemberFile" EntityType="Self.MemberFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Officers" EntityType="Self.Officers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Refunds" EntityType="Self.Refunds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vnpf$" EntityType="Self.vnpf$" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Files_Officers" Association="Self.FK_Files_Officers">
             <End Role="FileStatus" EntitySet="FileStatus" />
             <End Role="MemberFile" EntitySet="MemberFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Refunds_MemberFile" Association="Self.FK_Refunds_MemberFile">
+            <End Role="MemberFile" EntitySet="MemberFile" />
+            <End Role="Refunds" EntitySet="Refunds" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -186,11 +221,24 @@
           <Property Name="MemberNo" Type="Int32" Nullable="false" />
           <Property Name="FileNo" Type="Int32" Nullable="false" />
           <Property Name="FileStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="EmployerType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Officer" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Approver" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
-          <Property Name="PaymentOfficer" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
-          <Property Name="CollateralOfficer" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="EmployerType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Officer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LoanApprover" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LoanApprovalDate" Type="DateTime" Precision="3" />
+          <Property Name="PaymentOfficer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentDate" Type="DateTime" Precision="3" />
+          <Property Name="CollateralOfficer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CollateralDate" Type="DateTime" Precision="3" />
+          <Property Name="MaintenanceOfficer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PostingDate" Type="DateTime" Precision="3" />
+          <Property Name="MaintenanceApprover" Type="DateTime" Precision="3" />
+          <Property Name="MaintenanceApprovalDate" Type="DateTime" Precision="3" />
+          <Property Name="RefundValidationOfficer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ValidationDate" Type="DateTime" Precision="3" />
+          <Property Name="RefundApprovalOfficer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RefundApprovalDate" Type="DateTime" Precision="3" />
+          <Property Name="RefundPaymentOfficer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RefundPaymentDate" Type="DateTime" Precision="3" />
           <Property Name="Comment" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="FileStatus">
@@ -200,13 +248,6 @@
           <Property Name="FileStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FStatus" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="MemberFile" Relationship="Self.FK_Files_Officers" FromRole="FileStatus" ToRole="MemberFile" />
-        </EntityType>
-        <EntityType Name="FileType">
-          <Key>
-            <PropertyRef Name="FileTypeId" />
-          </Key>
-          <Property Name="FileTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FileDesc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityType Name="MemberFile">
           <Key>
@@ -236,9 +277,11 @@
           <Property Name="PaymentAdvice" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="Collateral" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="MaintenanceForm" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="DiaryMemo" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="fileGUID" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FStatusId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="FileStatus" Relationship="Self.FK_Files_Officers" FromRole="MemberFile" ToRole="FileStatus" />
+          <NavigationProperty Name="Refunds" Relationship="Self.FK_Refunds_MemberFile" FromRole="MemberFile" ToRole="Refunds" />
         </EntityType>
         <EntityType Name="Officers">
           <Key>
@@ -253,6 +296,19 @@
           <Property Name="EmpLname" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="StatusId" Type="Int32" Nullable="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Refunds">
+          <Key>
+            <PropertyRef Name="FileNo" />
+          </Key>
+          <Property Name="FileNo" Type="Int32" Nullable="false" />
+          <Property Name="RequestDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PaymentRequest" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="LoanStatement" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="ReconciliationSheet" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="RefundChequeCopy" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="fileGUID" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="MemberFile" Relationship="Self.FK_Refunds_MemberFile" FromRole="Refunds" ToRole="MemberFile" />
         </EntityType>
         <EntityType Name="vnpf_">
           <Key>
@@ -277,19 +333,35 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Refunds_MemberFile">
+          <End Role="MemberFile" Type="Self.MemberFile" Multiplicity="1" />
+          <End Role="Refunds" Type="Self.Refunds" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MemberFile">
+              <PropertyRef Name="FileNo" />
+            </Principal>
+            <Dependent Role="Refunds">
+              <PropertyRef Name="FileNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="MFSLEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Branches" EntityType="Self.Branches" />
           <EntitySet Name="CustomerBehavior" EntityType="Self.CustomerBehavior" />
           <EntitySet Name="EmployeeStatus" EntityType="Self.EmployeeStatus" />
           <EntitySet Name="FileReferences" EntityType="Self.FileReferences" />
           <EntitySet Name="FileStatus" EntityType="Self.FileStatus" />
-          <EntitySet Name="FileType" EntityType="Self.FileType" />
           <EntitySet Name="MemberFile" EntityType="Self.MemberFile" />
           <EntitySet Name="Officers" EntityType="Self.Officers" />
+          <EntitySet Name="Refunds" EntityType="Self.Refunds" />
           <EntitySet Name="vnpf_" EntityType="Self.vnpf_" />
           <AssociationSet Name="FK_Files_Officers" Association="Self.FK_Files_Officers">
             <End Role="FileStatus" EntitySet="FileStatus" />
             <End Role="MemberFile" EntitySet="MemberFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Refunds_MemberFile" Association="Self.FK_Refunds_MemberFile">
+            <End Role="MemberFile" EntitySet="MemberFile" />
+            <End Role="Refunds" EntitySet="Refunds" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -338,9 +410,22 @@
                 <ScalarProperty Name="FileStatus" ColumnName="FileStatus" />
                 <ScalarProperty Name="EmployerType" ColumnName="EmployerType" />
                 <ScalarProperty Name="Officer" ColumnName="Officer" />
-                <ScalarProperty Name="Approver" ColumnName="Approver" />
+                <ScalarProperty Name="LoanApprover" ColumnName="LoanApprover" />
+                <ScalarProperty Name="LoanApprovalDate" ColumnName="LoanApprovalDate" />
                 <ScalarProperty Name="PaymentOfficer" ColumnName="PaymentOfficer" />
+                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
                 <ScalarProperty Name="CollateralOfficer" ColumnName="CollateralOfficer" />
+                <ScalarProperty Name="CollateralDate" ColumnName="CollateralDate" />
+                <ScalarProperty Name="MaintenanceOfficer" ColumnName="MaintenanceOfficer" />
+                <ScalarProperty Name="PostingDate" ColumnName="PostingDate" />
+                <ScalarProperty Name="MaintenanceApprover" ColumnName="MaintenanceApprover" />
+                <ScalarProperty Name="MaintenanceApprovalDate" ColumnName="MaintenanceApprovalDate" />
+                <ScalarProperty Name="RefundValidationOfficer" ColumnName="RefundValidationOfficer" />
+                <ScalarProperty Name="ValidationDate" ColumnName="ValidationDate" />
+                <ScalarProperty Name="RefundApprovalOfficer" ColumnName="RefundApprovalOfficer" />
+                <ScalarProperty Name="RefundApprovalDate" ColumnName="RefundApprovalDate" />
+                <ScalarProperty Name="RefundPaymentOfficer" ColumnName="RefundPaymentOfficer" />
+                <ScalarProperty Name="RefundPaymentDate" ColumnName="RefundPaymentDate" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -350,14 +435,6 @@
               <MappingFragment StoreEntitySet="FileStatus">
                 <ScalarProperty Name="FileStatusId" ColumnName="FileStatusId" />
                 <ScalarProperty Name="FStatus" ColumnName="FStatus" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="FileType">
-            <EntityTypeMapping TypeName="MFSLModel.FileType">
-              <MappingFragment StoreEntitySet="FileType">
-                <ScalarProperty Name="FileTypeId" ColumnName="FileTypeId" />
-                <ScalarProperty Name="FileDesc" ColumnName="FileDesc" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -388,6 +465,7 @@
                 <ScalarProperty Name="PaymentAdvice" ColumnName="PaymentAdvice" />
                 <ScalarProperty Name="Collateral" ColumnName="Collateral" />
                 <ScalarProperty Name="MaintenanceForm" ColumnName="MaintenanceForm" />
+                <ScalarProperty Name="DiaryMemo" ColumnName="DiaryMemo" />
                 <ScalarProperty Name="fileGUID" ColumnName="fileGUID" />
                 <ScalarProperty Name="FStatusId" ColumnName="FStatusId" />
               </MappingFragment>
@@ -405,6 +483,19 @@
                 <ScalarProperty Name="EmpLname" ColumnName="EmpLname" />
                 <ScalarProperty Name="StatusId" ColumnName="StatusId" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Refunds">
+            <EntityTypeMapping TypeName="MFSLModel.Refunds">
+              <MappingFragment StoreEntitySet="Refunds">
+                <ScalarProperty Name="FileNo" ColumnName="FileNo" />
+                <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
+                <ScalarProperty Name="PaymentRequest" ColumnName="PaymentRequest" />
+                <ScalarProperty Name="LoanStatement" ColumnName="LoanStatement" />
+                <ScalarProperty Name="ReconciliationSheet" ColumnName="ReconciliationSheet" />
+                <ScalarProperty Name="RefundChequeCopy" ColumnName="RefundChequeCopy" />
+                <ScalarProperty Name="fileGUID" ColumnName="fileGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

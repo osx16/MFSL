@@ -9,9 +9,12 @@ namespace MFSL.Models
     {
         public int FileNo { get; set; }
         public string Officer { get; set; }
-        public string Approver { get; set; }
+        public string LoanApprover { get; set; }
+        public Nullable<System.DateTime> LoanApprovalDate { get; set; }
         public string PaymentOfficer { get; set; }
+        public Nullable<System.DateTime> PaymentDate { get; set; }
         public string CollateralOfficer { get; set; }
+        public Nullable<System.DateTime> CollateralDate { get; set; }
         public byte[] LoanApplication { get; set; }
         public byte[] PaymentAdvice { get; set; }
         public byte[] ChequeCopy { get; set; }

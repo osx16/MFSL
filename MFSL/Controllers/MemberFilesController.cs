@@ -949,7 +949,8 @@ namespace MFSL.Controllers
                 var FileDTO = new FileUpdateDTO
                 {
                     FileNo = File.FileNo,
-                    Approver = Settings.UserFirstName + " " + Settings.UserLastName,
+                    LoanApprover = Settings.UserFirstName + " " + Settings.UserLastName,
+                    LoanApprovalDate = DateTime.Now,
                     LoanApplication = LoanApplication.ToArray(),
                 };
 
@@ -1133,6 +1134,7 @@ namespace MFSL.Controllers
                 {
                     FileNo = File.FileNo,
                     PaymentOfficer = Settings.UserFirstName + " " + Settings.UserLastName,
+                    PaymentDate = DateTime.Now,
                     PaymentAdvice = PaymentAdvice.ToArray(),
                     ChequeCopy = ChequeCopy.ToArray()
                 };

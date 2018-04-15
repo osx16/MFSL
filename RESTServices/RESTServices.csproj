@@ -278,9 +278,6 @@
     <Compile Include="Models\FileStatus.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FileType.cs">
-      <DependentUpon>DataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\FileUpdateDTO.cs" />
     <Compile Include="Models\ForgotPasswordViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -291,6 +288,9 @@
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PasswordConfigModel.cs" />
+    <Compile Include="Models\Refunds.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ResetPasswordViewModel.cs" />
     <Compile Include="Models\UpdateFileStatusViewModel.cs" />
     <Compile Include="Models\UserRolesDTO.cs" />

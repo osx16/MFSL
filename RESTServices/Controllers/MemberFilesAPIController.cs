@@ -703,7 +703,8 @@ namespace RESTServices.Controllers
                     #region Transaction 2 begins
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
-                    RefToUpdate.Approver = fileUpdateDTO.Approver;
+                    RefToUpdate.LoanApprover = fileUpdateDTO.LoanApprover;
+                    RefToUpdate.LoanApprovalDate = fileUpdateDTO.LoanApprovalDate;
                     RefToUpdate.FileStatus = "Awaiting Input";
                     db.SaveChanges();
                     #endregion Transaction 2 ends
@@ -718,7 +719,7 @@ namespace RESTServices.Controllers
                         string ApproverName = query[0].EmpFname + " " + query[0].EmpLname;
                         var OfficerEmail = context.Users.Where(x => x.Id == file.OfficerId).Select(e => e.Email).First();
                         var clientName = db.vnpf_.Where(x => x.VNPF_Number == file.MemberNo).Select(x => x.Member_Fullname).First();                   
-                        string emailBody = "Your loan request for member, "+ clientName + " ("+file.MemberNo+ ")" + " has been approved by " + ApproverName + "\non " + DateTime.Now.ToString() + ".";
+                        string emailBody = "Your loan request for member, "+ clientName + " ("+file.MemberNo+ ")" + " has been approved by " + ApproverName + "\non " + fileUpdateDTO.LoanApprovalDate.ToString() + ".";
                         EmailController api = new EmailController();
                         api.SendConfirmLoanApprovalNotif(clientName, emailBody, OfficerEmail);
                     }
@@ -859,6 +860,7 @@ namespace RESTServices.Controllers
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
                     RefToUpdate.PaymentOfficer = fileUpdateDTO.PaymentOfficer;
+                    RefToUpdate.PaymentDate = fileUpdateDTO.PaymentDate;
                     RefToUpdate.FileStatus = "Awaiting Collateral";
                     db.SaveChanges();
                     #endregion Transaction 2 ends
@@ -874,7 +876,7 @@ namespace RESTServices.Controllers
                         string ApproverName = query[0].EmpFname + " " + query[0].EmpLname;
                         var OfficerEmail = context.Users.Where(x => x.Id == file.OfficerId).Select(e => e.Email).First();
                         var clientName = db.vnpf_.Where(x => x.VNPF_Number == file.MemberNo).Select(x => x.Member_Fullname).First();
-                        string emailBody = "Your loan request for member, " + clientName + " (" + file.MemberNo + ")" + " has been paid by " + ApproverName + "\non " + DateTime.Now.ToString() + ".";
+                        string emailBody = "Your loan request for member, " + clientName + " (" + file.MemberNo + ")" + " has been paid by " + ApproverName + "\non " + fileUpdateDTO.PaymentDate.ToString() + ".";
                         api.SendRequestPaymentConfirmationNotif(clientName, emailBody, OfficerEmail);
 
                         List<string> addressList = new List<string>();
@@ -940,6 +942,7 @@ namespace RESTServices.Controllers
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
                     RefToUpdate.CollateralOfficer = fileUpdateDTO.CollateralOfficer;
+                    RefToUpdate.CollateralDate = fileUpdateDTO.CollateralDate;
                     RefToUpdate.FileStatus = "Finalized";
                     db.SaveChanges();
                     #endregion Transaction 2 ends
@@ -954,7 +957,7 @@ namespace RESTServices.Controllers
                         string ApproverName = query[0].EmpFname + " " + query[0].EmpLname;
                         var OfficerEmail = context.Users.Where(x => x.Id == file.OfficerId).Select(e => e.Email).First();
                         var clientName = db.vnpf_.Where(x => x.VNPF_Number == file.MemberNo).Select(x => x.Member_Fullname).First();
-                        string emailBody = "Loan request collateral certificate for member, " + clientName + " (" + file.MemberNo + ")" + " has been attached by " + ApproverName + "\non " + DateTime.Now.ToString() + ".";
+                        string emailBody = "Loan request collateral certificate for member, " + clientName + " (" + file.MemberNo + ")" + " has been attached by " + ApproverName + "\non " + fileUpdateDTO.CollateralDate.ToString() + ".";
                         EmailController api = new EmailController();
                         api.SendCollateralConfirmationNotif(clientName, emailBody, OfficerEmail);
                     }

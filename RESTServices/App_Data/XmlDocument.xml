@@ -748,6 +748,11 @@
             Update Files Controller - Handles File Status Updates
             </summary>
         </member>
+        <member name="M:RESTServices.Controllers.UpdateFilesAPIController.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="M:RESTServices.Controllers.UpdateFilesAPIController.CheckFileProgress(System.Int32)">
             <summary>
             Check if file is in progress

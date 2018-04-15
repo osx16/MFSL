@@ -38,9 +38,11 @@ namespace RESTServices.Models
         public byte[] PaymentAdvice { get; set; }
         public byte[] Collateral { get; set; }
         public byte[] MaintenanceForm { get; set; }
+        public byte[] DiaryMemo { get; set; }
         public System.Guid fileGUID { get; set; }
         public int FStatusId { get; set; }
     
         public virtual FileStatus FileStatus { get; set; }
+        public virtual Refunds Refunds { get; set; }
     }
 }

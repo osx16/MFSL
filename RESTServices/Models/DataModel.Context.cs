@@ -30,9 +30,9 @@ namespace RESTServices.Models
         public virtual DbSet<EmployeeStatus> EmployeeStatus { get; set; }
         public virtual DbSet<FileReferences> FileReferences { get; set; }
         public virtual DbSet<FileStatus> FileStatus { get; set; }
-        public virtual DbSet<FileType> FileType { get; set; }
         public virtual DbSet<MemberFile> MemberFile { get; set; }
         public virtual DbSet<Officers> Officers { get; set; }
+        public virtual DbSet<Refunds> Refunds { get; set; }
         public virtual DbSet<vnpf_> vnpf_ { get; set; }
     }
 }

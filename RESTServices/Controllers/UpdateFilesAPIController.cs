@@ -19,7 +19,9 @@ namespace RESTServices.Controllers
         private MFSLEntities db = new MFSLEntities();
         ApplicationDbContext context;
         AccountController Account;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public UpdateFilesAPIController()
         {
             Account = new AccountController();
@@ -41,7 +43,7 @@ namespace RESTServices.Controllers
             {
                 return true;
             }
-            var loanApprover = db.FileReferences.Where(x => x.FileNo == fileNo).Select(x => x.Approver).First();
+            var loanApprover = db.FileReferences.Where(x => x.FileNo == fileNo).Select(x => x.LoanApprover).First();
             var paymentOfficer = db.FileReferences.Where(x => x.FileNo == fileNo).Select(x => x.PaymentOfficer).First();
             var collateralOfficer = db.FileReferences.Where(x => x.FileNo == fileNo).Select(x => x.CollateralOfficer).First();
             if( loanApprover != null && paymentOfficer != null && collateralOfficer != null)
@@ -132,7 +134,7 @@ namespace RESTServices.Controllers
                     {
                         fileToUpdate.FStatusId = 7;
                     }
-                    else if (fileUpdateDTO.FileStatus == "Restructure")
+                    else if (fileUpdateDTO.FileStatus == "Maintenance")
                     {
                         fileToUpdate.FStatusId = 8;
                     }
@@ -140,6 +142,7 @@ namespace RESTServices.Controllers
                     db.SaveChanges();
                     #endregion Transaction 1 ends
 
+                    //This is where you capture the filestatus
                     #region Transaction 2 begins
                     //Update FileReferences Table
                     var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();

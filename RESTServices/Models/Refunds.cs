@@ -12,9 +12,16 @@ namespace RESTServices.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class FileType
+    public partial class Refunds
     {
-        public int FileTypeId { get; set; }
-        public string FileDesc { get; set; }
+        public int FileNo { get; set; }
+        public System.DateTime RequestDate { get; set; }
+        public byte[] PaymentRequest { get; set; }
+        public byte[] LoanStatement { get; set; }
+        public byte[] ReconciliationSheet { get; set; }
+        public byte[] RefundChequeCopy { get; set; }
+        public System.Guid fileGUID { get; set; }
+    
+        public virtual MemberFile MemberFile { get; set; }
     }
 }

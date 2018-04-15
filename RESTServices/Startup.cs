@@ -100,6 +100,20 @@ namespace RESTServices
                 roleManager.Create(role);
             }
 
+            if (!roleManager.RoleExists("IO Restructure"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "IO Restructure";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("IO Validation"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "IO Validation";
+                roleManager.Create(role);
+            }
+
             if (!roleManager.RoleExists("Investment Officer"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
@@ -114,7 +128,7 @@ namespace RESTServices
                 roleManager.Create(role);
             }
 
-            if (!roleManager.RoleExists("Sr. Finance Officer "))
+            if (!roleManager.RoleExists("Sr. Finance Officer"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
                 role.Name = "Sr. Finance Officer";

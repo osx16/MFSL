@@ -1200,7 +1200,6 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\ResetPasswordError.cshtml" />
     <Content Include="Views\MemberFiles\_UserFiles.cshtml" />
-    <Content Include="ViewModels\_UpdateFile.cshtml" />
     <Content Include="Views\Error\CouldNotUpdateFile.cshtml" />
     <Content Include="Views\MemberFiles\_FileUpdateMessage.cshtml" />
     <Content Include="Views\MemberFiles\NewFileNGO1.cshtml" />
@@ -1261,6 +1260,7 @@
     <Compile Include="Models\Officers.cs" />
     <Compile Include="Models\PagedLister.cs" />
     <Compile Include="Models\PasswordConfigModel.cs" />
+    <Compile Include="ViewModels\MaintenanceViewModel.cs" />
     <Compile Include="ViewModels\PaymentAdviceViewModel.cs" />
     <Compile Include="Models\RegisterBindingModel.cs" />
     <Compile Include="Models\ResetPasswordViewModel.cs" />
@@ -1283,6 +1283,7 @@
     <Compile Include="ViewModels\NewMemberViewModel.cs" />
     <Compile Include="ViewModels\NGOFileViewModel1.cs" />
     <Compile Include="ViewModels\NGOFileViewModel2.cs" />
+    <Compile Include="ViewModels\RefundsViewModel.cs" />
     <Compile Include="ViewModels\UpdateFileStatusViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />
   </ItemGroup>
