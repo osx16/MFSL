@@ -18,7 +18,7 @@
                         <div class="ajax-dynamic-get-data-form" />
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -52,50 +52,14 @@
                                 @Html.DropDownList("FileStatus", (SelectList)ViewBag.FileStatuses, "Select New Status", new { id = "ddlfilestatus", @class = "form-control" })
                             </div>
                             <div class="form-group">
+                                <div class="box-footer no-padding">
+                                    <div id="table-view"></div>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Comment" } })
                                 @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
-                            </div>
-                            @* Use jquery to destroy table DOM if status changes *@
-                            <div class="form-group" id="table-view">
-                                <div class="box-footer no-padding">
-                                    <table class="table">
-                                        @if (Model.FileStatus == "Refund")
-                                        {
-                                            <tr>
-                                                <td>Payment Request:</td>
-                                                <td>
-                                                    @Html.TextBoxFor(model => model.PaymentRequest, "", new { id = "uploader1", @type = "file", @multiple = "multiple" })
-                                                    @Html.ValidationMessageFor(model => model.PaymentRequest, "", new { @class = "text-danger" })
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Loan Statement:</td>
-                                                <td>
-                                                    @Html.TextBoxFor(model => model.LoanStatement, "", new { id = "uploader2", @type = "file", @multiple = "multiple" })
-                                                    @Html.ValidationMessageFor(model => model.LoanStatement, "", new { @class = "text-danger" })
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Reconciliation Sheet:</td>
-                                                <td>
-                                                    @Html.TextBoxFor(model => model.ReconciliationSheet, "", new { id = "uploader2", @type = "file", @multiple = "multiple" })
-                                                    @Html.ValidationMessageFor(model => model.ReconciliationSheet, "", new { @class = "text-danger" })
-                                                </td>
-                                            </tr>
-                                        }
-                                        @if (Model.FileStatus == "Maintenance")
-                                        {
-                                            <tr>
-                                                <td>Maintenance Form:</td>
-                                                <td>
-                                                    @Html.TextBoxFor(model => model.MaintenanceForm, "", new { id = "uploader2", @type = "file", @multiple = "multiple" })
-                                                    @Html.ValidationMessageFor(model => model.MaintenanceForm, "", new { @class = "text-danger" })
-                                                </td>
-                                            </tr>
-                                        }
-
-                                    </table>
-                                </div>
                             </div>
                         </div>
                         <!-- /.box-body -->
@@ -134,9 +98,23 @@
         $(document).ready(
             function () {
                 $('#ddlfilestatus').change(
-
                     function () {
-                            $('input:submit').attr('disabled', false);
+                        $('input:submit').attr('disabled', false);
+                        var val = $("#ddlfilestatus option:selected").text();
+                        //alert("Value Selected: " + val);
+                        if (val == "Select New Status") { $('input:submit').attr('disabled', true); }
+                        if (val == "Refund") {
+                            $('#table-view').empty();
+                            $('#table-view').load('@Url.Action("LoadRefundPanel", "UpdateFiles")');
+                        }
+                        if (val == "Maintenance") {
+                            $('#table-view').empty();
+                            $('#table-view').load('@Url.Action("LoadMaintenancePanel", "UpdateFiles")');
+                        }
+                        else {
+                            $('#table-view').empty();
+                        }
+                        //
                     }
                 );
             });

@@ -1232,6 +1232,8 @@
     <Content Include="Views\UpdateFiles\_Info2.cshtml" />
     <Content Include="Views\UpdateFiles\_NoResultsFound.cshtml" />
     <Content Include="Views\UpdateFiles\_NotAllowed.cshtml" />
+    <Content Include="Views\UpdateFiles\_Refund.cshtml" />
+    <Content Include="Views\UpdateFiles\_Maintenance.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

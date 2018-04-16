@@ -44,7 +44,25 @@ namespace MFSL.Controllers
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-            return PartialView("_Info2");
+            return PartialView("_Info");
+        }
+
+        public ActionResult LoadRefundPanel()
+        {
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            return PartialView("_Refund");
+        }
+
+        public ActionResult LoadMaintenancePanel()
+        {
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+            return PartialView("_Maintenance");
         }
 
         public async Task<ActionResult> GetFileByFileNo(int? fileNo)
@@ -107,7 +125,8 @@ namespace MFSL.Controllers
             if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
             {
                 return RedirectToAction("SignOut", "Logout");
-            }           
+            }
+            ViewBag.FileStatus = "";
             return View();
         }
 

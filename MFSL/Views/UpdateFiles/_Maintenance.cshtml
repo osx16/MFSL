@@ -1,0 +1,28 @@
+﻿@model MFSL.ViewModels.UpdateFileStatusViewModel
+<table class="table">
+    <tr class="info">
+        <td>Upload Maintenance Form:</td>
+        <td>
+            @Html.TextBoxFor(model => model.MaintenanceForm, "", new { id = "uploader4", @type = "file", @multiple = "multiple" })
+            @Html.ValidationMessageFor(model => model.MaintenanceForm, "", new { @class = "text-danger" })
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(
+            function () {
+                $('input:submit').attr('disabled', true);
+                $('#uploader4').change(
+                    function () {
+                        if ($(this).val()) {
+                           $('input:submit').attr('disabled', false);
+                        }
+                    }
+                );
+            });
+    });
+</script>
+
+
+

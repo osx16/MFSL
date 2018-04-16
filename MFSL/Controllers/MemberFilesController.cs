@@ -1229,6 +1229,7 @@ namespace MFSL.Controllers
                 {
                     FileNo = File.FileNo,
                     CollateralOfficer = Settings.UserFirstName + " " + Settings.UserLastName,
+                    CollateralDate = DateTime.Now,
                     CollateralCertificate = CollateralCertificate.ToArray()
                 };
 

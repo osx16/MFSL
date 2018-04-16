@@ -1,0 +1,69 @@
+﻿@model MFSL.ViewModels.UpdateFileStatusViewModel
+<table class="table">
+
+        <tr class="info">
+            <td>Upload Payment Request:</td>
+            <td>
+                @Html.TextBoxFor(model => model.PaymentRequest, "", new { id = "uploader1", @type = "file", @multiple = "multiple" })
+                @Html.ValidationMessageFor(model => model.PaymentRequest, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr>
+            <td>Upload Loan Statement:</td>
+            <td>
+                @Html.TextBoxFor(model => model.LoanStatement, "", new { id = "uploader2", @type = "file", @multiple = "multiple" })
+                @Html.ValidationMessageFor(model => model.LoanStatement, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        <tr class="info">
+            <td>Upload Reconciliation Sheet:</td>
+            <td>
+                @Html.TextBoxFor(model => model.ReconciliationSheet, "", new { id = "uploader3", @type = "file", @multiple = "multiple" })
+                @Html.ValidationMessageFor(model => model.ReconciliationSheet, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+</table>
+
+<script type="text/javascript">
+    $(function () {
+        var flag1 = false;
+        var flag2 = false;
+        var flag3 = false;
+        $(document).ready(
+            function () {
+                $('input:submit').attr('disabled', true); 
+                $('#uploader1').change(
+                    function () {
+                        if ($(this).val()) {
+                            flag1 = true;
+                            if (flag1 == true && flag2 == true && flag3 == true) {
+                                $('input:submit').attr('disabled', false);
+                            }
+                        }
+                    }
+                );
+                $('#uploader2').change(
+                    function () {
+                        if ($(this).val()) {
+                            flag2 = true;
+                            if (flag1 == true && flag2 == true && flag3 == true) {
+                                $('input:submit').attr('disabled', false);
+                            }
+                        }
+                    }
+                );
+
+                $('#uploader3').change(
+                    function () {
+                        if ($(this).val()) {
+                            flag3 = true;
+                            if (flag1 == true && flag2 == true && flag3 == true) {
+                                $('input:submit').attr('disabled', false);
+                            }
+                        }
+                    }
+                );
+            });
+    });
+</script>
+
