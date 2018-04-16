@@ -71,8 +71,12 @@ namespace MFSL.Controllers
             {
                 HttpResponseMessage replyMsg = await client.GetAsync(url2 + "CheckFileProgress/" + fileNo);
                 var respnse = replyMsg.Content.ReadAsStringAsync().Result;
-                var isSuccess = JsonConvert.DeserializeObject<bool>(respnse);
-                if (isSuccess)
+                int statusCode = JsonConvert.DeserializeObject<int>(respnse);
+                if (statusCode == 404)
+                {
+                    return PartialView("_NoResultsFound");
+                }
+                else if (statusCode == 200)
                 {
                     var obj = new FileReferences();
                     ViewBag.FileStatuses = "";
@@ -109,8 +113,18 @@ namespace MFSL.Controllers
                     };
                     return PartialView("_EditFileStatus", file);
                 }
-                ViewBag.Status = "Pending";
-                return PartialView("_NotAllowed");
+                else if (statusCode == 423)
+                {
+                    ViewBag.Status = "pending";
+                    return PartialView("_FileLocked");
+                }
+                else if(statusCode == 401)
+                {
+                    ViewBag.Status = "unauthorized";
+                    return PartialView("_FileLocked");
+                }
+                ViewBag.Status = "error";
+                return PartialView("_NoResultsFound");
             }
             ViewBag.Status = "error";
             return PartialView("_NoResultsFound");

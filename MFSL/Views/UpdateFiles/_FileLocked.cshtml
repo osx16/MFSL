@@ -4,9 +4,13 @@
     <div class="modal-dialog">
         <div style="width:800px; margin:0 auto;" aria-hidden="true" class="alert alert-dismissable alert-danger">
             <button type="button" class="close" data-dismiss="alert">×</button>
-            <h4><i class="glyphicon glyphicon-remove"></i> Fail!</h4>
-
-            <p>Your file is still in progress. You can only change the status when it's finalized.</p>
+            <h4><i class="glyphicon glyphicon-ban-circle"></i> Not allowed!</h4>
+            <table>
+                <tr>
+                    <td align="left"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i></td>
+                    <td align="right">&nbsp File still in process. You can only update when status is 'Finalized'.</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
@@ -16,9 +20,21 @@
     <div class="modal-dialog">
         <div style="width:800px; margin:0 auto;" aria-hidden="true" class="alert alert-dismissable alert-danger">
             <button type="button" class="close" data-dismiss="alert">×</button>
-            <h4><i class="glyphicon glyphicon-remove"></i>Oops! Something went wrong.</h4>
+            <h4><i class="glyphicon glyphicon-remove"></i> Oops! Something went wrong.</h4>
 
             <p>Check your internet connection. If the problem continues to persist please contact support.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+<div class="modal fade" id="unauthorizedAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div style="width:800px; margin:0 auto;" aria-hidden="true" class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <h4><i class="glyphicon glyphicon-ban-circle"></i> Unauthorized!</h4>
+
+            <p>Sorry, you are not allowed to modify other officers' files except yours.</p>
         </div>
     </div>
 </div>
@@ -29,8 +45,11 @@
             if (status == "error") {
                 $('#serverAlertModal').modal('show');
             }
-            else if (status == "Pending") {
+            else if (status == "pending") {
                 $('#pendingAlertModal').modal('show');
+            }
+            else if (status == "unauthorized") {
+                $('#unauthorizedAlertModal').modal('show');
             }
         });
 </script>

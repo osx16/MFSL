@@ -32,25 +32,53 @@ namespace RESTServices.Controllers
         /// Check if file is in progress
         /// </summary>
         /// <param name="fileNo"> File Number</param>
-        /// <returns>true or false</returns>
+        /// <returns>200 or 401 or 423</returns>
         [HttpGet]
         [Route("api/UpdateFilesAPI/CheckFileProgress/{fileNo:int}")]
-        public bool CheckFileProgress(int fileNo)
+        public int CheckFileProgress(int fileNo)
         {
-            RolesAPIController api = new RolesAPIController();
-            var role = api.GetRoleForThisUser();
-            if (role == "Admin")
+            try
             {
-                return true;
+                var file = db.FileReferences.Where(x => x.FileNo == fileNo).First();
+                if (file != null)
+                {
+                    RolesAPIController api = new RolesAPIController();
+                    var role = api.GetRoleForThisUser();
+                    if (role == "Admin")
+                    {
+                        return 200; //Ok
+                    }
+
+                    var userId = User.Identity.GetUserId();
+                    var officerId = db.FileReferences.Where(x => x.FileNo == fileNo).Select(o => o.OfficerId).First();
+                    var loanApprover = db.FileReferences.Where(x => x.FileNo == fileNo).Select(x => x.LoanApprover).First();
+                    var paymentOfficer = db.FileReferences.Where(x => x.FileNo == fileNo).Select(x => x.PaymentOfficer).First();
+                    var collateralOfficer = db.FileReferences.Where(x => x.FileNo == fileNo).Select(x => x.CollateralOfficer).First();
+                    if (role == "IO Restructure" || userId == officerId)
+                    {
+                        if (loanApprover != null && paymentOfficer != null && collateralOfficer != null)
+                        {
+                            return 200; //Ok
+                        }
+                        else
+                        {
+                            return 423; //Locked
+                        }
+                    }
+                    return 401; //Unauthorized
+                }
             }
-            var loanApprover = db.FileReferences.Where(x => x.FileNo == fileNo).Select(x => x.LoanApprover).First();
-            var paymentOfficer = db.FileReferences.Where(x => x.FileNo == fileNo).Select(x => x.PaymentOfficer).First();
-            var collateralOfficer = db.FileReferences.Where(x => x.FileNo == fileNo).Select(x => x.CollateralOfficer).First();
-            if( loanApprover != null && paymentOfficer != null && collateralOfficer != null)
+            catch(Exception e)
             {
-                return true;
+                Console.WriteLine(e.InnerException);
+                if (e.InnerException == null)
+                {
+                    return 404; //Not Found
+                }
+
             }
-            return false;
+
+            return 500; //Internal Server Error
         }
         /// <summary>
         /// Returns all file Status
@@ -62,7 +90,7 @@ namespace RESTServices.Controllers
         {
             RolesAPIController api = new RolesAPIController();
             var UserRole = api.GetRoleForThisUser();
-            if(UserRole != "Admin")
+            if(UserRole != "Admin" && UserRole != "IO Restructure")
             {
                 return db.FileStatus.Where
                     (
@@ -71,9 +99,23 @@ namespace RESTServices.Controllers
                              !u.FStatus.Contains("Awaiting Payment") &&
                              !u.FStatus.Contains("Awaiting Collateral") &&
                              !u.FStatus.Contains("Finalilzed") &&
-                             !u.FStatus.Contains("Cleared Refund")
+                             !u.FStatus.Contains("Arrears Cleared") &&
+                             !u.FStatus.Contains("Paid Refund")
                     )
                     .Select(x => x.FStatus).ToList();
+            }
+            if (UserRole == "IO Restructure")
+            {
+                return db.FileStatus.Where
+                (
+                    u => !u.FStatus.Contains("Pending Approval") &&
+                         !u.FStatus.Contains("Awaiting Input") &&
+                         !u.FStatus.Contains("Awaiting Payment") &&
+                         !u.FStatus.Contains("Awaiting Collateral") &&
+                         !u.FStatus.Contains("Finalilzed") &&
+                         !u.FStatus.Contains("Paid Refund")
+                )
+                .Select(x => x.FStatus).ToList();
             }
             return db.FileStatus.Select(x => x.FStatus).ToList();
         }

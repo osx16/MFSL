@@ -758,7 +758,7 @@
             Check if file is in progress
             </summary>
             <param name="fileNo"> File Number</param>
-            <returns>true or false</returns>
+            <returns>200 or 401 or 423</returns>
         </member>
         <member name="M:RESTServices.Controllers.UpdateFilesAPIController.GetAllFileStatus">
             <summary>
