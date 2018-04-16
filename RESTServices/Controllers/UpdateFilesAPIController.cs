@@ -70,7 +70,8 @@ namespace RESTServices.Controllers
                              !u.FStatus.Contains("Awaiting Input") &&
                              !u.FStatus.Contains("Awaiting Payment") &&
                              !u.FStatus.Contains("Awaiting Collateral") &&
-                             !u.FStatus.Contains("Finalilzed")
+                             !u.FStatus.Contains("Finalilzed") &&
+                             !u.FStatus.Contains("Cleared Refund")
                     )
                     .Select(x => x.FStatus).ToList();
             }

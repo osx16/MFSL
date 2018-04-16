@@ -44,7 +44,7 @@ namespace MFSL.Controllers
             {
                 return RedirectToAction("SignOut", "Logout");
             }
-            return PartialView("_Info");
+            return PartialView("_Info2");
         }
 
         public ActionResult LoadRefundPanel()
