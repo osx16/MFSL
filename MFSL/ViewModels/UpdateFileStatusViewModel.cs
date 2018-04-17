@@ -45,5 +45,7 @@ namespace MFSL.ViewModels
         [DataType(DataType.Upload)]
         [Display(Name = "Select File")]
         public HttpPostedFileBase MaintenanceForm { get; set; }
+
+        public DateTime RequestDate { get; set; }
     }
 }

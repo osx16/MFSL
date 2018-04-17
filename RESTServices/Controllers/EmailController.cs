@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
-
+using RESTServices.Models;
 namespace RESTServices.Controllers
 {
     /// <summary>
@@ -12,6 +12,49 @@ namespace RESTServices.Controllers
     /// </summary>
     public class EmailController : Controller
     {
+        private MFSLEntities db = new MFSLEntities();
+        ApplicationDbContext context;
+        AccountController Account;
+
+        public EmailController()
+        {
+            Account = new AccountController();
+            context = new ApplicationDbContext();
+        }
+
+        [NonAction]
+        public void SendEmailAlert(int memberNo, string prevStatus, string newStatus, string comment, string officerEmail, string officerName, string branchLocation)
+        {
+            List<string> addressList = new List<string>();
+            var clientName = db.vnpf_.Where(x => x.VNPF_Number == memberNo).Select(x => x.Member_Fullname).First();
+            //This message will be send to issuing officer
+            string emailBody1 = "You've changed the loan status for member " + clientName + " (" + memberNo + "), from " +
+                                prevStatus + " \nto " + newStatus + " on " + DateTime.Now.ToString() + ".\n" +
+                                "Your comment: " + comment;
+            //This message will be sent to marketing and operations
+            string emailBody2 = "Loan status for member " + clientName + " (" + memberNo + "), has been changed from " +
+                                prevStatus + " \nto " + newStatus + " by " + officerName + " on " + DateTime.Now.ToString() + ".\n" +
+                                "Officer's comment: " + comment;
+
+            SendChangedStatusNotif(newStatus, emailBody1, officerEmail);
+            if (branchLocation == "Port Vila")
+            {
+                var SIOMarketingRoleId = context.Roles.Where(x => x.Name == "SIO Marketing").Select(x => x.Id).First();
+                var SIOOperationRoleId = context.Roles.Where(x => x.Name == "SIO Operation").Select(x => x.Id).First();
+                var SIOMarketingEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOMarketingRoleId))).Select(i => i.Email).First();
+                var SIOOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOOperationRoleId))).Select(i => i.Email).First();
+                addressList.Add(SIOMarketingEmailAddress);
+                addressList.Add(SIOOperationEmailAddress);
+                BroadCastChangedStatusNotif1(newStatus, emailBody2, addressList);
+            }
+            else
+            {
+                var SIOBranchOperationRoleId = context.Roles.Where(x => x.Name == "SIO Branch Operation").Select(x => x.Id).First();
+                var SIOBranchOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOBranchOperationRoleId))).Select(i => i.Email).First();
+                BroadCastChangedStatusNotif2(newStatus, emailBody2, SIOBranchOperationEmailAddress);
+            }
+        }
+
         /// <summary>
         /// Send Pending Approval Notification within Main Office Port Vila
         /// </summary>

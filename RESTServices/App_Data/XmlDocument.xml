@@ -631,9 +631,61 @@
             <param name="memberNo">Member Number</param>
             <returns></returns>
         </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.SearchDemands(System.Int32)">
+            <summary>
+            Gets specific file reference where status is Demand
+            </summary>
+            <param name="memberNo"> Member Number</param>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.SearchArrears(System.Int32)">
+            <summary>
+            Gets specific file reference where status is Arrears
+            </summary>
+            <param name="memberNo">Member Number</param>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.SearchRefunds(System.Int32)">
+            <summary>
+            Gets specific file reference where status is Refund
+            </summary>
+            <param name="memberNo">Member Number</param>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.SearchMaintenance(System.Int32)">
+            <summary>
+            Gets specific file reference where status is Maintenance
+            </summary>
+            <param name="memberNo">Member Number</param>
+            <returns></returns>
+        </member>
         <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllAwaitingInput">
             <summary>
             Get All Awaiting Input File References
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllDemands">
+            <summary>
+            Get All Demand File References
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllArrears">
+            <summary>
+            Get All Arrears File References
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllRefunds">
+            <summary>
+            Get All refunds File References
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RESTServices.Controllers.MemberFilesAPIController.GetAllMaintenance">
+            <summary>
+            Get All maintenance File References
             </summary>
             <returns></returns>
         </member>

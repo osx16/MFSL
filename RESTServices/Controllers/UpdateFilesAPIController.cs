@@ -3,6 +3,8 @@ using RESTServices.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -120,6 +122,77 @@ namespace RESTServices.Controllers
             return db.FileStatus.Select(x => x.FStatus).ToList();
         }
 
+        [AcceptVerbs("PUT")]
+        [Route("api/UpdateFilesAPI/UpdateMaintenanceFile/")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult UpdateMaintenanceFile(MaintenanceBindingModel bindingModel)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var fileRef = db.FileReferences.Where(x => x.FileNo == bindingModel.FileNo).First();
+                    if (fileRef == null)
+                    {
+                        return BadRequest();
+                    }
+                    bool isCommitted = false;
+                    string currentStatus = fileRef.FileStatus;
+
+                    #region Transaction 1 begins
+                    var fileToUpdate = db.MemberFile.Where(x => x.FileNo == bindingModel.FileNo).First();
+                    fileToUpdate.MaintenanceForm = bindingModel.MaintenanceForm;
+                    fileToUpdate.FStatusId = 1008;
+                    db.SaveChanges();
+                    #endregion Transaction 1 ends
+
+                    #region Transaction 3 begins
+                    //Update FileReferences Table
+                    fileRef.FileStatus = bindingModel.FileStatus;
+                    fileRef.Comment = bindingModel.Comment + " \n [Date: " + DateTime.Now.ToString() + "]";
+                    db.SaveChanges();
+                    #endregion End of Transaction 3
+
+                    transaction.Commit();
+                    isCommitted = true;
+                    if (isCommitted)
+                    {
+                        var UserId = User.Identity.GetUserId();
+                        var UserEmail = context.Users.Where(x => x.Id == UserId).Select(e => e.Email).First();
+                        var query = db.Officers.Where(x => x.OfficerId == UserId).Select(i => new { i.EmpFname, i.EmpLname }).ToList();
+                        string officerName = query[0].EmpFname + " " + query[0].EmpLname;
+                        int branchId = db.Officers.Where(x => x.OfficerId == UserId).Select(x => x.BranchId).First();
+                        var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+
+                        //Send email alert
+                        EmailController api = new EmailController();
+                        api.SendEmailAlert(fileRef.MemberNo, currentStatus, fileRef.FileStatus, fileRef.Comment, UserEmail, officerName, branchLocation);
+                    }
+                }
+                catch (DbEntityValidationException dbEx)
+                {
+                    foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            Trace.TraceInformation("Property: {0} Error: {1}",
+                                                    validationError.PropertyName,
+                                                    validationError.ErrorMessage);
+                        }
+                    }
+                    //Rollback Transaction
+                    transaction.Rollback();
+                    return BadRequest();
+                }
+            }
+            return Ok();
+        }
+
         /// <summary>
         /// Update file status by file number
         /// </summary>
@@ -137,18 +210,19 @@ namespace RESTServices.Controllers
             //Create Transaction
             using (var transaction = db.Database.BeginTransaction())
             {
-                var file = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
-                string CurrentStatus = file.FileStatus;
                 try
                 {
-                    bool isCommitted = false;
-                    #region Transaction 1 begins
-                    //Update MemberFileTable
-                    if (file == null)
+                    var fileRef = db.FileReferences.Where(x => x.FileNo == fileUpdateDTO.FileNo).First();
+                    if (fileRef == null)
                     {
                         return BadRequest();
                     }
-                    var fileToUpdate = db.MemberFile.Where(x => x.FileNo == file.FileNo).First();
+                    bool isCommitted = false;
+                    #region Transaction 1 begins
+                    //Update MemberFileTable
+                    string currentStatus = fileRef.FileStatus;
+                    var fileToUpdate = db.MemberFile.Where(x => x.FileNo == fileRef.FileNo).First();
+                    //Need to refactor this piece - create a dictionary
                     if(fileUpdateDTO.FileStatus == "Pending Approval")
                     {
                         fileToUpdate.FStatusId = 1;
@@ -177,20 +251,21 @@ namespace RESTServices.Controllers
                     {
                         fileToUpdate.FStatusId = 7;
                     }
-                    else if (fileUpdateDTO.FileStatus == "Maintenance")
+                    else if (fileUpdateDTO.FileStatus == "Paid Refund")
                     {
-                        fileToUpdate.FStatusId = 8;
+                        fileToUpdate.FStatusId = 1009;
                     }
-
+                    else if (fileUpdateDTO.FileStatus == "Arrears Cleared")
+                    {
+                        fileToUpdate.FStatusId = 1010;
+                    }
                     db.SaveChanges();
                     #endregion Transaction 1 ends
 
-                    //This is where you capture the filestatus
                     #region Transaction 2 begins
                     //Update FileReferences Table
-                    var RefToUpdate = db.FileReferences.Where(x => x.FileNo == file.FileNo).First();
-                    RefToUpdate.FileStatus = fileUpdateDTO.FileStatus;
-                    RefToUpdate.Comment = fileUpdateDTO.Comment + " \n [Date: " + DateTime.Now.ToString()+"]";
+                    fileRef.FileStatus = fileUpdateDTO.FileStatus;
+                    fileRef.Comment = fileUpdateDTO.Comment + " \n [Date: " + DateTime.Now.ToString()+"]";
                     db.SaveChanges();
                     #endregion Transaction 2 ends
 
@@ -206,58 +281,19 @@ namespace RESTServices.Controllers
                         int branchId = db.Officers.Where(x => x.OfficerId == UserId).Select(x => x.BranchId).First();
                         var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
 
-                        //Send email
+                        //Send email alert
                         EmailController api = new EmailController();
-                        List<string> addressList = new List<string>();
-                        var clientName = db.vnpf_.Where(x => x.VNPF_Number == RefToUpdate.MemberNo).Select(x => x.Member_Fullname).First();
-                        //This message will be sent to marketing and operations
-                        string emailBody = "Loan status for member " + clientName + " (" + RefToUpdate.MemberNo + "), has been changed from " +
-                                            CurrentStatus + " \nto " + RefToUpdate.FileStatus + " by " + officerName + " on " + DateTime.Now.ToString() + ".\n" +
-                                            "Officer's comment: " + RefToUpdate.Comment;
-
-                        string emailBody2 = "You've changed the loan status for member " + clientName + " (" + RefToUpdate.MemberNo + "), from " +
-                                            CurrentStatus + " \nto " + RefToUpdate.FileStatus + " on " + DateTime.Now.ToString() + ".\n" +
-                                            "Your comment: " + RefToUpdate.Comment;
-
-                        api.SendChangedStatusNotif(RefToUpdate.FileStatus, emailBody2, UserEmail);
-                        if (branchLocation == "Port Vila")
-                        {
-                            var SIOMarketingRoleId = context.Roles.Where(x => x.Name == "SIO Marketing").Select(x => x.Id).First();
-                            var SIOOperationRoleId = context.Roles.Where(x => x.Name == "SIO Operation").Select(x => x.Id).First();
-                            var SIOMarketingEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOMarketingRoleId))).Select(i => i.Email).First();
-                            var SIOOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOOperationRoleId))).Select(i => i.Email).First();
-                            addressList.Add(SIOMarketingEmailAddress);
-                            addressList.Add(SIOOperationEmailAddress);
-                            api.BroadCastChangedStatusNotif1(RefToUpdate.FileStatus, emailBody, addressList);
-                        }
-                        else
-                        {
-                            var SIOBranchOperationRoleId = context.Roles.Where(x => x.Name == "SIO Branch Operation").Select(x => x.Id).First();
-                            var SIOBranchOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOBranchOperationRoleId))).Select(i => i.Email).First();
-                            api.BroadCastChangedStatusNotif2(RefToUpdate.FileStatus, emailBody, SIOBranchOperationEmailAddress);
-                        }
+                        api.SendEmailAlert(fileRef.MemberNo, currentStatus, fileRef.FileStatus, fileRef.Comment, UserEmail,officerName,branchLocation);
                     }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     //Rollback Transaction
                     transaction.Rollback();
-                    if (!MemberFileExists(file.FileNo))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return BadRequest();
                 }
             }
             return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        private bool MemberFileExists(int id)
-        {
-            return db.MemberFile.Count(e => e.FileNo == id) > 0;
         }
     }
 }

@@ -24,6 +24,7 @@ namespace MFSL.Controllers
         //Web API Web URL
         string url = "http://localhost:64890/api/MemberFilesAPI/";
         string url2 = "http://localhost:64890/api/UpdateFilesAPI/";
+        string url3 = "http://localhost:64890/api/RefundsAPI/";
 
         public UpdateFilesController()
         {
@@ -146,10 +147,69 @@ namespace MFSL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateFileStatus([Bind(Include = "FileNo,Officer,MemberNo,FileStatus,Comment")] UpdateFileStatusViewModel file)
+        public async Task<ActionResult> UpdateFileStatus([Bind(Include = "FileNo,Officer,MemberNo,FileStatus,PaymentRequest," + 
+        "LoanStatement,ReconciliationSheet,MaintenanceForm,Comment")] UpdateFileStatusViewModel file)
         {
             if (ModelState.IsValid)
             {
+                if (file.PaymentRequest != null && file.LoanStatement != null && file.ReconciliationSheet != null)
+                {
+                    var PR = new MemoryStream();
+                    var LS = new MemoryStream();
+                    var RS = new MemoryStream();
+
+                    file.PaymentRequest.InputStream.CopyTo(PR);
+                    file.LoanStatement.InputStream.CopyTo(LS);
+                    file.ReconciliationSheet.InputStream.CopyTo(RS);
+
+                    RefundsBindingModel bindingModel = new RefundsBindingModel()
+                    {
+                        RequestDate = DateTime.Now,
+                        FileNo = file.FileNo,
+                        PaymentRequest = PR.ToArray(),
+                        LoanStatement = LS.ToArray(),
+                        ReconciliationSheet = RS.ToArray(),
+                        FileStatus = file.FileStatus,
+                        Comment = file.Comment
+                    };
+
+                    var jsonObj = JsonConvert.SerializeObject(bindingModel);
+                    HttpContent httpContent = new StringContent(jsonObj);
+                    httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    var resp = await client.PostAsync(url3+ "PostToRefunds", httpContent);
+
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        ModelState.Clear();
+                        ViewBag.Confirmation = 1;
+                        return View();                       
+                    }
+                }
+                else if(file.MaintenanceForm != null)
+                {
+                    var M = new MemoryStream();
+                    file.MaintenanceForm.InputStream.CopyTo(M);
+
+                    MaintenanceBindingModel dto = new MaintenanceBindingModel()
+                    {
+                        FileNo = file.FileNo,
+                        MaintenanceForm = M.ToArray(),
+                        FileStatus = file.FileStatus,
+                        Comment = file.Comment                      
+                    };
+
+                    var jsonObj = JsonConvert.SerializeObject(dto);
+                    HttpContent httpContent = new StringContent(jsonObj);
+                    httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    var resp = await client.PutAsync(url2 + "UpdateMaintenanceFile", httpContent);
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        ModelState.Clear();
+                        ViewBag.Confirmation = 1;
+                        return View();
+                    }
+                }
+
                 FileReferences model = new FileReferences()
                 {
                     FileNo = file.FileNo,
@@ -161,23 +221,13 @@ namespace MFSL.Controllers
                 HttpContent content = new StringContent(json);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-                try
+                var response = await client.PutAsync(url2 + "UpdateFileStatus", content);
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = await client.PutAsync(url2 + "UpdateFileStatus", content);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        ModelState.Clear();
-                        ViewBag.Confirmation = 1;
-                        return View();
-                    }
-                    Debug.WriteLine(response);
+                    ModelState.Clear();
+                    ViewBag.Confirmation = 1;
+                    return View();
                 }
-                catch (HttpRequestException e)
-                {
-                    Debug.WriteLine("\nException Caught!");
-                    Debug.WriteLine("Message :{0} ", e.Message);
-                }
-
             }
 
             ViewBag.Status = "error";

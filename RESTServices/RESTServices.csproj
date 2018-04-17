@@ -239,6 +239,7 @@
     <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MemberFilesAPIController.cs" />
+    <Compile Include="Controllers\RefundsAPIController.cs" />
     <Compile Include="Controllers\RolesAPIController.cs" />
     <Compile Include="Controllers\UpdateFilesAPIController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -281,6 +282,7 @@
     <Compile Include="Models\FileUpdateDTO.cs" />
     <Compile Include="Models\ForgotPasswordViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\MaintenanceBindingModel.cs" />
     <Compile Include="Models\MemberFile.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
@@ -291,6 +293,7 @@
     <Compile Include="Models\Refunds.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RefundsBindingModel.cs" />
     <Compile Include="Models\ResetPasswordViewModel.cs" />
     <Compile Include="Models\UpdateFileStatusViewModel.cs" />
     <Compile Include="Models\UserRolesDTO.cs" />
@@ -420,6 +423,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Email\" />
+    <Folder Include="Views\RefundsAPI\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

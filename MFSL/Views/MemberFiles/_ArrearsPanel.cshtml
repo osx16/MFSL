@@ -1,0 +1,283 @@
+﻿@model PagedList.IPagedList<MFSL.Models.FileReferences>
+@using PagedList.Mvc;
+
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <section class="content">
+        <div class="row">
+            <div class="box-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td align="right">
+                                    <input type="number" min="1" id="txtbox6" class="form-control" placeholder="Enter Member #" />
+                                </td>
+                                <td align="left">
+                                    <input type="submit" id="search6" value="search" class="btn btn-success" disabled="disabled" />
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            <div class="col-md-4">
+                <h4 class="box-title">Total: @ViewBag.TotalFiles <i class="fa fa-fw fa-folder"></i></h4>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr class="success">
+                        @if (ViewBag.Role != "Investment Officer" && ViewBag.Role != "Intern")
+                        {
+                            if (ViewBag.Role != "SIO Operation" && ViewBag.Role != "SIO Marketing")
+                            {
+                                <th>
+                                    Branch
+                                </th>
+                            }
+                            <th>
+                                Officer
+                            </th>
+                        }
+                        <th>
+                            Date Created
+                        </th>
+                        <th>
+                            Client No
+                        </th>
+                        <th>
+                            File No
+                        </th>
+                        <th>
+                            File Type
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th class="alert-success">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="8">No results Found</td>
+                        </tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            @if (ViewBag.Role != "Investment Officer" && ViewBag.Role != "Intern")
+                            {
+                                if (ViewBag.Role != "SIO Operation" && ViewBag.Role != "SIO Marketing")
+                                {
+                                    <td class="alert-danger">
+                                        @Html.DisplayFor(modelItem => item.Branch)
+                                    </td>
+                                }
+                                <td class="alert-info">
+                                    @Html.DisplayFor(modelItem => item.Officer)
+                                </td>
+                            }
+                            <td class="danger">
+                                @Html.DisplayFor(modelItem => item.DateCreated)
+                            </td>
+                            <td class="warning">
+                                <a href="" class="MemberLink6"
+                                   data-id="@item.MemberNo"
+                                   data-toggle="modal" title="Click for more">
+                                    @Html.DisplayFor(modelItem => item.MemberNo)
+                                </a>
+                            </td>
+                            <td class="warning">
+                                @Html.DisplayFor(modelItem => item.FileNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EmployerType)
+                            </td>
+                            <td class="alert-warning">
+                                @Html.DisplayFor(modelItem => item.FileStatus)
+                            </td>
+                            <td class="active">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td align="left">
+                                                <a href="" class="FileLink6"
+                                                   data-id="@item.FileNo"
+                                                   data-toggle="modal" title="Click to view">
+                                                    Show
+                                                </a>
+                                            </td>
+                                            @if (ViewBag.Role == "SIO Marketing" || ViewBag.Role == "SIO Operation" || ViewBag.Role == "SIO Branch Operation" || ViewBag.Role == "General Manager" || ViewBag.Role == "Admin")
+                                            {
+                                                <td>
+                                                    |
+                                                </td>
+                                                <td align="center">
+                                                    <a href="" class="UpdateLink6"
+                                                       data-id="@item.FileNo"
+                                                       data-toggle="modal" data-target="#exampleModal" title="Click to open">
+                                                        Update
+                                                    </a>
+                                                </td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+            <div id='Paging' style="text-align: center">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                of @Model.PageCount
+                @Html.PagedListPager(Model, page => Url.Action(@ViewBag.ActionName,
+                 new { memberNo = ViewBag.MemberNo, page }),
+                 PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = @ViewBag.PanelId }))
+            </div>
+        </div>
+    </section>
+
+    <!-- Button trigger modal -->
+    <div class="modal" id="memberDetailsModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> | Member Info</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ajax-dynamic-get-data-form" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File modal -->
+    <div class="modal" id="memberFilesModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-files-o fa-lg" aria-hidden="true"></i> | Docs</h4>
+                </div>
+                <div class="modal-body">
+                   <div class="ajax-dynamic-get-data-form" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update File modal -->
+    <div class="modal" id="updateFileModal1" role="dialog" aria-labelledby="updateFileModal1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-fw fa-arrow-circle-o-up fa-lg"></i> | Update file</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="test" class="ajax-dynamic-get-data-form" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        jQuery('#search6').unbind().click(function (e) {
+            e.preventDefault();
+            if ($('#txtbox6').val() != null) {
+                $("#8").load('@(Url.Action("LoadArrearsPanel", "MemberFiles",null, Request.Url.Scheme))?memberNo=' + $('#txtbox6').val());
+            }
+        });
+
+        var status = '@(ViewBag.Status)';
+        if (status == "error") {
+            $('#serverAlertModal').modal('show');
+        }
+        document.getElementById("txtbox6").onkeyup = function () {
+            if ($(this).val() == 0) {
+                $('.btn').prop('disabled', true);
+            } else {
+                $('.btn').prop('disabled', false);
+            }
+        }
+
+        jQuery('.MemberLink6').on('click', function (e) {
+            var MemberNum = $(this).attr("data-id");
+            $.ajax({
+                async: true,
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("GetMemberInfoByNum"))",
+                data: { "MemberNum": MemberNum },
+                success: function (data) {
+                    $('#memberDetailsModal1').modal();
+                    $('#memberDetailsModal1').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#memberDetailsModal1').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
+
+        jQuery('.FileLink6').on('click', function (e) {
+            var FileNo = $(this).attr("data-id");
+            $.ajax({
+                async: true,
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("GetFileRefsByFileNo"))",
+                data: { "FileNo": FileNo },
+                success: function (data) {
+                    $('#memberFilesModal1').modal();
+                    $('#memberFilesModal1').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#memberFilesModal1').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
+
+        jQuery('.UpdateLink6').on('click', function (e) {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) { options.async = true;});
+            var FileNo = $(this).attr("data-id");
+
+            $.ajax({
+                async: true,
+                cache: false,
+                type: "GET",
+                url: "@(Url.RouteUrl("UploadLoanApproval"))",
+                data: { "FileNo": FileNo },
+                success: function (data) {
+                    $('#updateFileModal1').modal();
+                    $('#updateFileModal1').find('.ajax-dynamic-get-data-form').html(data);
+                    $('#updateFileModal1').modal('show');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                }
+            });//EndOf Ajax
+        });
+    </script>
+</body>
+</html>
+

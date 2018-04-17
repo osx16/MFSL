@@ -32,6 +32,26 @@
                             </div>
                         </div>
                         <!--/.box 2-->
+                        <!--.box 3-->
+                        <div class="box box-danger">
+                            <div class="box-header with-border">
+                                <b>Demand</b>
+                            </div>
+                            <div class="box-body">
+                                <div id="7"></div>
+                            </div>
+                        </div>
+                        <!--/.box 3-->
+                        <!--.box 4-->
+                        <div class="box box-danger">
+                            <div class="box-header with-border">
+                                <b>Arrears</b>
+                            </div>
+                            <div class="box-body">
+                                <div id="8"></div>
+                            </div>
+                        </div>
+                        <!--/.box 4-->
                     </div>
                 <!--/left column -->
 
@@ -59,6 +79,26 @@
                         </div>
                     </div>
                     <!--/.box 4-->
+                    <!--.box 5-->
+                    <div class="box box-warning">
+                        <div class="box-header with-border">
+                            <b>Refund</b>
+                        </div>
+                        <div class="box-body">
+                            <div id="9"></div>
+                        </div>
+                    </div>
+                    <!--/.box 5-->
+                    <!--.box 6-->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <b>Maintenance</b>
+                        </div>
+                        <div class="box-body">
+                            <div id="10"></div>
+                        </div>
+                    </div>
+                    <!--/.box 6-->
                 </div>
                 <!--/right column-->
                 }
@@ -77,6 +117,16 @@
                         </div>
                     </div>
                 <!--/.box 5-->
+                <!--.box 7-->
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <b>Refund</b>
+                        </div>
+                        <div class="box-body">
+                            <div id="11"></div>
+                        </div>
+                    </div>
+                <!--/.box 7-->
                 }
                 <!--.box 6-->
                 <div class="box box-success">
@@ -118,9 +168,14 @@
                 $('#2').load('@Url.Action("LoadInputPanel", "MemberFiles")');
                 $('#3').load('@Url.Action("LoadPaymentPanel", "MemberFiles")');
                 $('#4').load('@Url.Action("LoadCollateralPanel", "MemberFiles")');
+                $('#7').load('@Url.Action("LoadDemandsPanel", "MemberFiles")');
+                $('#8').load('@Url.Action("LoadArrearsPanel", "MemberFiles")');
+                $('#9').load('@Url.Action("LoadRefundsPanel", "MemberFiles")');
+                $('#10').load('@Url.Action("LoadMaintenancePanel", "MemberFiles")');
             }
             if (role == "Sr. Finance Officer" || role == "Accounts Payable" || role == "Accounts Receivable") {
                 $('#5').load('@Url.Action("LoadPaymentPanel", "MemberFiles")');
+                $('#11').load('@Url.Action("LoadRefundsPanel", "MemberFiles")');
                 $('#6').load('@Url.Action("LoadCollateralPanel", "MemberFiles")');
             }
             if (role == "Collateral Officer")

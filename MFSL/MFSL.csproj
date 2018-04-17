@@ -1234,6 +1234,10 @@
     <Content Include="Views\UpdateFiles\_FileLocked.cshtml" />
     <Content Include="Views\UpdateFiles\_Refund.cshtml" />
     <Content Include="Views\UpdateFiles\_Maintenance.cshtml" />
+    <Content Include="Views\MemberFiles\_DemandsPanel.cshtml" />
+    <Content Include="Views\MemberFiles\_ArrearsPanel.cshtml" />
+    <Content Include="Views\MemberFiles\_RefundsPanel.cshtml" />
+    <Content Include="Views\MemberFiles\_MaintenancePanel.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1251,6 +1255,8 @@
     <Compile Include="Controllers\UpdateFilesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Helpers\Settings.cs" />
+    <Compile Include="Models\MaintenanceBindingModel.cs" />
+    <Compile Include="Models\RefundsBindingModel.cs" />
     <Compile Include="ViewModels\ApprovedLoanFileViewModel.cs" />
     <Compile Include="ViewModels\CollateralFileViewModel.cs" />
     <Compile Include="Models\FileReferences.cs" />

@@ -178,6 +178,100 @@ namespace MFSL.Controllers
             return PartialView();
         }
 
+        public async Task<ActionResult> LoadDemandsPanel(int? memberNo, int? page)
+        {
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
+            int pageSize = 5;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            if (memberNo != null)
+            {
+                ViewBag.MemberNo = memberNo;
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "SearchDemands/" + memberNo);
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    var resData = responseMsg.Content.ReadAsStringAsync().Result;
+                    var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
+                    ViewBag.TotalFiles = data.Count;
+                    IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadDemandsPanel";
+                    ViewBag.PanelId = "7";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Demand";
+                    return PartialView("_DemandsPanel", filteredList);
+                }
+            }
+            else
+            {
+                HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllDemands");
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                    var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    ViewBag.TotalFiles = fileRefs.Count;
+                    IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadDemandsPanel";
+                    ViewBag.PanelId = "7";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Demand";
+                    return PartialView("_DemandsPanel", PagedList);
+                }
+            }
+            ViewBag.Status = "error";
+            return PartialView();
+        }
+
+        public async Task<ActionResult> LoadArrearsPanel(int? memberNo, int? page)
+        {
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
+            int pageSize = 5;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            if (memberNo != null)
+            {
+                ViewBag.MemberNo = memberNo;
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "SearchArrears/" + memberNo);
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    var resData = responseMsg.Content.ReadAsStringAsync().Result;
+                    var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
+                    ViewBag.TotalFiles = data.Count;
+                    IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadArrearsPanel";
+                    ViewBag.PanelId = "8";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Arrears";
+                    return PartialView("_ArrearsPanel", filteredList);
+                }
+            }
+            else
+            {
+                HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllArrears");
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                    var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    ViewBag.TotalFiles = fileRefs.Count;
+                    IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadArrearsPanel";
+                    ViewBag.PanelId = "8";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Arrears";
+                    return PartialView("_ArrearsPanel", PagedList);
+                }
+            }
+            ViewBag.Status = "error";
+            return PartialView();
+        }
+
         /// <summary>
         /// Pulls Awaiting Payment files and renders them
         /// </summary>
@@ -286,6 +380,100 @@ namespace MFSL.Controllers
                     ViewBag.Role = Settings.RoleForThisUser;
                     ViewBag.FileStatus = "Awaiting Collateral";
                     return PartialView("_CollateralPanel", PagedList);
+                }
+            }
+            ViewBag.Status = "error";
+            return PartialView();
+        }
+
+        public async Task<ActionResult> LoadRefundsPanel(int? memberNo, int? page)
+        {
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
+            int pageSize = 5;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            if (memberNo != null)
+            {
+                ViewBag.MemberNo = memberNo;
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "SearchRefunds/" + memberNo);
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    var resData = responseMsg.Content.ReadAsStringAsync().Result;
+                    var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
+                    ViewBag.TotalFiles = data.Count;
+                    IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadRefundsPanel";
+                    ViewBag.PanelId = "9";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Refund";
+                    return PartialView("_RefundsPanel", filteredList);
+                }
+            }
+            else
+            {
+                HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllRefunds");
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                    var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    ViewBag.TotalFiles = fileRefs.Count;
+                    IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadRefundsPanel";
+                    ViewBag.PanelId = "9";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Refund";
+                    return PartialView("_RefundsPanel", PagedList);
+                }
+            }
+            ViewBag.Status = "error";
+            return PartialView();
+        }
+
+        public async Task<ActionResult> LoadMaintenancePanel(int? memberNo, int? page)
+        {
+            if (Settings.AccessToken == "" || DateTime.UtcNow.AddHours(1) > Settings.AccessTokenExpirationDate)
+            {
+                return RedirectToAction("SignOut", "Logout");
+            }
+
+            int pageSize = 5;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            if (memberNo != null)
+            {
+                ViewBag.MemberNo = memberNo;
+                HttpResponseMessage responseMsg = await client.GetAsync(url + "SearchMaintenance/" + memberNo);
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    var resData = responseMsg.Content.ReadAsStringAsync().Result;
+                    var data = JsonConvert.DeserializeObject<List<FileReferences>>(resData);
+                    ViewBag.TotalFiles = data.Count;
+                    IPagedList<FileReferences> filteredList = (data).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadMaintenancePanel";
+                    ViewBag.PanelId = "10";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Maintenance";
+                    return PartialView("_MaintenancePanel", filteredList);
+                }
+            }
+            else
+            {
+                HttpResponseMessage responseMessage = await client.GetAsync(url + "GetAllMaintenance");
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var responseData = responseMessage.Content.ReadAsStringAsync().Result;
+                    var fileRefs = JsonConvert.DeserializeObject<List<FileReferences>>(responseData);
+                    ViewBag.TotalFiles = fileRefs.Count;
+                    IPagedList<FileReferences> PagedList = (fileRefs).ToPagedList(pageIndex, pageSize);
+                    ViewBag.ActionName = "LoadMaintenancePanel";
+                    ViewBag.PanelId = "10";
+                    ViewBag.Role = Settings.RoleForThisUser;
+                    ViewBag.FileStatus = "Maintenance";
+                    return PartialView("_MaintenancePanel", PagedList);
                 }
             }
             ViewBag.Status = "error";
@@ -812,10 +1000,10 @@ namespace MFSL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> NewFileNGO2(
-            [Bind(Include = "MemberNo,LoanApplication," +
-            "LoanAgreement,GuaranteeCertificate," +
-            "Amortisation,Eligibility,RequestLetter,EmployerLetter,Quotation," +
-            "BankAccStatment,LoanStatement,VNPFStatement,OffsetLetter,CustomerID,FStatusId,")] NGOFileViewModel2 File)
+        [Bind(Include = "MemberNo,LoanApplication," +
+        "LoanAgreement,GuaranteeCertificate," +
+        "Amortisation,Eligibility,RequestLetter,EmployerLetter,Quotation," +
+        "BankAccStatment,LoanStatement,VNPFStatement,OffsetLetter,CustomerID,FStatusId,")] NGOFileViewModel2 File)
 
         {
             if (ModelState.IsValid)

@@ -104,7 +104,11 @@ namespace RESTServices.Controllers
             FileList.Add(16, "CustomerID");
             FileList.Add(17, "PaymentAdvice"); 
             FileList.Add(18, "Collateral");
-            FileList.Add(19, "MaintenanceForm");
+            FileList.Add(19, "PaymentRequest"); //Special case
+            FileList.Add(20, "LoanStatement"); //Special case
+            FileList.Add(21, "ReconciliationSheet"); //Special case
+            FileList.Add(22, "RefundChequeCopy");
+            FileList.Add(23, "MaintenanceForm");
 
 
 
@@ -327,6 +331,162 @@ namespace RESTServices.Controllers
         }
 
         /// <summary>
+        /// Gets specific file reference where status is Demand
+        /// </summary>
+        /// <param name="memberNo"> Member Number</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/MemberFilesAPI/SearchDemands/{memberNo:int}")]
+        public IEnumerable<FileReferences> SearchDemands(int memberNo)
+        {
+            string FileStatus = "Demand";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "Admin" || role == "General Manager")
+            {
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") &&
+                         x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo)
+                     .OrderByDescending(x => x.DateCreated);
+        }
+
+        /// <summary>
+        /// Gets specific file reference where status is Arrears
+        /// </summary>
+        /// <param name="memberNo">Member Number</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/MemberFilesAPI/SearchArrears/{memberNo:int}")]
+        public IEnumerable<FileReferences> SearchArrears(int memberNo)
+        {
+            string FileStatus = "Arrears";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "Admin" || role == "General Manager" || role == "IO Restructure")
+            {
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") &&
+                         x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo)
+                     .OrderByDescending(x => x.DateCreated);
+        }
+
+        /// <summary>
+        /// Gets specific file reference where status is Refund
+        /// </summary>
+        /// <param name="memberNo">Member Number</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/MemberFilesAPI/SearchRefunds/{memberNo:int}")]
+        public IEnumerable<FileReferences> SearchRefunds(int memberNo)
+        {
+            string FileStatus = "Refund";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "Admin" || role == "General Manager" || role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
+            {
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") &&
+                         x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo)
+                     .OrderByDescending(x => x.DateCreated);
+        }
+
+        /// <summary>
+        /// Gets specific file reference where status is Maintenance
+        /// </summary>
+        /// <param name="memberNo">Member Number</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/MemberFilesAPI/SearchMaintenance/{memberNo:int}")]
+        public IEnumerable<FileReferences> SearchMaintenance(int memberNo)
+        {
+            string FileStatus = "Maintenance";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "Admin" || role == "General Manager" || role == "IO Restructure")
+            {
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") &&
+                         x.FileStatus == FileStatus && x.MemberNo == memberNo)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus && f.MemberNo == memberNo)
+                     .OrderByDescending(x => x.DateCreated);
+        }
+
+        /// <summary>
         /// Get All Awaiting Input File References
         /// </summary>
         /// <returns></returns>
@@ -341,6 +501,154 @@ namespace RESTServices.Controllers
             RolesAPIController roleApi = new RolesAPIController();
             var role = roleApi.GetRoleForThisUser();
             if (role == "Admin" || role == "General Manager")
+            {
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus)
+                     .OrderByDescending(x => x.DateCreated);
+        }
+
+        /// <summary>
+        /// Get All Demand File References
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/MemberFilesAPI/GetAllDemands")]
+        public IEnumerable<FileReferences> GetAllDemands()
+        {
+            string FileStatus = "Demand";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "Admin" || role == "General Manager")
+            {
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus)
+                     .OrderByDescending(x => x.DateCreated);
+        }
+
+        /// <summary>
+        /// Get All Arrears File References
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/MemberFilesAPI/GetAllArrears")]
+        public IEnumerable<FileReferences> GetAllArrears()
+        {
+            string FileStatus = "Arrears";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "Admin" || role == "General Manager" ||  role == "IO Restructure")
+            {
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing")
+            {
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus)
+                     .OrderByDescending(x => x.DateCreated);
+        }
+
+        /// <summary>
+        /// Get All refunds File References
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/MemberFilesAPI/GetAllRefunds")]
+        public IEnumerable<FileReferences> GetAllRefunds()
+        {
+            string FileStatus = "Refund";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "Admin" || role == "General Manager" || role == "Accounts Payable" || role == "Accounts Receivable" || role == "Sr. Finance Officer")
+            {
+                return db.FileReferences
+                         .Where(x => x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Operation" || role == "SIO Marketing" || role == "IO Validation")
+            {
+                return db.FileReferences
+                         .Where(x => x.Branch == branchLocation && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            else if (role == "SIO Branch Operation")
+            {
+                return db.FileReferences
+                         .Where(x => (x.Branch == "Tanna" || x.Branch == "Malekula" || x.Branch == "Santo") && x.FileStatus == FileStatus)
+                         .OrderByDescending(x => x.DateCreated);
+            }
+            return db.FileReferences
+                     .Where(f => f.OfficerId == OfficerID && f.FileStatus == FileStatus)
+                     .OrderByDescending(x => x.DateCreated);
+        }
+
+        /// <summary>
+        /// Get All maintenance File References
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/MemberFilesAPI/GetAllMaintenance")]
+        public IEnumerable<FileReferences> GetAllMaintenance()
+        {
+            string FileStatus = "Maintenance";
+            var OfficerID = User.Identity.GetUserId();
+            int branchId = db.Officers.Where(x => x.OfficerId == OfficerID).Select(x => x.BranchId).First();
+            var branchLocation = db.Branches.Where(x => x.BranchId == branchId).Select(x => x.BranchLocation).First();
+            RolesAPIController roleApi = new RolesAPIController();
+            var role = roleApi.GetRoleForThisUser();
+            if (role == "Admin" || role == "General Manager" || role == "IO Restructure")
             {
                 return db.FileReferences
                          .Where(x => x.FileStatus == FileStatus)
@@ -403,6 +711,7 @@ namespace RESTServices.Controllers
                      && f.FileStatus == FileStatus && f.MemberNo == memberNo)
                      .OrderByDescending(x => x.DateCreated);
         }
+
 
         /// <summary>
         /// Get All Awaiting Payment File References

@@ -40,7 +40,7 @@
                     <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Amortisation", "FetchFile", new { id = item.FileNo, flag = 4 }, new { target = "_blank" })
                 </td>
             </tr>
-            if (item.FileStatus == "Awaiting Collateral" || item.FileStatus == "Finalized" || item.FileStatus == "Demand" || item.FileStatus == "Arrears")
+            if (item.FileStatus == "Awaiting Collateral" || item.FileStatus == "Finalized" || item.FileStatus == "Demand" || item.FileStatus == "Arrears" || item.FileStatus == "Refund" || item.FileStatus == "Maintenance")
             {
                 <tr>
                     <td>
@@ -113,7 +113,7 @@
                     <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Customer ID", "FetchFile", new { id = item.FileNo, flag = 16 }, new { target = "_blank" })
                 </td>
             </tr>
-            if (item.FileStatus == "Awaiting Payment" || item.FileStatus == "Awaiting Collateral" || item.FileStatus == "Finalized" || item.FileStatus == "Demand" || item.FileStatus =="Arrears")
+            if (item.FileStatus == "Awaiting Payment" || item.FileStatus == "Awaiting Collateral" || item.FileStatus == "Finalized" || item.FileStatus == "Demand" || item.FileStatus =="Arrears" || item.FileStatus == "Refund" || item.FileStatus == "Maintenance")
             {
                 <tr>
                     <td>
@@ -129,11 +129,37 @@
                     </td>
                 </tr>
             }
+            if (item.FileStatus == "Refund")
+            {
+                <tr class="danger">
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Payment Request", "FetchFile", new { id = item.FileNo, flag = 19 }, new { target = "_blank" })
+                    </td>
+                </tr>
+                <tr class="danger">
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Lastest Loan Statement", "FetchFile", new { id = item.FileNo, flag = 20 }, new { target = "_blank" })
+                    </td>
+                </tr>
+                <tr class="danger">
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Reconciliation Sheet", "FetchFile", new { id = item.FileNo, flag = 21 }, new { target = "_blank" })
+                    </td>
+                </tr>
+            }
+            if (item.FileStatus == "Paid Refund")
+            {
+                <tr class="danger">
+                    <td>
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Refund Cheque Copy", "FetchFile", new { id = item.FileNo, flag = 22 }, new { target = "_blank" })
+                    </td>
+                </tr>
+            }
             if (item.FileStatus == "Maintenance")
             {
-                <tr>
+                <tr class="danger">
                     <td>
-                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Maintenance Form", "FetchFile", new { id = item.FileNo, flag = 19 }, new { target = "_blank" })
+                        <i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i> @Html.ActionLink("Maintenance Form", "FetchFile", new { id = item.FileNo, flag = 23 }, new { target = "_blank" })
                     </td>
                 </tr>
             }
