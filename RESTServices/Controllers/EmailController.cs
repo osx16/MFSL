@@ -59,6 +59,14 @@ namespace RESTServices.Controllers
             }
         }
 
+        /// <summary>
+        /// Alert Restructure officer
+        /// </summary>
+        /// <param name="fileStatus"></param>
+        /// <param name="comment"></param>
+        /// <param name="memberNo"></param>
+        /// <param name="officerName"></param>
+        /// <param name="clientName"></param>
         [NonAction]
         public void AlertRestructure(string fileStatus, string comment, int memberNo, string officerName, string clientName)
         {
@@ -73,6 +81,14 @@ namespace RESTServices.Controllers
             }
         }
 
+        /// <summary>
+        /// Alert validation officer
+        /// </summary>
+        /// <param name="fileStatus"></param>
+        /// <param name="comment"></param>
+        /// <param name="memberNo"></param>
+        /// <param name="officerName"></param>
+        /// <param name="clientName"></param>
         [NonAction]
         public void AlertValidation(string fileStatus,string comment, int memberNo, string officerName, string clientName)
         {
