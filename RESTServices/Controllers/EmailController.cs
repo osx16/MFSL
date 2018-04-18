@@ -43,15 +43,107 @@ namespace RESTServices.Controllers
                 var SIOOperationRoleId = context.Roles.Where(x => x.Name == "SIO Operation").Select(x => x.Id).First();
                 var SIOMarketingEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOMarketingRoleId))).Select(i => i.Email).First();
                 var SIOOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOOperationRoleId))).Select(i => i.Email).First();
+
                 addressList.Add(SIOMarketingEmailAddress);
                 addressList.Add(SIOOperationEmailAddress);
                 BroadCastChangedStatusNotif1(newStatus, emailBody2, addressList);
+                AlertRestructure(newStatus,comment,memberNo,officerName,clientName);
+                AlertValidation(newStatus,comment, memberNo, officerName, clientName);
             }
             else
             {
                 var SIOBranchOperationRoleId = context.Roles.Where(x => x.Name == "SIO Branch Operation").Select(x => x.Id).First();
                 var SIOBranchOperationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(SIOBranchOperationRoleId))).Select(i => i.Email).First();
                 BroadCastChangedStatusNotif2(newStatus, emailBody2, SIOBranchOperationEmailAddress);
+                AlertRestructure(newStatus,comment, memberNo, officerName, clientName);
+            }
+        }
+
+        [NonAction]
+        public void AlertRestructure(string fileStatus, string comment, int memberNo, string officerName, string clientName)
+        {
+            if (fileStatus == "Maintenance")
+            {
+                var IORestructureRoleId = context.Roles.Where(x => x.Name == "IO Restructure").Select(x => x.Id).First();
+                var IORestructureEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(IORestructureRoleId))).Select(i => i.Email).First();
+                //AlertRestructureOfficer
+                string emailBody = "You have a file pending maintenance from " + officerName + "for member, " + clientName + " (" + memberNo + "). \n"+
+                "Officer's comment: " + comment;
+                AlertRestructureOfficer(officerName, emailBody, IORestructureEmailAddress);
+            }
+        }
+
+        [NonAction]
+        public void AlertValidation(string fileStatus,string comment, int memberNo, string officerName, string clientName)
+        {
+            if (fileStatus == "Refund")
+            {
+                var IOValidationRoleId = context.Roles.Where(x => x.Name == "IO Validation").Select(x => x.Id).First();
+                var IOValidationEmailAddress = context.Users.Where(x => x.Roles.Any(u => u.RoleId.Equals(IOValidationRoleId))).Select(i => i.Email).First();
+                //AlertValidationOfficer
+                string emailBody = "You have a file pending refund from " + officerName + "for member, " + clientName + " (" + memberNo + "). \n" +
+                "Officer's comment: " + comment;
+                AlertValidationOfficer(officerName, emailBody, IOValidationEmailAddress);
+            }
+        }
+
+        [NonAction]
+        public void AlertRestructureOfficer(string subjInfo, string emailBody, string emailAddress)
+        {
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("samsamson2016@gmail.com");
+            //mailMessage.To.Add(addressList.First());
+            //mailMessage.To.Add(addressList.Last());
+            mailMessage.To.Add("s11075775@student.usp.ac.fj");
+            mailMessage.Subject = "[DO NOT REPLY] Pending Maintenance - " + subjInfo;
+            mailMessage.Body = emailBody;
+            //mailMessage.IsBodyHtml = true;
+
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new System.Net.NetworkCredential()
+            {
+                UserName = "samsamson2016@gmail.com",
+                Password = "1215Jean.b45"
+            };
+            smtpClient.EnableSsl = true;
+            try
+            {
+                smtpClient.Send(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        [NonAction]
+        public void AlertValidationOfficer(string subjInfo, string emailBody, string emailAddress)
+        {
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("samsamson2016@gmail.com");
+            //mailMessage.To.Add(addressList.First());
+            //mailMessage.To.Add(addressList.Last());
+            mailMessage.To.Add("s11075775@student.usp.ac.fj");
+            mailMessage.Subject = "[DO NOT REPLY] Pending Refund-" + subjInfo;
+            mailMessage.Body = emailBody;
+            //mailMessage.IsBodyHtml = true;
+
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new System.Net.NetworkCredential()
+            {
+                UserName = "samsamson2016@gmail.com",
+                Password = "1215Jean.b45"
+            };
+            smtpClient.EnableSsl = true;
+            try
+            {
+                smtpClient.Send(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -69,7 +161,7 @@ namespace RESTServices.Controllers
             //mailMessage.To.Add(addressList.First());
             //mailMessage.To.Add(addressList.Last());
             mailMessage.To.Add("s11075775@student.usp.ac.fj");
-            mailMessage.Subject = "[DO NOT REPLY] Pending Loan Request-" +subjInfo;
+            mailMessage.Subject = "[DO NOT REPLY] Pending Loan Request - " +subjInfo;
             mailMessage.Body = emailbody;
             //mailMessage.IsBodyHtml = true;
 
@@ -175,7 +267,7 @@ namespace RESTServices.Controllers
             //mailMessage.To.Add(addressList[1]);
             //mailMessage.To.Add(addressList[2]);
             mailMessage.To.Add("s11075775@student.usp.ac.fj");
-            mailMessage.Subject = "[DO NOT REPLY] Loan Request Awaiting Payment-" + subjInfo;
+            mailMessage.Subject = "[DO NOT REPLY] Loan Request Awaiting Payment - " + subjInfo;
             mailMessage.Body = emailbody;
             //mailMessage.IsBodyHtml = true;
 
@@ -242,7 +334,7 @@ namespace RESTServices.Controllers
             //mailMessage.To.Add(addressList[1]);
             //mailMessage.To.Add(addressList[2]);
             mailMessage.To.Add("s11075775@student.usp.ac.fj");
-            mailMessage.Subject = "[DO NOT REPLY] Loan Request Awaiting Collateral-" + subjInfo;
+            mailMessage.Subject = "[DO NOT REPLY] Loan Request Awaiting Collateral - " + subjInfo;
             mailMessage.Body = emailbody;
             //mailMessage.IsBodyHtml = true;
 
